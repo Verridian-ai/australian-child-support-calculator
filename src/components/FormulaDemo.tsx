@@ -457,10 +457,10 @@ export default function FormulaDemo({
         </div>
       </div>
 
-      {/* Integrated Calculator Layout - All in One Screen */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4 min-h-[400px]">
-        {/* Left Column: Formula, Values, Result */}
-        <div className="lg:col-span-1 space-y-3">
+      {/* Integrated Calculator Layout - All in One Screen - Mobile Optimized */}
+      <div className="space-y-3 md:space-y-4">
+        {/* Formula, Values, Result - Stacked for Mobile */}
+        <div className="space-y-3">
           {/* Formula */}
           <div className="p-2 md:p-3 bg-white dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-600">
             <div className="flex items-center space-x-2 mb-1.5">
@@ -527,93 +527,90 @@ export default function FormulaDemo({
           )}
         </div>
 
-        {/* Center Column: Calculator */}
-        <div className="lg:col-span-1 flex flex-col items-center justify-center">
-          {/* Step Explanation */}
-          {isPlaying && (
-            <div className="mb-2 p-2 bg-accent-teal/10 dark:bg-accent-teal/20 rounded-lg border border-accent-teal/30 w-full">
-              <div className="flex items-start space-x-1.5">
-                <PlayCircle className="h-3 w-3 text-accent-teal flex-shrink-0 mt-0.5 animate-pulse" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-[10px] md:text-xs text-gray-900 dark:text-text-primary font-medium break-words">
-                    {currentExplanation || 'Click "Next" to start the calculation step by step.'}
+        {/* Step Explanation */}
+        {isPlaying && (
+          <div className="p-2 bg-accent-teal/10 dark:bg-accent-teal/20 rounded-lg border border-accent-teal/30 w-full">
+            <div className="flex items-start space-x-1.5">
+              <PlayCircle className="h-3 w-3 text-accent-teal flex-shrink-0 mt-0.5 animate-pulse" />
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] md:text-xs text-gray-900 dark:text-text-primary font-medium break-words">
+                  {currentExplanation || 'Click "Next" to start the calculation step by step.'}
+                </p>
+                {currentStep > 0 && currentStep <= buttonSequence.length && (
+                  <p className="text-[9px] text-gray-600 dark:text-text-secondary mt-0.5">
+                    Step {currentStep} of {buttonSequence.length}
                   </p>
-                  {currentStep > 0 && currentStep <= buttonSequence.length && (
-                    <p className="text-[9px] text-gray-600 dark:text-text-secondary mt-0.5">
-                      Step {currentStep} of {buttonSequence.length}
-                    </p>
-                  )}
-                </div>
+                )}
               </div>
             </div>
-          )}
-
-          {/* Calculator - Always visible and prominent */}
-          <div className="relative w-full flex justify-center items-center min-h-[300px]">
-            <div className="scale-75 md:scale-90 lg:scale-100 origin-center relative">
-              <NeumorphicCalculator 
-                ref={calculatorRef}
-                onValueChange={(val) => {
-                  setCalculatorDisplayValue(val.toString());
-                }}
-                currentValue={0}
-                highlightedButton={highlightedButton}
-              />
-              {highlightedButton && (
-                <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-accent-orange text-white text-[10px] px-2 py-0.5 rounded-full shadow-lg animate-pulse whitespace-nowrap z-20">
-                  Pressing: {highlightedButton}
-                </div>
-              )}
-            </div>
           </div>
+        )}
 
-          {/* Calculator Display Value */}
-          <div className="mt-2 text-center w-full">
-            <p className="text-[9px] text-gray-500 dark:text-text-tertiary mb-0.5">Current Display:</p>
-            <p className="text-sm md:text-base font-mono font-bold text-accent-teal">{calculatorDisplayValue}</p>
-          </div>
-
-          {/* Button Sequence - Compact */}
-          <div className="mt-2 w-full">
-            <p className="text-[9px] md:text-[10px] font-semibold text-gray-600 dark:text-text-secondary mb-1 uppercase tracking-wide text-center">
-              Button Sequence
-            </p>
-            <div className="flex flex-wrap gap-1 justify-center">
-              {groupedSequence.map((group, groupIndex) => {
-                const isCompleted = group.indices.every(idx => idx < currentStep);
-                const isActive = group.indices.some(idx => idx === currentStep) && isPlaying;
-                
-                return (
-                  <React.Fragment key={groupIndex}>
-                    <div
-                      className={`
-                        px-1.5 py-0.5 rounded font-mono text-[9px] md:text-[10px] font-semibold
-                        transition-all duration-300
-                        ${
-                          isCompleted
-                            ? 'bg-accent-teal text-white shadow-md'
-                            : isActive
-                            ? 'bg-accent-orange text-white shadow-lg scale-110 animate-pulse'
-                            : 'bg-gray-200 dark:bg-dark-700 text-gray-700 dark:text-gray-300'
-                        }
-                      `}
-                    >
-                      {group.value}
-                    </div>
-                    {groupIndex < groupedSequence.length - 1 && (
-                      <span className="text-gray-400 dark:text-gray-600 text-[9px]">→</span>
-                    )}
-                  </React.Fragment>
-                );
-              })}
-            </div>
+        {/* Calculator - Smaller for Mobile */}
+        <div className="relative w-full flex justify-center items-center">
+          <div className="scale-[0.55] sm:scale-[0.65] md:scale-[0.75] lg:scale-[0.85] origin-center relative">
+            <NeumorphicCalculator 
+              ref={calculatorRef}
+              onValueChange={(val) => {
+                setCalculatorDisplayValue(val.toString());
+              }}
+              currentValue={0}
+              highlightedButton={highlightedButton}
+            />
+            {highlightedButton && (
+              <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-accent-orange text-white text-[9px] px-1.5 py-0.5 rounded-full shadow-lg animate-pulse whitespace-nowrap z-20">
+                Pressing: {highlightedButton}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Right Column: Auto-Calculate Steps */}
-        <div className="lg:col-span-1">
+        {/* Calculator Display Value */}
+        <div className="text-center w-full">
+          <p className="text-[9px] text-gray-500 dark:text-text-tertiary mb-0.5">Current Display:</p>
+          <p className="text-xs md:text-sm font-mono font-bold text-accent-teal">{calculatorDisplayValue}</p>
+        </div>
+
+        {/* Button Sequence - Compact */}
+        <div className="w-full">
+          <p className="text-[9px] md:text-[10px] font-semibold text-gray-600 dark:text-text-secondary mb-1 uppercase tracking-wide text-center">
+            Button Sequence
+          </p>
+          <div className="flex flex-wrap gap-1 justify-center">
+            {groupedSequence.map((group, groupIndex) => {
+              const isCompleted = group.indices.every(idx => idx < currentStep);
+              const isActive = group.indices.some(idx => idx === currentStep) && isPlaying;
+              
+              return (
+                <React.Fragment key={groupIndex}>
+                  <div
+                    className={`
+                      px-1.5 py-0.5 rounded font-mono text-[9px] md:text-[10px] font-semibold
+                      transition-all duration-300
+                      ${
+                        isCompleted
+                          ? 'bg-accent-teal text-white shadow-md'
+                          : isActive
+                          ? 'bg-accent-orange text-white shadow-lg scale-110 animate-pulse'
+                          : 'bg-gray-200 dark:bg-dark-700 text-gray-700 dark:text-gray-300'
+                      }
+                    `}
+                  >
+                    {group.value}
+                  </div>
+                  {groupIndex < groupedSequence.length - 1 && (
+                    <span className="text-gray-400 dark:text-gray-600 text-[9px]">→</span>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Auto-Calculate Steps */}
+        <div>
           {showAutoCalculate && autoCalculateSteps.length > 0 ? (
-            <div className="p-2 md:p-3 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-500/10 dark:to-emerald-500/10 rounded-lg border border-green-200 dark:border-green-500/30 h-full">
+            <div className="p-2 md:p-3 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-500/10 dark:to-emerald-500/10 rounded-lg border border-green-200 dark:border-green-500/30">
               <div className="flex items-center space-x-1.5 mb-2">
                 <Zap className="h-3 w-3 text-accent-green" />
                 <span className="text-[10px] md:text-xs font-semibold text-gray-900 dark:text-text-primary uppercase tracking-wide">
@@ -654,14 +651,13 @@ export default function FormulaDemo({
               </div>
             </div>
           ) : (
-            <div className="p-2 md:p-3 bg-white dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-600 h-full flex items-center justify-center">
+            <div className="p-2 md:p-3 bg-white dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-600 flex items-center justify-center">
               <p className="text-[10px] md:text-xs text-gray-500 dark:text-text-tertiary text-center">
                 Click "Auto Calculate" to see step-by-step calculation
               </p>
             </div>
           )}
         </div>
-      </div>
 
       {/* Explanation - Bottom */}
       <p className="text-[10px] md:text-xs text-gray-600 dark:text-text-secondary leading-relaxed italic mt-3 text-center">

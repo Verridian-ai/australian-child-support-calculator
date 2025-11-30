@@ -141,26 +141,6 @@ export default function FormulaDemo({
     return `Press ${button}`;
   };
 
-  const startDemo = () => {
-    setIsPlaying(true);
-    setCurrentStep(0);
-    setCurrentExplanation(null);
-    setHighlightedButton(null);
-    setCurrentCalculationStep(0);
-    setShowCalculator(true); // Show calculator when demo starts
-    clearTimeouts();
-    
-    // Clear calculator first
-    if (calculatorRef.current) {
-      calculatorRef.current.clear();
-      setCalculatorDisplayValue('0');
-    }
-    
-    // Show first step explanation
-    if (buttonSequence.length > 0) {
-      setCurrentExplanation('Click "Next" to start the calculation step by step.');
-    }
-  };
 
   const nextStep = () => {
     if (currentStep < buttonSequence.length) {

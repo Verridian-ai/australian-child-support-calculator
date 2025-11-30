@@ -2,6 +2,7 @@ import React from 'react';
 import { ChevronDown, ChevronRight, Info } from 'lucide-react';
 import { ChildSupportCalculationStep, formatCurrency, formatPercentage } from '../../lib/calculator';
 import { StepContent } from './StepContent';
+import FormulaDemo from '../FormulaDemo';
 
 interface StepCardProps {
   step: ChildSupportCalculationStep;
@@ -73,18 +74,12 @@ export function StepCard({ step, isExpanded, onToggle }: StepCardProps) {
       {/* Step Content */}
       {isExpanded && (
         <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-600 animate-fade-in">
-          {/* Formula Display */}
-          <div className="mb-6">
-            <div className="flex items-center space-x-2 mb-3">
-              <Info className="h-4 w-4 text-info-500" />
-              <span className="text-sm font-semibold text-gray-600 dark:text-text-secondary uppercase tracking-wide">
-                Formula
-              </span>
+          {/* Formula Demo with Integrated Calculator */}
+          {getFormulaDemoProps(step) && (
+            <div className="mb-6">
+              <FormulaDemo {...getFormulaDemoProps(step)!} />
             </div>
-            <div className="text-formula bg-gray-50 dark:bg-dark-800/80 border border-gray-200 dark:border-dark-700 p-4 rounded-lg shadow-inner">
-              {step.formula}
-            </div>
-          </div>
+          )}
 
           {/* Detailed Breakdown */}
           <StepContent step={step} />
@@ -113,6 +108,256 @@ export function StepCard({ step, isExpanded, onToggle }: StepCardProps) {
       )}
     </div>
   );
+}
+
+function getFormulaDemoProps(step: ChildSupportCalculationStep): any | null {
+  const { stepNumber, details, value } = step;
+  
+  switch (stepNumber) {
+    case 1: {
+      const parentA_ATI = details?.parentA_ATI || 50000;
+      const parentB_ATI = details?.parentB_ATI || 60000;
+      const selfSupport = details?.selfSupportAmount || 29841;
+      return {
+        title: `Step ${stepNumber}: ${step.title}`,
+        formula: step.formula,
+        buttonSequence: [...parentA_ATI.toString().split(''), '-', ...selfSupport.toString().split(''), '='],
+        exampleValues: { "Parent A ATI": parentA_ATI, "Self-Support Amount": selfSupport },
+        explanation: `Calculate Child Support Income for each parent by subtracting the self-support amount ($29,841) from their Adjusted Taxable Income.`,
+        result: parentA_ATI - selfSupport,
+        calculateResult: (values: any) => (Number(values["Parent A ATI"]) || 0) - (Number(values["Self-Support Amount"]) || 0),
+        generateButtonSequence: (values: any) => [...String(values["Parent A ATI"]).split(''), '-', ...String(values["Self-Support Amount"]).split(''), '='],
+        generateCalculationSteps: (values: any, res: number) => [
+          { step: "Enter Parent A ATI", value: Number(values["Parent A ATI"]) },
+          { step: "Subtract Self-Support Amount", value: Number(values["Self-Support Amount"]) },
+          { step: `${values["Parent A ATI"]} - ${values["Self-Support Amount"]}`, value: res }
+        ]
+      };
+    }
+    case 2: {
+      const parentA_CSI = details?.parentA_CSI || 20159;
+      const parentB_CSI = details?.parentB_CSI || 30159;
+      return {
+        title: `Step ${stepNumber}: ${step.title}`,
+        formula: step.formula,
+        buttonSequence: [...parentA_CSI.toString().split(''), '+', ...parentB_CSI.toString().split(''), '='],
+        exampleValues: { "Parent A CSI": parentA_CSI, "Parent B CSI": parentB_CSI },
+        explanation: `Add Parent A's and Parent B's Child Support Income together to get the Combined Child Support Income.`,
+        result: parentA_CSI + parentB_CSI,
+        calculateResult: (values: any) => (Number(values["Parent A CSI"]) || 0) + (Number(values["Parent B CSI"]) || 0),
+        generateButtonSequence: (values: any) => [...String(values["Parent A CSI"]).split(''), '+', ...String(values["Parent B CSI"]).split(''), '='],
+        generateCalculationSteps: (values: any, res: number) => [
+          { step: "Enter Parent A CSI", value: Number(values["Parent A CSI"]) },
+          { step: "Add Parent B CSI", value: Number(values["Parent B CSI"]) },
+          { step: `${values["Parent A CSI"]} + ${values["Parent B CSI"]}`, value: res }
+        ]
+      };
+    }
+    case 3: {
+      const parentA_CSI = details?.parentA_CSI || 20159;
+      const combined = details?.combinedCSI || 50318;
+      const percentage = combined > 0 ? (parentA_CSI / combined) * 100 : 0;
+      return {
+        title: `Step ${stepNumber}: ${step.title}`,
+        formula: step.formula,
+        buttonSequence: [...parentA_CSI.toString().split(''), '÷', ...combined.toString().split(''), '×', '1', '0', '0', '='],
+        exampleValues: { "Parent A CSI": parentA_CSI, "Combined CSI": combined },
+        explanation: `Divide Parent A's Child Support Income by the Combined Child Support Income, then multiply by 100 to get the Income Percentage.`,
+        result: percentage,
+        resultFormat: 'percentage' as const,
+        calculateResult: (values: any) => {
+          const a = Number(values["Parent A CSI"]) || 0;
+          const combined = Number(values["Combined CSI"]) || 1;
+          return (a / combined) * 100;
+        },
+        generateButtonSequence: (values: any) => [...String(values["Parent A CSI"]).split(''), '÷', ...String(values["Combined CSI"]).split(''), '×', '1', '0', '0', '='],
+        generateCalculationSteps: (values: any, res: number) => {
+          const a = Number(values["Parent A CSI"]) || 0;
+          const combined = Number(values["Combined CSI"]) || 1;
+          const ratio = a / combined;
+          return [
+            { step: "Enter Parent A CSI", value: a },
+            { step: "Divide by Combined CSI", value: combined },
+            { step: `${a} ÷ ${combined}`, value: ratio },
+            { step: "Multiply by 100", value: 100 },
+            { step: `${ratio.toFixed(4)} × 100`, value: res }
+          ];
+        }
+      };
+    }
+    case 4: {
+      const nights = details?.parentA_CareNights || 290;
+      return {
+        title: `Step ${stepNumber}: ${step.title}`,
+        formula: step.formula,
+        buttonSequence: [...nights.toString().split(''), '÷', '3', '6', '5', '×', '1', '0', '0', '='],
+        exampleValues: { "Parent A Nights": nights, "Days per Year": 365 },
+        explanation: `Divide care nights by 365 days, then multiply by 100 to get the Care Percentage.`,
+        result: Math.round((nights / 365) * 100 * 100) / 100,
+        resultFormat: 'percentage' as const,
+        calculateResult: (values: any) => {
+          const nights = Number(values["Parent A Nights"]) || 0;
+          const days = Number(values["Days per Year"]) || 365;
+          return Math.round((nights / days) * 100 * 100) / 100;
+        },
+        generateButtonSequence: (values: any) => [...String(values["Parent A Nights"]).split(''), '÷', '3', '6', '5', '×', '1', '0', '0', '='],
+        generateCalculationSteps: (values: any, res: number) => {
+          const nights = Number(values["Parent A Nights"]) || 0;
+          const days = Number(values["Days per Year"]) || 365;
+          const ratio = nights / days;
+          return [
+            { step: "Enter Care Nights", value: nights },
+            { step: "Divide by Days per Year", value: days },
+            { step: `${nights} ÷ ${days}`, value: ratio },
+            { step: "Multiply by 100", value: 100 },
+            { step: `${ratio.toFixed(4)} × 100`, value: res }
+          ];
+        }
+      };
+    }
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+      // These steps are more complex, return basic demo
+      return {
+        title: `Step ${stepNumber}: ${step.title}`,
+        formula: step.formula,
+        buttonSequence: ['1', '0', '0', '-', '5', '0', '='],
+        exampleValues: { "Value": 100, "Subtract": 50 },
+        explanation: step.description || `This step uses the values calculated in previous steps. Refer to the detailed breakdown above.`,
+        result: value,
+        calculateResult: () => value,
+        generateButtonSequence: () => ['1', '0', '0', '-', '5', '0', '='],
+        generateCalculationSteps: () => [
+          { step: "Calculation Result", value: value }
+        ]
+      };
+    default:
+      return null;
+  }
+}
+
+function getFormulaDemoProps(step: ChildSupportCalculationStep): any | null {
+  const { stepNumber, details, value, formula, description } = step;
+  
+  switch (stepNumber) {
+    case 1: {
+      const parentA_ATI = details?.parentA_ATI || 50000;
+      const selfSupport = details?.selfSupportAmount || 29841;
+      return {
+        title: `Step ${stepNumber}: ${step.title}`,
+        formula: formula,
+        buttonSequence: [...parentA_ATI.toString().split(''), '-', ...selfSupport.toString().split(''), '='],
+        exampleValues: { "Parent A ATI": parentA_ATI, "Self-Support Amount": selfSupport },
+        explanation: `Calculate Child Support Income for each parent by subtracting the self-support amount ($29,841) from their Adjusted Taxable Income.`,
+        result: parentA_ATI - selfSupport,
+        calculateResult: (values: any) => (Number(values["Parent A ATI"]) || 0) - (Number(values["Self-Support Amount"]) || 0),
+        generateButtonSequence: (values: any) => [...String(values["Parent A ATI"]).split(''), '-', ...String(values["Self-Support Amount"]).split(''), '='],
+        generateCalculationSteps: (values: any, res: number) => [
+          { step: "Enter Parent A ATI", value: Number(values["Parent A ATI"]) },
+          { step: "Subtract Self-Support Amount", value: Number(values["Self-Support Amount"]) },
+          { step: `${values["Parent A ATI"]} - ${values["Self-Support Amount"]}`, value: res }
+        ]
+      };
+    }
+    case 2: {
+      const parentA_CSI = details?.parentA_CSI || 20159;
+      const parentB_CSI = details?.parentB_CSI || 30159;
+      return {
+        title: `Step ${stepNumber}: ${step.title}`,
+        formula: formula,
+        buttonSequence: [...parentA_CSI.toString().split(''), '+', ...parentB_CSI.toString().split(''), '='],
+        exampleValues: { "Parent A CSI": parentA_CSI, "Parent B CSI": parentB_CSI },
+        explanation: `Add Parent A's and Parent B's Child Support Income together to get the Combined Child Support Income.`,
+        result: parentA_CSI + parentB_CSI,
+        calculateResult: (values: any) => (Number(values["Parent A CSI"]) || 0) + (Number(values["Parent B CSI"]) || 0),
+        generateButtonSequence: (values: any) => [...String(values["Parent A CSI"]).split(''), '+', ...String(values["Parent B CSI"]).split(''), '='],
+        generateCalculationSteps: (values: any, res: number) => [
+          { step: "Enter Parent A CSI", value: Number(values["Parent A CSI"]) },
+          { step: "Add Parent B CSI", value: Number(values["Parent B CSI"]) },
+          { step: `${values["Parent A CSI"]} + ${values["Parent B CSI"]}`, value: res }
+        ]
+      };
+    }
+    case 3: {
+      const parentA_CSI = details?.parentA_CSI || 20159;
+      const combined = details?.combinedCSI || 50318;
+      const percentage = combined > 0 ? (parentA_CSI / combined) * 100 : 0;
+      return {
+        title: `Step ${stepNumber}: ${step.title}`,
+        formula: formula,
+        buttonSequence: [...parentA_CSI.toString().split(''), '÷', ...combined.toString().split(''), '×', '1', '0', '0', '='],
+        exampleValues: { "Parent A CSI": parentA_CSI, "Combined CSI": combined },
+        explanation: `Divide Parent A's Child Support Income by the Combined Child Support Income, then multiply by 100 to get the Income Percentage.`,
+        result: percentage,
+        resultFormat: 'percentage' as const,
+        calculateResult: (values: any) => {
+          const a = Number(values["Parent A CSI"]) || 0;
+          const combined = Number(values["Combined CSI"]) || 1;
+          return (a / combined) * 100;
+        },
+        generateButtonSequence: (values: any) => [...String(values["Parent A CSI"]).split(''), '÷', ...String(values["Combined CSI"]).split(''), '×', '1', '0', '0', '='],
+        generateCalculationSteps: (values: any, res: number) => {
+          const a = Number(values["Parent A CSI"]) || 0;
+          const combined = Number(values["Combined CSI"]) || 1;
+          const ratio = a / combined;
+          return [
+            { step: "Enter Parent A CSI", value: a },
+            { step: "Divide by Combined CSI", value: combined },
+            { step: `${a} ÷ ${combined}`, value: ratio },
+            { step: "Multiply by 100", value: 100 },
+            { step: `${ratio.toFixed(4)} × 100`, value: res }
+          ];
+        }
+      };
+    }
+    case 4: {
+      const nights = details?.parentA_CareNights || 290;
+      return {
+        title: `Step ${stepNumber}: ${step.title}`,
+        formula: formula,
+        buttonSequence: [...nights.toString().split(''), '÷', '3', '6', '5', '×', '1', '0', '0', '='],
+        exampleValues: { "Parent A Nights": nights, "Days per Year": 365 },
+        explanation: `Divide care nights by 365 days, then multiply by 100 to get the Care Percentage.`,
+        result: Math.round((nights / 365) * 100 * 100) / 100,
+        resultFormat: 'percentage' as const,
+        calculateResult: (values: any) => {
+          const nights = Number(values["Parent A Nights"]) || 0;
+          const days = Number(values["Days per Year"]) || 365;
+          return Math.round((nights / days) * 100 * 100) / 100;
+        },
+        generateButtonSequence: (values: any) => [...String(values["Parent A Nights"]).split(''), '÷', '3', '6', '5', '×', '1', '0', '0', '='],
+        generateCalculationSteps: (values: any, res: number) => {
+          const nights = Number(values["Parent A Nights"]) || 0;
+          const days = Number(values["Days per Year"]) || 365;
+          const ratio = nights / days;
+          return [
+            { step: "Enter Care Nights", value: nights },
+            { step: "Divide by Days per Year", value: days },
+            { step: `${nights} ÷ ${days}`, value: ratio },
+            { step: "Multiply by 100", value: 100 },
+            { step: `${ratio.toFixed(4)} × 100`, value: res }
+          ];
+        }
+      };
+    }
+    default:
+      // For steps 5-8, return basic demo
+      return {
+        title: `Step ${stepNumber}: ${step.title}`,
+        formula: formula,
+        buttonSequence: ['1', '0', '0', '-', '5', '0', '='],
+        exampleValues: { "Value": 100, "Subtract": 50 },
+        explanation: description || `This step uses the values calculated in previous steps. Refer to the detailed breakdown above.`,
+        result: value,
+        calculateResult: () => value,
+        generateButtonSequence: () => ['1', '0', '0', '-', '5', '0', '='],
+        generateCalculationSteps: () => [
+          { step: "Calculation Result", value: value }
+        ]
+      };
+  }
 }
 
 function getLegalReference(stepNumber: number): { text: string, url: string } {

@@ -458,7 +458,7 @@ export default function FormulaDemo({
       </div>
 
       {/* Integrated Calculator Layout - All in One Screen */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4 min-h-[400px]">
         {/* Left Column: Formula, Values, Result */}
         <div className="lg:col-span-1 space-y-3">
           {/* Formula */}
@@ -548,8 +548,8 @@ export default function FormulaDemo({
             </div>
           )}
 
-          {/* Calculator - Always visible */}
-          <div className="relative w-full flex justify-center">
+          {/* Calculator - Always visible and prominent */}
+          <div className="relative w-full flex justify-center items-center min-h-[300px]">
             <div className="scale-75 md:scale-90 lg:scale-100 origin-center relative">
               <NeumorphicCalculator 
                 ref={calculatorRef}

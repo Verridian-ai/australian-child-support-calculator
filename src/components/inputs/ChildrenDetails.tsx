@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Baby, HelpCircle } from 'lucide-react';
 import { ChildSupportInputs } from '../../lib/calculator';
+import FormulaDemo from '../FormulaDemo';
 
 interface ChildrenDetailsProps {
   inputs: ChildSupportInputs;
@@ -60,6 +61,42 @@ export function ChildrenDetails({ inputs, onChange, onShowGuide }: ChildrenDetai
           </button>
         )}
       </div>
+
+      {/* Formula Demo for Children Costs (if applicable) */}
+      <FormulaDemo
+        title="Children Details - Cost Calculation Reference"
+        formula="Number of Children × Age-Based Costs = Total Children Costs"
+        buttonSequence={["3", "×", "1", "6", "2", "1", "="]}
+        exampleValues={{ "Number of Children": 3, "Per Child Cost": 1621 }}
+        explanation="The number of children and their ages are used to calculate the Costs of the Children (COTC) in Step 7. This is a reference calculator for manual calculations."
+        result={3 * 1621}
+        calculateResult={(values) => {
+          const numChildren = typeof values["Number of Children"] === 'number' ? values["Number of Children"] : Number(values["Number of Children"]);
+          const perChild = typeof values["Per Child Cost"] === 'number' ? values["Per Child Cost"] : Number(values["Per Child Cost"]);
+          return numChildren * perChild;
+        }}
+        generateButtonSequence={(values) => {
+          const numChildren = typeof values["Number of Children"] === 'number' ? values["Number of Children"] : Number(values["Number of Children"]);
+          const perChild = typeof values["Per Child Cost"] === 'number' ? values["Per Child Cost"] : Number(values["Per Child Cost"]);
+          return [...numChildren.toString().split(''), '×', ...perChild.toString().split(''), '='];
+        }}
+        generateCalculationSteps={(values, result) => {
+          const numChildren = typeof values["Number of Children"] === 'number' ? values["Number of Children"] : Number(values["Number of Children"]);
+          const perChild = typeof values["Per Child Cost"] === 'number' ? values["Per Child Cost"] : Number(values["Per Child Cost"]);
+          return [
+            { step: "Enter Number of Children", value: numChildren },
+            { step: "Multiply by Per Child Cost", value: perChild },
+            { step: `${numChildren} × ${perChild}`, value: result },
+            { step: "Total Children Costs Result", value: result }
+          ];
+        }}
+        calculationSteps={[
+          { step: "Enter Number of Children", value: 3 },
+          { step: "Multiply by Per Child Cost", value: 1621 },
+          { step: "3 × 1621", value: 4863 },
+          { step: "Total Children Costs Result", value: 4863 }
+        ]}
+      />
       
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

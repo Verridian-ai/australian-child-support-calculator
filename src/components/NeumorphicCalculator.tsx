@@ -22,6 +22,13 @@ const NeumorphicCalculator = forwardRef<CalculatorRef, NeumorphicCalculatorProps
   const [previousValue, setPreviousValue] = useState<number | null>(null);
   const [waitingForNewOperand, setWaitingForNewOperand] = useState<boolean>(false);
 
+  // Sync display with external currentValue when it changes significantly
+  useEffect(() => {
+    if (currentValue !== 0 && Math.abs(parseFloat(display) - currentValue) > 0.01) {
+      setDisplay(currentValue.toString());
+    }
+  }, [currentValue]);
+
   const calculate = (prev: number, curr: number, op: string): number => {
     switch (op) {
       case '+': return prev + curr;

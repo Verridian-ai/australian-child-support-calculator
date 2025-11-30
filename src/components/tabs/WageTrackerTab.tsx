@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { DollarSign, TrendingDown, AlertTriangle, Info } from 'lucide-react';
 import { formatCurrency, checkWageReduction, calculateWageThreshold } from '../../lib/calculator';
 import NeumorphicCalculator from '../NeumorphicCalculator';
+import FormulaDemo from '../FormulaDemo';
 
 interface WageTrackerTabProps {
   currentWage: number;
@@ -57,6 +58,16 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
             Recorded Wage in System
           </h3>
 
+          {/* Formula Demo for 15% Reduction Threshold */}
+          <FormulaDemo
+            title="15% Reduction Threshold Calculation"
+            formula="15% Reduction Threshold = Current Annual Wage × 0.85"
+            buttonSequence={["9", "7", "0", "0", "0", "×", "0", ".", "8", "5", "="]}
+            exampleValues={{ "Current Annual Wage": 97000, "Multiplier": 0.85 }}
+            explanation="Multiply the current annual wage ($97,000) by 0.85 (which represents 85% or 100% minus 15%). This gives you the threshold amount ($82,450). If a parent's new reported wage falls below this threshold, the 15% rule is met and reassessment can proceed."
+            result={97000 * 0.85}
+          />
+
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-text-secondary mb-2">
@@ -110,6 +121,16 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
             <TrendingDown className="h-5 w-5 text-accent-orange mr-2" />
             15% Reassessment Check
           </h3>
+
+          {/* Formula Demo for Percentage Drop Calculation */}
+          <FormulaDemo
+            title="15% Percentage Drop Calculation"
+            formula="Percentage Drop = ((Current Wage - New Reported Wage) ÷ Current Wage) × 100"
+            buttonSequence={["9", "7", "0", "0", "0", "-", "8", "2", "0", "0", "0", "=", "÷", "9", "7", "0", "0", "0", "=", "×", "1", "0", "0", "="]}
+            exampleValues={{ "Current Wage": 97000, "New Reported Wage": 82000 }}
+            explanation="Calculate the percentage drop: Subtract new reported wage ($82,000) from current wage ($97,000) = $15,000. Divide by current wage ($97,000) = 0.1546. Multiply by 100 = 15.46%. If result is 15% or greater, reassessment can proceed."
+            result={((97000 - 82000) / 97000) * 100}
+          />
 
           <div className="space-y-4">
             <div>

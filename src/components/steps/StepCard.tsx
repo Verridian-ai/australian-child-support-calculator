@@ -116,7 +116,7 @@ export function StepCard({ step, isExpanded, onToggle }: StepCardProps) {
 }
 
 function getLegalReference(stepNumber: number): { text: string, url: string } {
-  const baseUrl = "http://www5.austlii.edu.au/au/legis/cth/consol_act/csaa1989294";
+  const baseUrl = "https://www5.austlii.edu.au/au/legis/cth/consol_act/csaa1989294";
   
   switch (stepNumber) {
     case 1: return {

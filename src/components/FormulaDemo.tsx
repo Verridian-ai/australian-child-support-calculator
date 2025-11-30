@@ -658,6 +658,7 @@ export default function FormulaDemo({
             </div>
           )}
         </div>
+      </div>
 
       {/* Explanation - Bottom */}
       <p className="text-[10px] md:text-xs text-gray-600 dark:text-text-secondary leading-relaxed italic mt-3 text-center">

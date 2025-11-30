@@ -118,9 +118,9 @@ export default function ReferenceModal({ isOpen, onClose }: ReferenceModalProps)
               </div>
             </div>
 
-            <div className="flex items-start space-x-3 p-3 bg-blue-50 dark:bg-info-500/10 rounded-lg border border-blue-100 dark:border-info-500/30">
-              <AlertTriangle className="h-5 w-5 text-blue-600 dark:text-info-500 flex-shrink-0" />
-              <p className="text-xs text-gray-600 dark:text-text-secondary">
+            <div className="flex items-start space-x-3 p-3 bg-blue-50 dark:bg-blue-500/20 rounded-lg border border-blue-200 dark:border-blue-500/40">
+              <AlertTriangle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+              <p className="text-xs text-blue-900 dark:text-blue-100">
                 This calculator uses the standard formula for the 2024-2025 financial year. 
                 Actual assessments may vary based on complex family circumstances, multiple case groups, and specific Services Australia determinations.
               </p>

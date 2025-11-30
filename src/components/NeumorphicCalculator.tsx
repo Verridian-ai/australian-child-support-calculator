@@ -6,6 +6,7 @@ interface NeumorphicCalculatorProps {
   currentValue?: number;
   externalButtonPress?: string | null;
   onButtonPressComplete?: () => void;
+  highlightedButton?: string | null;
 }
 
 export interface CalculatorRef {
@@ -15,7 +16,7 @@ export interface CalculatorRef {
 }
 
 const NeumorphicCalculator = forwardRef<CalculatorRef, NeumorphicCalculatorProps>(
-  ({ onValueChange, currentValue = 0, externalButtonPress, onButtonPressComplete }, ref) => {
+  ({ onValueChange, currentValue = 0, externalButtonPress, onButtonPressComplete, highlightedButton }, ref) => {
   const [display, setDisplay] = useState(currentValue.toString());
   const [operator, setOperator] = useState<string | null>(null);
   const [previousValue, setPreviousValue] = useState<number | null>(null);
@@ -134,27 +135,32 @@ const NeumorphicCalculator = forwardRef<CalculatorRef, NeumorphicCalculatorProps
   const renderButton = (
     label: string | React.ReactNode,
     onClick: () => void,
+    buttonValue: string,
     bgColor: string = 'bg-gray-100 dark:bg-gray-700',
     textColor: string = 'text-gray-900 dark:text-gray-100',
     className: string = '',
     textSize: string = 'text-lg'
-  ) => (
-    <button
-      onClick={onClick}
-      className={`
-        ${bgColor} ${textColor} ${textSize} font-semibold
-        rounded-md shadow-[0_3px_0_rgba(0,0,0,0.2),0_4px_4px_rgba(0,0,0,0.1)] 
-        active:shadow-[0_1px_0_rgba(0,0,0,0.2)] active:translate-y-[2px]
-        flex items-center justify-center
-        transition-all duration-100
-        border-t border-white/80 border-b border-black/10
-        dark:border-white/10 dark:border-black/30
-        ${className}
-      `}
-    >
-      {label}
-    </button>
-  );
+  ) => {
+    const isHighlighted = highlightedButton === buttonValue || highlightedButton === label?.toString();
+    return (
+      <button
+        onClick={onClick}
+        className={`
+          ${bgColor} ${textColor} ${textSize} font-semibold
+          rounded-md shadow-[0_3px_0_rgba(0,0,0,0.2),0_4px_4px_rgba(0,0,0,0.1)] 
+          active:shadow-[0_1px_0_rgba(0,0,0,0.2)] active:translate-y-[2px]
+          flex items-center justify-center
+          transition-all duration-300
+          border-t border-white/80 border-b border-black/10
+          dark:border-white/10 dark:border-black/30
+          ${className}
+          ${isHighlighted ? 'ring-4 ring-accent-orange ring-offset-2 ring-offset-gray-300 dark:ring-offset-gray-800 brightness-125 z-20 scale-105 shadow-lg' : ''}
+        `}
+      >
+        {label}
+      </button>
+    );
+  };
 
   return (
     <div className="flex justify-center perspective-1000">
@@ -194,45 +200,45 @@ const NeumorphicCalculator = forwardRef<CalculatorRef, NeumorphicCalculatorProps
         {/* Keypad */}
         <div className="relative z-10 grid grid-cols-5 gap-3">
           {/* Row 1: Tax/Rate buttons */}
-          {renderButton('TAX+', () => {}, 'bg-[#4a7bb5]', 'text-white', 'text-[10px]', 'text-[10px]')}
-          {renderButton('TAX-', () => {}, 'bg-[#4a7bb5]', 'text-white', 'text-[10px]', 'text-[10px]')}
-          {renderButton('RATE', () => {}, 'bg-[#4a7bb5]', 'text-white', 'text-[10px]', 'text-[10px]')}
+          {renderButton('TAX+', () => {}, 'TAX+', 'bg-[#4a7bb5]', 'text-white', 'text-[10px]', 'text-[10px]')}
+          {renderButton('TAX-', () => {}, 'TAX-', 'bg-[#4a7bb5]', 'text-white', 'text-[10px]', 'text-[10px]')}
+          {renderButton('RATE', () => {}, 'RATE', 'bg-[#4a7bb5]', 'text-white', 'text-[10px]', 'text-[10px]')}
           <div className="col-span-2"></div> 
 
           {/* Row 2: Red/Pink Function Keys + Memory */}
-          {renderButton('CI/C', handleClear, 'bg-[#b95e6d]', 'text-white', '', 'text-xs')}
-          {renderButton('→', handleBackspace, 'bg-[#b95e6d]', 'text-white', '', 'text-lg')}
-          {renderButton('RM/CM', () => {}, 'bg-[#b95e6d]', 'text-white', '', 'text-[10px]')}
-          {renderButton('M+', () => {}, 'bg-gray-400 dark:bg-gray-600', 'text-white', '', 'text-xs')}
-          {renderButton('M-', () => {}, 'bg-gray-400 dark:bg-gray-600', 'text-white', '', 'text-xs')}
+          {renderButton('CI/C', handleClear, 'C', 'bg-[#b95e6d]', 'text-white', '', 'text-xs')}
+          {renderButton('→', handleBackspace, 'BACKSPACE', 'bg-[#b95e6d]', 'text-white', '', 'text-lg')}
+          {renderButton('RM/CM', () => {}, 'RM/CM', 'bg-[#b95e6d]', 'text-white', '', 'text-[10px]')}
+          {renderButton('M+', () => {}, 'M+', 'bg-gray-400 dark:bg-gray-600', 'text-white', '', 'text-xs')}
+          {renderButton('M-', () => {}, 'M-', 'bg-gray-400 dark:bg-gray-600', 'text-white', '', 'text-xs')}
 
           {/* Row 3 */}
-          {renderButton('7', () => handleNumber('7'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton('8', () => handleNumber('8'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton('9', () => handleNumber('9'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton('%±', () => {}, 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-sm')}
-          {renderButton('√', () => {}, 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-lg')}
+          {renderButton('7', () => handleNumber('7'), '7', 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('8', () => handleNumber('8'), '8', 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('9', () => handleNumber('9'), '9', 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('%±', () => {}, '%±', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-sm')}
+          {renderButton('√', () => {}, '√', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-lg')}
 
           {/* Row 4 */}
-          {renderButton('4', () => handleNumber('4'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton('5', () => handleNumber('5'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton('6', () => handleNumber('6'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton(<X className="h-4 w-4" />, () => handleOperator('×'), 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton(<Divide className="h-4 w-4" />, () => handleOperator('÷'), 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('4', () => handleNumber('4'), '4', 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('5', () => handleNumber('5'), '5', 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('6', () => handleNumber('6'), '6', 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton(<X className="h-4 w-4" />, () => handleOperator('×'), '×', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton(<Divide className="h-4 w-4" />, () => handleOperator('÷'), '÷', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
 
           {/* Row 5 */}
-          {renderButton('1', () => handleNumber('1'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton('2', () => handleNumber('2'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton('3', () => handleNumber('3'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton(<Plus className="h-5 w-5" />, () => handleOperator('+'), 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', 'row-span-2 h-full', 'text-xl')}
-          {renderButton(<Minus className="h-5 w-5" />, () => handleOperator('-'), 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('1', () => handleNumber('1'), '1', 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('2', () => handleNumber('2'), '2', 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('3', () => handleNumber('3'), '3', 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton(<Plus className="h-5 w-5" />, () => handleOperator('+'), '+', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', 'row-span-2 h-full', 'text-xl')}
+          {renderButton(<Minus className="h-5 w-5" />, () => handleOperator('-'), '-', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
 
           {/* Row 6 */}
-          {renderButton('0', () => handleNumber('0'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton('.', () => handleNumber('.'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton('±', () => {}, 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-lg')}
+          {renderButton('0', () => handleNumber('0'), '0', 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('.', () => handleNumber('.'), '.', 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('±', () => {}, '±', 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-lg')}
           {/* + occupied by rowspan */}
-          {renderButton(<Equal className="h-5 w-5" />, handleEquals, 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton(<Equal className="h-5 w-5" />, handleEquals, '=', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
         </div>
       </div>
     </div>

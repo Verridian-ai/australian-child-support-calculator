@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Calculator, Play, RotateCcw, Keyboard } from 'lucide-react';
+import { Calculator, Play, RotateCcw, Keyboard, Zap, Info } from 'lucide-react';
 import NeumorphicCalculator, { CalculatorRef } from './NeumorphicCalculator';
 
 interface FormulaDemoProps {
@@ -10,6 +10,7 @@ interface FormulaDemoProps {
   explanation: string;
   result?: number;
   resultFormat?: 'currency' | 'percentage' | 'number';
+  calculationSteps?: Array<{ step: string; value: string | number }>;
 }
 
 export default function FormulaDemo({
@@ -19,7 +20,8 @@ export default function FormulaDemo({
   exampleValues,
   explanation,
   result,
-  resultFormat = 'currency'
+  resultFormat = 'currency',
+  calculationSteps = []
 }: FormulaDemoProps) {
   
   // Group consecutive digits for better display
@@ -54,6 +56,10 @@ export default function FormulaDemo({
   const groupedSequence = getGroupedSequence();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [currentExplanation, setCurrentExplanation] = useState<string | null>(null);
+  const [highlightedButton, setHighlightedButton] = useState<string | null>(null);
+  const [showAutoCalculate, setShowAutoCalculate] = useState(false);
+  const [currentCalculationStep, setCurrentCalculationStep] = useState(0);
   const calculatorRef = useRef<CalculatorRef>(null);
   const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
 
@@ -69,9 +75,29 @@ export default function FormulaDemo({
     timeoutRefs.current = [];
   };
 
+  // Generate explanations for each step
+  const getStepExplanation = (button: string, index: number, allButtons: string[]): string => {
+    const prevButton = index > 0 ? allButtons[index - 1] : null;
+    
+    if (button === '=') {
+      return 'Press equals to calculate the result.';
+    } else if (['+', '-', '×', '÷'].includes(button)) {
+      return `Press ${button} operator to continue the calculation.`;
+    } else if (!isNaN(Number(button))) {
+      if (prevButton && ['+', '-', '×', '÷', '='].includes(prevButton)) {
+        return `Enter the next number: ${button}`;
+      }
+      return `Enter digit: ${button}`;
+    }
+    return `Press ${button}`;
+  };
+
   const startDemo = () => {
     setIsPlaying(true);
     setCurrentStep(0);
+    setCurrentExplanation(null);
+    setHighlightedButton(null);
+    setCurrentCalculationStep(0);
     clearTimeouts();
     
     // Clear calculator first
@@ -86,16 +112,28 @@ export default function FormulaDemo({
       buttonSequence.forEach((button, index) => {
         const t = setTimeout(() => {
           setCurrentStep(index + 1);
+          setHighlightedButton(button);
+          setCurrentExplanation(getStepExplanation(button, index, buttonSequence));
           
           // Press button on calculator
           if (calculatorRef.current) {
             calculatorRef.current.pressButton(button);
           }
           
+          // Clear highlight after a moment
+          setTimeout(() => {
+            setHighlightedButton(null);
+            setCurrentExplanation(null);
+          }, 600);
+          
           if (index === buttonSequence.length - 1) {
             // Pause at the end before resetting
             const endDelay = setTimeout(() => {
               setIsPlaying(false);
+              setCurrentExplanation('Calculation complete!');
+              if (result !== undefined) {
+                setCurrentCalculationStep(calculationSteps.length);
+              }
             }, 1000);
             timeoutRefs.current.push(endDelay);
           }
@@ -108,9 +146,58 @@ export default function FormulaDemo({
     timeoutRefs.current.push(initialDelay);
   };
 
+  const startAutoCalculate = () => {
+    setShowAutoCalculate(true);
+    setCurrentCalculationStep(0);
+    
+    if (calculationSteps.length === 0) {
+      // Generate calculation steps from button sequence
+      const steps: Array<{ step: string; value: string | number }> = [];
+      let currentExpr = '';
+      let currentNumber = '';
+      
+      buttonSequence.forEach((button) => {
+        if (!isNaN(Number(button)) || button === '.') {
+          currentNumber += button;
+        } else if (button !== '=') {
+          if (currentNumber) {
+            currentExpr += currentNumber + ' ' + button + ' ';
+            steps.push({ step: currentExpr.trim(), value: currentNumber });
+            currentNumber = '';
+          }
+        }
+      });
+      
+      if (currentNumber) {
+        currentExpr += currentNumber;
+        steps.push({ step: currentExpr.trim(), value: currentNumber });
+      }
+      
+      if (result !== undefined) {
+        steps.push({ step: 'Result', value: result });
+      }
+      
+      calculationSteps.push(...steps);
+    }
+    
+    // Animate through calculation steps
+    let stepIndex = 0;
+    const animateSteps = () => {
+      if (stepIndex < calculationSteps.length) {
+        setCurrentCalculationStep(stepIndex + 1);
+        stepIndex++;
+        setTimeout(animateSteps, 1500);
+      }
+    };
+    animateSteps();
+  };
+
   const resetDemo = () => {
     setIsPlaying(false);
     setCurrentStep(0);
+    setCurrentExplanation(null);
+    setHighlightedButton(null);
+    setCurrentCalculationStep(0);
     clearTimeouts();
     
     // Clear calculator
@@ -129,6 +216,13 @@ export default function FormulaDemo({
           </h4>
         </div>
         <div className="flex items-center space-x-2">
+          <button
+            onClick={startAutoCalculate}
+            className="px-3 py-1.5 text-xs font-medium rounded-md bg-accent-orange text-white hover:bg-accent-orange/80 transition-colors flex items-center space-x-1"
+          >
+            <Zap className="h-3 w-3" />
+            <span>Auto Calculate</span>
+          </button>
           <button
             onClick={isPlaying ? resetDemo : startDemo}
             className="px-3 py-1.5 text-xs font-medium rounded-md bg-accent-teal text-white hover:bg-accent-teal/80 transition-colors flex items-center space-x-1"
@@ -160,6 +254,62 @@ export default function FormulaDemo({
           {formula}
         </p>
       </div>
+
+      {/* Current Step Explanation */}
+      {currentExplanation && (
+        <div className="mb-4 p-3 bg-accent-orange/10 dark:bg-accent-orange/20 rounded-lg border border-accent-orange/30 animate-fade-in">
+          <div className="flex items-start space-x-2">
+            <Info className="h-4 w-4 text-accent-orange flex-shrink-0 mt-0.5" />
+            <p className="text-xs text-gray-900 dark:text-text-primary font-medium">
+              {currentExplanation}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Auto-Calculate Section */}
+      {showAutoCalculate && calculationSteps.length > 0 && (
+        <div className="mb-4 p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-500/10 dark:to-emerald-500/10 rounded-lg border border-green-200 dark:border-green-500/30">
+          <div className="flex items-center space-x-2 mb-3">
+            <Zap className="h-4 w-4 text-accent-green" />
+            <span className="text-xs font-semibold text-gray-900 dark:text-text-primary uppercase tracking-wide">
+              Auto-Calculate (Failsafe Training Mode)
+            </span>
+          </div>
+          <p className="text-xs text-gray-600 dark:text-text-secondary mb-3">
+            This shows the calculation steps automatically. Use this if the system is down or for quick verification.
+          </p>
+          <div className="space-y-2">
+            {calculationSteps.map((calcStep, index) => (
+              <div
+                key={index}
+                className={`p-2 rounded border transition-all ${
+                  index < currentCalculationStep
+                    ? 'bg-green-100 dark:bg-green-500/20 border-green-300 dark:border-green-500/40'
+                    : index === currentCalculationStep
+                    ? 'bg-accent-green/20 border-accent-green animate-pulse'
+                    : 'bg-gray-50 dark:bg-dark-700 border-gray-200 dark:border-dark-600 opacity-50'
+                }`}
+              >
+                <div className="flex justify-between items-center">
+                  <span className="text-xs font-medium text-gray-700 dark:text-text-secondary">
+                    {calcStep.step}:
+                  </span>
+                  <span className="text-sm font-bold font-mono text-gray-900 dark:text-text-primary">
+                    {typeof calcStep.value === 'number'
+                      ? resultFormat === 'percentage'
+                        ? `${calcStep.value.toFixed(2)}%`
+                        : resultFormat === 'currency'
+                        ? calcStep.value.toLocaleString('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0 })
+                        : calcStep.value.toLocaleString('en-AU')
+                      : calcStep.value}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Button Sequence Instructions */}
       <div className="mb-4">
@@ -240,19 +390,24 @@ export default function FormulaDemo({
       {/* Live Calculator */}
       <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-600">
         <p className="text-xs font-semibold text-gray-600 dark:text-text-secondary mb-4 uppercase tracking-wide">
-          Live Calculator Demo:
+          Live Calculator Demo (Keys will light up as pressed):
         </p>
         <div className="flex justify-center">
-          <div className="scale-90 origin-center">
+          <div className="scale-90 origin-center relative">
             <NeumorphicCalculator 
               ref={calculatorRef}
               onValueChange={() => {}}
               currentValue={0}
+              highlightedButton={highlightedButton}
             />
+            {highlightedButton && (
+              <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-accent-orange text-white text-xs px-3 py-1 rounded-full shadow-lg animate-bounce whitespace-nowrap">
+                Pressing: {highlightedButton}
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
 }
-

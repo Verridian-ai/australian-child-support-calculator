@@ -1,0 +1,312 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-dark-900 text-text-primary;
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    line-height: 1.5;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    /* Keep opacity and color transitions for UX clarity */
+    *:where(:not(.no-transition)) {
+      transition-property: opacity, color, background-color, border-color;
+      transition-duration: 150ms;
+    }
+  }
+}
+
+@layer components {
+  /* Glassmorphic Panel Component - Enhanced Government Styling */
+  .glass-panel {
+    @apply bg-dark-700 border border-dark-600 backdrop-blur-md;
+    @apply shadow-glass-md rounded-lg p-8;
+    background: linear-gradient(135deg, rgba(30, 37, 48, 0.8), rgba(42, 51, 67, 0.6));
+  }
+
+  .glass-panel-sm {
+    @apply bg-dark-700 border border-dark-600 backdrop-blur-md;
+    @apply shadow-glass-sm rounded-md p-6;
+    background: linear-gradient(135deg, rgba(30, 37, 48, 0.8), rgba(42, 51, 67, 0.6));
+  }
+
+  .glass-panel-lg {
+    @apply bg-dark-700 border border-dark-600 backdrop-blur-md;
+    @apply shadow-glass-lg rounded-xl p-8;
+    background: linear-gradient(135deg, rgba(30, 37, 48, 0.8), rgba(42, 51, 67, 0.6));
+  }
+
+  /* Enhanced Neumorphic Button Components - Government App Style */
+  .neumorphic-btn {
+    @apply bg-dark-600 text-text-primary font-medium;
+    @apply shadow-neumorphic-raised rounded-2xl px-6 py-4;
+    @apply transition-all duration-fast ease-standard;
+    @apply hover:shadow-neumorphic-raised;
+    @apply active:shadow-neumorphic-pressed active:scale-98;
+    @apply focus:outline-none focus:ring-2 focus:ring-accent-teal;
+    @apply border border-dark-500;
+    min-height: 52px;
+    position: relative;
+  }
+
+  .neumorphic-btn::before {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+    border-radius: inherit;
+    z-index: -1;
+  }
+
+  .neumorphic-btn-operator {
+    @apply bg-dark-700 text-accent-orange font-semibold;
+    @apply shadow-neumorphic-operator rounded-2xl px-6 py-4;
+    @apply transition-all duration-fast ease-standard;
+    @apply hover:shadow-neumorphic-operator;
+    @apply active:shadow-neumorphic-operator-pressed active:scale-98;
+    @apply focus:outline-none focus:ring-2 focus:ring-accent-orange;
+    @apply border border-accent-orange border-opacity-30;
+    min-height: 52px;
+  }
+
+  .neumorphic-btn-operator::before {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.03), rgba(255, 107, 53, 0.01));
+    border-radius: inherit;
+    z-index: -1;
+  }
+
+  .neumorphic-btn-accent {
+    @apply bg-dark-700 text-accent-teal font-semibold;
+    @apply shadow-neumorphic-accent rounded-2xl px-6 py-4;
+    @apply transition-all duration-fast ease-standard;
+    @apply hover:shadow-neumorphic-accent;
+    @apply active:shadow-neumorphic-pressed active:scale-98;
+    @apply focus:outline-none focus:ring-2 focus:ring-accent-teal;
+    @apply border border-accent-teal border-opacity-30;
+    min-height: 52px;
+  }
+
+  .neumorphic-btn-primary {
+    @apply neumorphic-btn-accent;
+    @apply border-2 border-accent-green text-accent-green;
+    @apply hover:text-accent-green/80;
+  }
+
+  /* Input Field Component */
+  .input-field {
+    @apply bg-dark-800 border border-dark-400 rounded-md px-3 py-3;
+    @apply text-text-primary placeholder-text-tertiary;
+    @apply focus:border-2 focus:border-primary-500 focus:outline-none;
+    @apply transition-colors duration-base ease-standard;
+    min-height: 48px;
+  }
+
+  .input-field-error {
+    @apply input-field border-2 border-semantic-error;
+  }
+
+  .input-field-currency {
+    @apply input-field font-mono text-lg text-right;
+  }
+
+  /* Calculation Step Card */
+  .step-card {
+    @apply glass-panel-sm rounded-lg;
+    @apply transition-all duration-base ease-standard;
+    @apply hover:bg-glass-hover;
+  }
+
+  .step-card-expanded {
+    @apply shadow-glass-md;
+  }
+
+  .step-card-active {
+    @apply border-l-4 border-primary-500;
+  }
+
+  /* Alert Banner */
+  .alert-warning {
+    @apply bg-semantic-warning bg-opacity-10 border border-semantic-warning;
+    @apply backdrop-blur-sm rounded-lg p-4;
+  }
+
+  .alert-info {
+    @apply bg-semantic-info bg-opacity-10 border border-semantic-info;
+    @apply backdrop-blur-sm rounded-lg p-4;
+  }
+
+  .alert-success {
+    @apply bg-semantic-success bg-opacity-10 border border-semantic-success;
+    @apply backdrop-blur-sm rounded-lg p-4;
+  }
+
+  /* Data Table */
+  .data-table {
+    @apply glass-panel;
+    @apply overflow-hidden;
+  }
+
+  .data-table-row {
+    @apply border-b border-dark-400 hover:bg-glass-hover;
+    @apply transition-colors duration-base ease-standard;
+    min-height: 56px;
+  }
+
+  .data-table-header {
+    @apply bg-dark-600 bg-opacity-30;
+    @apply text-xs font-semibold text-text-secondary uppercase tracking-wide;
+  }
+
+  /* Animation Utilities */
+  .animate-slide-down {
+    animation: slideDown 400ms ease-decelerate forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 250ms ease-accelerate forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 150ms ease-standard forwards;
+  }
+
+  .animate-pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  /* Custom animation keyframes */
+  @keyframes slideDown {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.7);
+    }
+  }
+
+  /* Scale utilities for neumorphic buttons */
+  .scale-98 {
+    transform: scale(0.98);
+  }
+
+  .scale-95 {
+    transform: scale(0.95);
+  }
+
+  .scale-102 {
+    transform: scale(1.02);
+  }
+
+  /* Backdrop filter utilities */
+  .backdrop-blur-md {
+    backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  .backdrop-blur-lg {
+    backdrop-filter: blur(40px) saturate(180%);
+  }
+
+  .backdrop-blur-sm {
+    backdrop-filter: blur(12px) saturate(180%);
+  }
+
+  /* Focus utilities */
+  .focus-visible-primary {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+
+  /* Typography utilities */
+  .text-calculator-display {
+    @apply font-mono text-4xl font-bold text-text-primary tracking-tight;
+  }
+
+  .text-formula {
+    @apply font-mono text-sm bg-dark-800 p-3 rounded-md;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(26, 32, 44, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(107, 114, 128, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.7);
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(0, 102, 255, 0.3);
+  color: #F8FAFC;
+}

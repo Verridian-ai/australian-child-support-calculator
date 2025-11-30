@@ -1,6 +1,7 @@
 import React from 'react';
 import { DollarSign, HelpCircle } from 'lucide-react';
 import { ChildSupportInputs, formatCurrency } from '../../lib/calculator';
+import FormulaDemo from '../FormulaDemo';
 
 interface CurrentWageProps {
   inputs: ChildSupportInputs;
@@ -37,6 +38,16 @@ export function CurrentWage({ inputs, onChange, onShowGuide }: CurrentWageProps)
           </button>
         )}
       </div>
+
+      {/* Formula Demo for 15% Reduction Threshold */}
+      <FormulaDemo
+        title="15% Reduction Threshold Calculation"
+        formula="15% Reduction Threshold = Current Annual Wage × 0.85"
+        buttonSequence={["9", "7", "0", "0", "0", "×", "0", ".", "8", "5", "="]}
+        exampleValues={{ "Current Annual Wage": 97000, "Multiplier": 0.85 }}
+        explanation="Multiply the current annual wage ($97,000) by 0.85 (which represents 85% or 100% minus 15%). This gives you the threshold amount ($82,450). If a parent's new reported wage falls below this threshold, the 15% rule is met and reassessment can proceed."
+        result={97000 * 0.85}
+      />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">

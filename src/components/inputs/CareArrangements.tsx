@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar, HelpCircle } from 'lucide-react';
 import { ChildSupportInputs } from '../../lib/calculator';
+import FormulaDemo from '../FormulaDemo';
 
 interface CareArrangementsProps {
   inputs: ChildSupportInputs;
@@ -30,6 +31,16 @@ export function CareArrangements({ inputs, onChange, onShowGuide }: CareArrangem
           </button>
         )}
       </div>
+
+      {/* Formula Demo for Care Percentage */}
+      <FormulaDemo
+        title="Step 4: Care Percentage Calculation"
+        formula="Care Percentage = (Nights of Care ÷ 365) × 100"
+        buttonSequence={["2", "9", "0", "÷", "3", "6", "5", "×", "1", "0", "0", "="]}
+        exampleValues={{ "Parent A Nights": 290, "Days per Year": 365 }}
+        explanation="To calculate Parent A's care percentage: Divide care nights (290) by 365 days, then multiply by 100. Result: 79.45%. Repeat for Parent B using their care nights. The sum of both percentages should equal 100%."
+        result={Math.round((290 / 365) * 100 * 100) / 100}
+      />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Users, HelpCircle } from 'lucide-react';
 import { ChildSupportInputs } from '../../lib/calculator';
+import FormulaDemo from '../FormulaDemo';
 
 interface ParentIncomesProps {
   inputs: ChildSupportInputs;
@@ -30,6 +31,16 @@ export function ParentIncomes({ inputs, onChange, onShowGuide }: ParentIncomesPr
           </button>
         )}
       </div>
+
+      {/* Formula Demo for Child Support Income */}
+      <FormulaDemo
+        title="Step 1: Child Support Income (Parent A)"
+        formula="Child Support Income = Adjusted Taxable Income - Self-Support Amount ($29,841)"
+        buttonSequence={["5", "0", "0", "0", "0", "-", "2", "9", "8", "4", "1", "="]}
+        exampleValues={{ "Parent A ATI": 50000, "Self-Support Amount": 29841 }}
+        explanation="Enter Parent A's income ($50,000) and subtract the self-support amount ($29,841) to get Child Support Income. Result: $20,159. Repeat the same calculation for Parent B with their income amount."
+        result={50000 - 29841}
+      />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">

@@ -71,7 +71,7 @@ export default function CalculationHistory({ calculations, onLoadCalculation }: 
             {/* Summary */}
             <div className="space-y-3">
               {/* Date */}
-              <div className="flex items-center space-x-2 text-xs text-text-tertiary">
+              <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-text-tertiary">
                 <Clock className="h-3 w-3" />
                 <span>{formatDate(calculation.timestamp)}</span>
               </div>
@@ -80,28 +80,28 @@ export default function CalculationHistory({ calculations, onLoadCalculation }: 
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <div className="flex items-center space-x-1 mb-1">
-                    <User className="h-3 w-3 text-text-secondary" />
-                    <span className="text-xs text-text-secondary">Combined Income</span>
+                    <User className="h-3 w-3 text-gray-600 dark:text-text-secondary" />
+                    <span className="text-xs text-gray-600 dark:text-text-secondary">Combined Income</span>
                   </div>
-                  <p className="text-sm font-mono text-text-primary">
+                  <p className="text-sm font-mono text-gray-900 dark:text-text-primary">
                     {formatCurrency(calculation.inputs.parentA_ATI + calculation.inputs.parentB_ATI)}
                   </p>
                 </div>
                 <div>
                   <div className="flex items-center space-x-1 mb-1">
-                    <Baby className="h-3 w-3 text-text-secondary" />
-                    <span className="text-xs text-text-secondary">Children</span>
+                    <Baby className="h-3 w-3 text-gray-600 dark:text-text-secondary" />
+                    <span className="text-xs text-gray-600 dark:text-text-secondary">Children</span>
                   </div>
-                  <p className="text-sm text-text-primary">
+                  <p className="text-sm text-gray-900 dark:text-text-primary">
                     {calculation.inputs.numberOfChildren} child{calculation.inputs.numberOfChildren !== 1 ? 'ren' : ''}
                   </p>
                 </div>
               </div>
 
               {/* Result */}
-              <div className="p-3 bg-dark-800 bg-opacity-50 rounded-md border border-dark-600">
+              <div className="p-3 bg-white dark:bg-dark-800 bg-opacity-50 dark:bg-opacity-50 rounded-md border border-gray-200 dark:border-dark-600">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-text-secondary">Annual Amount</span>
+                  <span className="text-xs text-gray-600 dark:text-text-secondary">Annual Amount</span>
                   <span className="text-lg font-bold text-primary-500 font-mono">
                     {formatCurrency(calculation.result.finalAmount)}
                   </span>
@@ -109,10 +109,10 @@ export default function CalculationHistory({ calculations, onLoadCalculation }: 
               </div>
 
               {/* Expand/Collapse Button */}
-              <div className="flex items-center justify-between pt-2 border-t border-dark-600">
+              <div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-dark-600">
                 <div className="flex items-center space-x-2">
-                  <Eye className="h-4 w-4 text-text-tertiary" />
-                  <span className="text-sm text-text-tertiary">
+                  <Eye className="h-4 w-4 text-gray-500 dark:text-text-tertiary" />
+                  <span className="text-sm text-gray-500 dark:text-text-tertiary">
                     {selectedCalculation === calculation.id ? 'Hide' : 'View'} Details
                   </span>
                 </div>
@@ -130,34 +130,34 @@ export default function CalculationHistory({ calculations, onLoadCalculation }: 
 
             {/* Expanded Details */}
             {selectedCalculation === calculation.id && (
-              <div className="mt-4 pt-4 border-t border-dark-400 animate-fade-in space-y-4">
+              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-400 animate-fade-in space-y-4">
                 {/* Inputs Summary */}
                 <div>
-                  <h5 className="text-sm font-semibold text-text-secondary uppercase tracking-wide mb-2">
+                  <h5 className="text-sm font-semibold text-gray-600 dark:text-text-secondary uppercase tracking-wide mb-2">
                     Calculation Inputs
                   </h5>
                   <div className="grid grid-cols-1 gap-2 text-xs">
                     <div className="flex justify-between">
-                      <span className="text-text-tertiary">Parent A Income:</span>
-                      <span className="text-text-primary font-mono">
+                      <span className="text-gray-500 dark:text-text-tertiary">Parent A Income:</span>
+                      <span className="text-gray-900 dark:text-text-primary font-mono">
                         {formatCurrency(calculation.inputs.parentA_ATI)}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-text-tertiary">Parent B Income:</span>
-                      <span className="text-text-primary font-mono">
+                      <span className="text-gray-500 dark:text-text-tertiary">Parent B Income:</span>
+                      <span className="text-gray-900 dark:text-text-primary font-mono">
                         {formatCurrency(calculation.inputs.parentB_ATI)}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-text-tertiary">Care Nights (A/B):</span>
-                      <span className="text-text-primary">
+                      <span className="text-gray-500 dark:text-text-tertiary">Care Nights (A/B):</span>
+                      <span className="text-gray-900 dark:text-text-primary">
                         {calculation.inputs.parentA_CareNights} / {calculation.inputs.parentB_CareNights}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-text-tertiary">Children Ages:</span>
-                      <span className="text-text-primary">
+                      <span className="text-gray-500 dark:text-text-tertiary">Children Ages:</span>
+                      <span className="text-gray-900 dark:text-text-primary">
                         {calculation.inputs.childrenAges.join(', ')}
                       </span>
                     </div>
@@ -166,31 +166,31 @@ export default function CalculationHistory({ calculations, onLoadCalculation }: 
 
                 {/* Results Breakdown */}
                 <div>
-                  <h5 className="text-sm font-semibold text-text-secondary uppercase tracking-wide mb-2">
+                  <h5 className="text-sm font-semibold text-gray-600 dark:text-text-secondary uppercase tracking-wide mb-2">
                     Results Breakdown
                   </h5>
                   <div className="grid grid-cols-1 gap-2 text-xs">
                     <div className="flex justify-between">
-                      <span className="text-text-tertiary">Combined Income:</span>
-                      <span className="text-text-primary font-mono">
+                      <span className="text-gray-500 dark:text-text-tertiary">Combined Income:</span>
+                      <span className="text-gray-900 dark:text-text-primary font-mono">
                         {formatCurrency(calculation.inputs.parentA_ATI + calculation.inputs.parentB_ATI)}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-text-tertiary">Total COTC:</span>
-                      <span className="text-text-primary font-mono">
+                      <span className="text-gray-500 dark:text-text-tertiary">Total COTC:</span>
+                      <span className="text-gray-900 dark:text-text-primary font-mono">
                         {formatCurrency(calculation.result.steps[6].value)}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-text-tertiary">Per Child (Annual):</span>
-                      <span className="text-text-primary font-mono">
+                      <span className="text-gray-500 dark:text-text-tertiary">Per Child (Annual):</span>
+                      <span className="text-gray-900 dark:text-text-primary font-mono">
                         {formatCurrency(calculation.result.finalAmount / calculation.inputs.numberOfChildren)}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-text-tertiary">Offset Applied:</span>
-                      <span className="text-text-primary">
+                      <span className="text-gray-500 dark:text-text-tertiary">Offset Applied:</span>
+                      <span className="text-gray-900 dark:text-text-primary">
                         {calculation.result.offsetApplied ? 'Yes' : 'No'}
                       </span>
                     </div>
@@ -199,14 +199,14 @@ export default function CalculationHistory({ calculations, onLoadCalculation }: 
 
                 {/* Key Calculation Steps */}
                 <div>
-                  <h5 className="text-sm font-semibold text-text-secondary uppercase tracking-wide mb-2">
+                  <h5 className="text-sm font-semibold text-gray-600 dark:text-text-secondary uppercase tracking-wide mb-2">
                     Key Steps
                   </h5>
                   <div className="space-y-2">
                     {calculation.result.steps.slice(0, 3).map((step) => (
                       <div key={step.stepNumber} className="flex items-center justify-between text-xs">
-                        <span className="text-text-tertiary">{step.title}:</span>
-                        <span className="text-text-primary font-mono">
+                        <span className="text-gray-500 dark:text-text-tertiary">{step.title}:</span>
+                        <span className="text-gray-900 dark:text-text-primary font-mono">
                           {step.stepNumber === 3 
                             ? `${step.value.toFixed(1)}%`
                             : formatCurrency(step.value)
@@ -215,7 +215,7 @@ export default function CalculationHistory({ calculations, onLoadCalculation }: 
                       </div>
                     ))}
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-text-tertiary">Final Amount:</span>
+                      <span className="text-gray-500 dark:text-text-tertiary">Final Amount:</span>
                       <span className="text-primary-500 font-bold">
                         {formatCurrency(calculation.result.finalAmount)}
                       </span>
@@ -230,23 +230,23 @@ export default function CalculationHistory({ calculations, onLoadCalculation }: 
 
       {/* History Stats */}
       {calculations.length > 0 && (
-        <div className="pt-4 border-t border-dark-600">
+        <div className="pt-4 border-t border-gray-200 dark:border-dark-600">
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <p className="text-xs text-text-tertiary">Total Saved</p>
-              <p className="text-sm font-semibold text-text-primary">
+              <p className="text-xs text-gray-500 dark:text-text-tertiary">Total Saved</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-text-primary">
                 {calculations.length}
               </p>
             </div>
             <div>
-              <p className="text-xs text-text-tertiary">Latest Amount</p>
-              <p className="text-sm font-semibold text-text-primary">
+              <p className="text-xs text-gray-500 dark:text-text-tertiary">Latest Amount</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-text-primary">
                 {formatCurrency(calculations[calculations.length - 1]?.result.finalAmount || 0)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-text-tertiary">Average Amount</p>
-              <p className="text-sm font-semibold text-text-primary">
+              <p className="text-xs text-gray-500 dark:text-text-tertiary">Average Amount</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-text-primary">
                 {formatCurrency(
                   calculations.reduce((sum, calc) => sum + calc.result.finalAmount, 0) / calculations.length
                 )}

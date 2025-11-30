@@ -10,46 +10,53 @@ export default function NeumorphicCalculator({ onValueChange, currentValue = 0 }
   const [display, setDisplay] = useState(currentValue.toString());
   const [operator, setOperator] = useState<string | null>(null);
   const [previousValue, setPreviousValue] = useState<number | null>(null);
+  const [waitingForNewOperand, setWaitingForNewOperand] = useState<boolean>(false);
+
+  const calculate = (prev: number, curr: number, op: string): number => {
+    switch (op) {
+      case '+': return prev + curr;
+      case '-': return prev - curr;
+      case '×': return prev * curr;
+      case '÷': return curr !== 0 ? prev / curr : 0;
+      default: return curr;
+    }
+  };
 
   const handleNumber = (num: string) => {
-    if (display === '0') {
+    if (waitingForNewOperand) {
       setDisplay(num);
+      setWaitingForNewOperand(false);
     } else {
-      setDisplay(display + num);
+      if (display === '0') {
+        setDisplay(num);
+      } else {
+        setDisplay(display + num);
+      }
     }
   };
 
   const handleOperator = (op: string) => {
-    setPreviousValue(parseFloat(display));
-    setDisplay('0');
+    if (operator && !waitingForNewOperand && previousValue !== null) {
+      const current = parseFloat(display);
+      const result = calculate(previousValue, current, operator);
+      setDisplay(result.toString());
+      setPreviousValue(result);
+    } else {
+      setPreviousValue(parseFloat(display));
+    }
     setOperator(op);
+    setWaitingForNewOperand(true);
   };
 
   const handleEquals = () => {
     if (previousValue !== null && operator) {
       const current = parseFloat(display);
-      let result = 0;
-
-      switch (operator) {
-        case '+':
-          result = previousValue + current;
-          break;
-        case '-':
-          result = previousValue - current;
-          break;
-        case '×':
-          result = previousValue * current;
-          break;
-        case '÷':
-          result = current !== 0 ? previousValue / current : 0;
-          break;
-        default:
-          return;
-      }
+      const result = calculate(previousValue, current, operator);
 
       setDisplay(result.toString());
       setOperator(null);
       setPreviousValue(null);
+      setWaitingForNewOperand(true);
       
       // Notify parent component
       onValueChange(result);
@@ -60,80 +67,122 @@ export default function NeumorphicCalculator({ onValueChange, currentValue = 0 }
     setDisplay('0');
     setOperator(null);
     setPreviousValue(null);
+    setWaitingForNewOperand(false);
   };
 
-  const renderOperatorButton = (icon: React.ReactNode, label: string, onClick: () => void) => (
-    <button
-      onClick={onClick}
-      className="neumorphic-btn-operator flex flex-col items-center justify-center aspect-square text-sm"
-    >
-      {icon}
-      <span className="text-xs mt-1 font-semibold">{label}</span>
-    </button>
-  );
+  const handleBackspace = () => {
+    if (waitingForNewOperand) return;
+    
+    if (display.length > 1) {
+      setDisplay(display.slice(0, -1));
+    } else {
+      setDisplay('0');
+    }
+  };
 
-  const renderNumberButton = (num: string, onClick: () => void, className: string = '') => (
+  const renderButton = (
+    label: string | React.ReactNode,
+    onClick: () => void,
+    bgColor: string = 'bg-gray-100 dark:bg-gray-700',
+    textColor: string = 'text-gray-900 dark:text-gray-100',
+    className: string = '',
+    textSize: string = 'text-lg'
+  ) => (
     <button
       onClick={onClick}
-      className={`neumorphic-btn flex items-center justify-center text-xl font-mono ${className}`}
+      className={`
+        ${bgColor} ${textColor} ${textSize} font-semibold
+        rounded-md shadow-[0_3px_0_rgba(0,0,0,0.2),0_4px_4px_rgba(0,0,0,0.1)] 
+        active:shadow-[0_1px_0_rgba(0,0,0,0.2)] active:translate-y-[2px]
+        flex items-center justify-center
+        transition-all duration-100
+        border-t border-white/80 border-b border-black/10
+        dark:border-white/10 dark:border-black/30
+        ${className}
+      `}
     >
-      {num}
+      {label}
     </button>
   );
 
   return (
-    <div className="glass-panel-sm bg-dark-800 bg-opacity-80 border border-dark-600">
-      <div className="mb-4">
-        <div className="flex items-center space-x-2 mb-2">
-          <Calculator className="h-5 w-5 text-accent-teal" />
-          <h3 className="text-sm font-semibold text-accent-teal uppercase tracking-wide">
-            Calculator Interface
-          </h3>
-        </div>
+    <div className="flex justify-center perspective-1000">
+      {/* Calculator Body */}
+      <div className="bg-gradient-to-b from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 p-5 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.3),0_10px_20px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.5)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5),0_10px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)] w-full max-w-[340px] border border-gray-400/50 dark:border-gray-700/50 relative overflow-hidden transform transition-transform hover:scale-[1.01] duration-500">
         
-        {/* Display */}
-        <div className="neumorphic-btn bg-dark-700 h-16 flex items-center justify-end px-6 mb-4">
-          <span className="text-2xl font-mono text-text-primary">
-            {display}
-          </span>
+        {/* Top Blue Bezel with 3D effect */}
+        <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-[#1e4b8f] to-[#163a6f] rounded-t-[22px] z-0 shadow-md">
+          <div className="flex justify-between items-start p-5">
+            <div className="text-white font-serif font-bold text-xl tracking-wide italic drop-shadow-md">Canon</div>
+            <div className="text-white/90 text-xs font-sans font-medium">LS-100TS</div>
+          </div>
+          {/* Solar Panel with realistic reflection */}
+          <div className="absolute top-5 right-5 w-20 h-8 bg-[#2a2a2a] rounded border border-gray-600/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] overflow-hidden">
+            <div className="w-full h-full grid grid-cols-4 gap-[1px] opacity-80">
+              {[1,2,3,4].map(i => <div key={i} className="bg-[#3a2a2a]"></div>)}
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none"></div>
+          </div>
         </div>
-      </div>
 
-      {/* Button Grid */}
-      <div className="grid grid-cols-4 gap-3">
-        {/* Row 1 */}
-        {renderOperatorButton(<Delete className="h-5 w-5" />, 'Clear', handleClear)}
-        {renderOperatorButton(<Divide className="h-5 w-5" />, '÷', () => handleOperator('÷'))}
-        {renderOperatorButton(<X className="h-5 w-5" />, '×', () => handleOperator('×'))}
-        {renderOperatorButton(<Minus className="h-5 w-5" />, '-', () => handleOperator('-'))}
+        {/* Display Area with Bevel */}
+        <div className="relative z-10 mt-20 mb-8">
+          <div className="bg-[#9ea792] p-1 rounded-lg border border-gray-400 shadow-[inset_0_2px_6px_rgba(0,0,0,0.2),0_1px_0_rgba(255,255,255,0.3)]">
+            <div className="bg-[#c8cfc0] h-20 rounded flex flex-col relative shadow-inner overflow-hidden">
+              <div className="absolute top-1 left-2 text-[10px] text-black/60 font-mono">M</div>
+              <div className="flex-1 flex items-center justify-end px-3">
+                <div className="text-right text-5xl font-mono tracking-widest text-black/90 drop-shadow-sm overflow-hidden whitespace-nowrap">
+                  {display}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="text-center text-[#1e4b8f] dark:text-blue-400 text-xs font-bold mt-2 tracking-widest uppercase drop-shadow-[0_1px_0_rgba(255,255,255,0.5)]">Tax & Business</div>
+        </div>
 
-        {/* Row 2 */}
-        {renderNumberButton('7', () => handleNumber('7'))}
-        {renderNumberButton('8', () => handleNumber('8'))}
-        {renderNumberButton('9', () => handleNumber('9'))}
-        {renderOperatorButton(<Plus className="h-5 w-5" />, '+', () => handleOperator('+'))}
+        {/* Keypad */}
+        <div className="relative z-10 grid grid-cols-5 gap-3">
+          {/* Row 1: Tax/Rate buttons */}
+          {renderButton('TAX+', () => {}, 'bg-[#4a7bb5]', 'text-white', 'text-[10px]', 'text-[10px]')}
+          {renderButton('TAX-', () => {}, 'bg-[#4a7bb5]', 'text-white', 'text-[10px]', 'text-[10px]')}
+          {renderButton('RATE', () => {}, 'bg-[#4a7bb5]', 'text-white', 'text-[10px]', 'text-[10px]')}
+          <div className="col-span-2"></div> 
 
-        {/* Row 3 */}
-        {renderNumberButton('4', () => handleNumber('4'))}
-        {renderNumberButton('5', () => handleNumber('5'))}
-        {renderNumberButton('6', () => handleNumber('6'))}
-        {renderNumberButton('.', () => handleNumber('.'), 'row-span-2')}
+          {/* Row 2: Red/Pink Function Keys + Memory */}
+          {renderButton('CI/C', handleClear, 'bg-[#b95e6d]', 'text-white', '', 'text-xs')}
+          {renderButton('→', handleBackspace, 'bg-[#b95e6d]', 'text-white', '', 'text-lg')}
+          {renderButton('RM/CM', () => {}, 'bg-[#b95e6d]', 'text-white', '', 'text-[10px]')}
+          {renderButton('M+', () => {}, 'bg-gray-400 dark:bg-gray-600', 'text-white', '', 'text-xs')}
+          {renderButton('M-', () => {}, 'bg-gray-400 dark:bg-gray-600', 'text-white', '', 'text-xs')}
 
-        {/* Row 4 */}
-        {renderNumberButton('1', () => handleNumber('1'))}
-        {renderNumberButton('2', () => handleNumber('2'))}
-        {renderNumberButton('3', () => handleNumber('3'))}
+          {/* Row 3 */}
+          {renderButton('7', () => handleNumber('7'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('8', () => handleNumber('8'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('9', () => handleNumber('9'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('%±', () => {}, 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-sm')}
+          {renderButton('√', () => {}, 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-lg')}
 
-        {/* Row 5 */}
-        {renderNumberButton('0', () => handleNumber('0'), 'col-span-2')}
-        {renderOperatorButton(<Equal className="h-5 w-5" />, '=', handleEquals)}
-      </div>
+          {/* Row 4 */}
+          {renderButton('4', () => handleNumber('4'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('5', () => handleNumber('5'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('6', () => handleNumber('6'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton(<X className="h-4 w-4" />, '×', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton(<Divide className="h-4 w-4" />, '÷', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
 
-      {/* Helper Text */}
-      <div className="mt-4 p-3 bg-dark-900 bg-opacity-50 rounded-lg border border-dark-700">
-        <p className="text-xs text-text-tertiary leading-relaxed">
-          <span className="text-accent-teal font-medium">Neumorphic Design:</span> Buttons appear pressed into the surface with soft shadows and highlights, creating a tactile 3D experience.
-        </p>
+          {/* Row 5 */}
+          {renderButton('1', () => handleNumber('1'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('2', () => handleNumber('2'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('3', () => handleNumber('3'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton(<Plus className="h-5 w-5" />, '+', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', 'row-span-2 h-full', 'text-xl')}
+          {renderButton(<Minus className="h-5 w-5" />, '-', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
+
+          {/* Row 6 */}
+          {renderButton('0', () => handleNumber('0'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('.', () => handleNumber('.'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton('±', () => {}, 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-lg')}
+          {/* + occupied by rowspan */}
+          {renderButton(<Equal className="h-5 w-5" />, '=', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
+        </div>
       </div>
     </div>
   );

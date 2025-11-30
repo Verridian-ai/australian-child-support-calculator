@@ -1,7 +1,10 @@
 import React from 'react';
-import { Users, Baby, Calendar, DollarSign, Calculator } from 'lucide-react';
-import { formatCurrency } from '../lib/calculator';
-import type { ChildSupportInputs, ChildSupportResult } from '../lib/calculator';
+import { Calculator } from 'lucide-react';
+import { ChildSupportInputs, ChildSupportResult, formatCurrency } from '../lib/calculator';
+import { ParentIncomes } from './inputs/ParentIncomes';
+import { ChildrenDetails } from './inputs/ChildrenDetails';
+import { CareArrangements } from './inputs/CareArrangements';
+import { CurrentWage } from './inputs/CurrentWage';
 
 interface CalculatorInputsProps {
   inputs: ChildSupportInputs;
@@ -20,251 +23,50 @@ export default function CalculatorInputs({
     onChange({ [field]: value });
   };
 
-  const calculateWageThreshold = () => {
-    if (inputs.currentWage) {
-      return inputs.currentWage * 0.85; // 15% reduction threshold
-    }
-    return 0;
-  };
-
   return (
-    <div className="space-y-8">
-      {/* Parent Incomes */}
-      <div>
-        <div className="flex items-center space-x-2 mb-4">
-          <Users className="h-5 w-5 text-primary-500" />
-          <h3 className="text-lg font-medium text-text-primary">
-            Parent Incomes (Adjusted Taxable Income)
-          </h3>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              Parent A Income
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span className="text-text-tertiary">$</span>
-              </div>
-              <input
-                type="number"
-                value={inputs.parentA_ATI || ''}
-                onChange={(e) => handleInputChange('parentA_ATI', parseFloat(e.target.value) || 0)}
-                className="input-field pl-7 w-full"
-                placeholder="50,000"
-                min="0"
-                step="1000"
-              />
-            </div>
-            <p className="text-xs text-text-tertiary mt-1">
-              Annual income after deductions
-            </p>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              Parent B Income
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span className="text-text-tertiary">$</span>
-              </div>
-              <input
-                type="number"
-                value={inputs.parentB_ATI || ''}
-                onChange={(e) => handleInputChange('parentB_ATI', parseFloat(e.target.value) || 0)}
-                className="input-field pl-7 w-full"
-                placeholder="60,000"
-                min="0"
-                step="1000"
-              />
-            </div>
-            <p className="text-xs text-text-tertiary mt-1">
-              Annual income after deductions
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Children Details */}
-      <div>
-        <div className="flex items-center space-x-2 mb-4">
-          <Baby className="h-5 w-5 text-primary-500" />
-          <h3 className="text-lg font-medium text-text-primary">
-            Children Details
-          </h3>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              Number of Children
-            </label>
-            <input
-              type="number"
-              value={inputs.numberOfChildren || ''}
-              onChange={(e) => handleInputChange('numberOfChildren', parseInt(e.target.value) || 0)}
-              className="input-field w-full"
-              placeholder="3"
-              min="1"
-              max="10"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              Children's Ages
-            </label>
-            <input
-              type="text"
-              value={inputs.childrenAges.join(', ')}
-              onChange={(e) => {
-                const ages = e.target.value
-                  .split(',')
-                  .map(age => parseInt(age.trim()))
-                  .filter(age => !isNaN(age) && age >= 0);
-                handleInputChange('childrenAges', ages);
-              }}
-              className="input-field w-full"
-              placeholder="9, 7, 5"
-            />
-            <p className="text-xs text-text-tertiary mt-1">
-              Separate with commas
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Care Arrangements */}
-      <div>
-        <div className="flex items-center space-x-2 mb-4">
-          <Calendar className="h-5 w-5 text-primary-500" />
-          <h3 className="text-lg font-medium text-text-primary">
-            Annual Care Nights
-          </h3>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              Parent A Care Nights
-            </label>
-            <input
-              type="number"
-              value={inputs.parentA_CareNights || ''}
-              onChange={(e) => handleInputChange('parentA_CareNights', parseInt(e.target.value) || 0)}
-              className="input-field w-full"
-              placeholder="290"
-              min="0"
-              max="365"
-            />
-            <p className="text-xs text-text-tertiary mt-1">
-              Out of 365 days per year
-            </p>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              Parent B Care Nights
-            </label>
-            <input
-              type="number"
-              value={inputs.parentB_CareNights || ''}
-              onChange={(e) => handleInputChange('parentB_CareNights', parseInt(e.target.value) || 0)}
-              className="input-field w-full"
-              placeholder="75"
-              min="0"
-              max="365"
-            />
-            <p className="text-xs text-text-tertiary mt-1">
-              Out of 365 days per year
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Current Wage */}
-      <div>
-        <div className="flex items-center space-x-2 mb-4">
-          <DollarSign className="h-5 w-5 text-primary-500" />
-          <h3 className="text-lg font-medium text-text-primary">
-            Current Wage (for 15% threshold tracking)
-          </h3>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              Current Annual Wage
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span className="text-text-tertiary">$</span>
-              </div>
-              <input
-                type="number"
-                value={inputs.currentWage || ''}
-                onChange={(e) => handleInputChange('currentWage', parseFloat(e.target.value) || 0)}
-                className="input-field pl-7 w-full"
-                placeholder="97,000"
-                min="0"
-                step="1000"
-              />
-            </div>
-            <p className="text-xs text-text-tertiary mt-1">
-              Used for 15% reduction alerts
-            </p>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              15% Reduction Threshold
-            </label>
-            <div className="p-3 bg-dark-800 rounded-md border border-dark-400">
-              <p className="text-lg font-mono font-semibold text-text-primary">
-                {formatCurrency(calculateWageThreshold())}
-              </p>
-              <p className="text-xs text-text-tertiary">
-                Wage must drop below this for new estimate eligibility
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="space-y-6 md:space-y-8">
+      <ParentIncomes inputs={inputs} onChange={handleInputChange} />
+      <ChildrenDetails inputs={inputs} onChange={handleInputChange} />
+      <CareArrangements inputs={inputs} onChange={handleInputChange} />
+      <CurrentWage inputs={inputs} onChange={handleInputChange} />
 
       {/* Calculate Button */}
-      <div className="pt-6 border-t border-dark-600">
+      <div className="pt-4 md:pt-6 border-t border-gray-200 dark:border-dark-600 animate-fade-in" style={{ animationDelay: '400ms' }}>
         <button
           onClick={onCalculate}
-          className="neumorphic-btn-primary w-full flex items-center justify-center space-x-2"
+          className="neumorphic-btn-primary w-full flex items-center justify-center space-x-2 group py-4 active:scale-95"
         >
-          <Calculator className="h-5 w-5" />
-          <span>Calculate & Save Estimate</span>
+          <Calculator className="h-5 w-5 group-hover:scale-110 transition-transform" />
+          <span className="text-lg font-semibold">Calculate & Save Estimate</span>
         </button>
-        <p className="text-xs text-text-tertiary text-center mt-2">
+        <p className="text-xs text-gray-500 dark:text-text-tertiary text-center mt-3">
           Saves calculation to history for future reference
         </p>
       </div>
 
       {/* Quick Result Preview */}
       {result && (
-        <div className="glass-panel-sm border border-dark-600 bg-dark-800 bg-opacity-60">
-          <h4 className="text-sm font-semibold text-accent-teal uppercase tracking-wide mb-3">
+        <div className="glass-panel-sm border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800/60 animate-fade-in mt-6">
+          <h4 className="text-sm font-semibold text-accent-teal uppercase tracking-wide mb-4 flex items-center">
+            <div className="w-1.5 h-1.5 bg-accent-teal rounded-full mr-2" />
             Quick Result Preview
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-            <div className="p-3 bg-dark-700 bg-opacity-50 rounded-lg border border-dark-600">
-              <p className="text-xs text-text-tertiary">Final Annual Amount</p>
-              <p className="text-xl font-bold text-accent-orange font-mono">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+            <div className="p-4 bg-gray-50 dark:bg-dark-700/50 rounded-xl border border-gray-200 dark:border-dark-600 hover:border-accent-orange/30 transition-colors">
+              <p className="text-xs text-gray-500 dark:text-text-tertiary uppercase tracking-wider mb-1">Final Annual Amount</p>
+              <p className="text-2xl font-bold text-accent-orange font-mono">
                 {formatCurrency(result.finalAmount)}
               </p>
             </div>
-            <div className="p-3 bg-dark-700 bg-opacity-50 rounded-lg border border-dark-600">
-              <p className="text-xs text-text-tertiary">Per Child (Annual)</p>
-              <p className="text-lg font-semibold text-accent-teal font-mono">
+            <div className="p-4 bg-gray-50 dark:bg-dark-700/50 rounded-xl border border-gray-200 dark:border-dark-600 hover:border-accent-teal/30 transition-colors">
+              <p className="text-xs text-gray-500 dark:text-text-tertiary uppercase tracking-wider mb-1">Per Child (Annual)</p>
+              <p className="text-xl font-semibold text-accent-teal font-mono">
                 {formatCurrency(result.finalAmount / inputs.numberOfChildren)}
               </p>
             </div>
-            <div className="p-3 bg-dark-700 bg-opacity-50 rounded-lg border border-dark-600">
-              <p className="text-xs text-text-tertiary">Offset Applied</p>
-              <p className="text-sm font-medium text-accent-green">
+            <div className="p-4 bg-gray-50 dark:bg-dark-700/50 rounded-xl border border-gray-200 dark:border-dark-600 hover:border-accent-green/30 transition-colors">
+              <p className="text-xs text-gray-500 dark:text-text-tertiary uppercase tracking-wider mb-1">Offset Applied</p>
+              <p className="text-lg font-medium text-accent-green">
                 {result.offsetApplied ? 'Yes' : 'No'}
               </p>
             </div>

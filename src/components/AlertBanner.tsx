@@ -67,10 +67,10 @@ export default function AlertBanner({ alert, onDismiss, onCalculate }: AlertBann
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h3 className="text-base font-semibold text-text-primary">
+                  <h3 className="text-base font-semibold text-gray-900 dark:text-text-primary">
                     {alert.title}
                   </h3>
-                  <p className="mt-1 text-sm text-text-secondary">
+                  <p className="mt-1 text-sm text-gray-600 dark:text-text-secondary">
                     {alert.message}
                   </p>
                   
@@ -91,7 +91,7 @@ export default function AlertBanner({ alert, onDismiss, onCalculate }: AlertBann
                 {/* Close Button */}
                 <button
                   onClick={onDismiss}
-                  className="ml-4 flex-shrink-0 p-1 text-text-tertiary hover:text-text-primary transition-colors duration-base"
+                  className="ml-4 flex-shrink-0 p-1 text-gray-500 dark:text-text-tertiary hover:text-gray-900 dark:hover:text-text-primary transition-colors duration-base"
                 >
                   <X className="h-5 w-5" />
                 </button>

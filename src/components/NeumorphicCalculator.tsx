@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useImperativeHandle, forwardRef, useEffect } from 'react';
 import { Plus, Minus, X, Divide, Equal, Calculator, Delete } from 'lucide-react';
 
 interface NeumorphicCalculatorProps {
   onValueChange: (value: number) => void;
   currentValue?: number;
+  externalButtonPress?: string | null;
+  onButtonPressComplete?: () => void;
 }
 
-export default function NeumorphicCalculator({ onValueChange, currentValue = 0 }: NeumorphicCalculatorProps) {
+export interface CalculatorRef {
+  pressButton: (button: string) => void;
+  clear: () => void;
+  getDisplay: () => string;
+}
+
+const NeumorphicCalculator = forwardRef<CalculatorRef, NeumorphicCalculatorProps>(
+  ({ onValueChange, currentValue = 0, externalButtonPress, onButtonPressComplete }, ref) => {
   const [display, setDisplay] = useState(currentValue.toString());
   const [operator, setOperator] = useState<string | null>(null);
   const [previousValue, setPreviousValue] = useState<number | null>(null);
@@ -79,6 +88,48 @@ export default function NeumorphicCalculator({ onValueChange, currentValue = 0 }
       setDisplay('0');
     }
   };
+
+  const handleButtonPress = (button: string) => {
+    if (button === 'C' || button === 'CI/C') {
+      handleClear();
+    } else if (button === '=') {
+      handleEquals();
+    } else if (button === '-' || button === '+') {
+      handleOperator(button);
+    } else if (button === '×' || button === '*') {
+      handleOperator('×');
+    } else if (button === '÷' || button === '/') {
+      handleOperator('÷');
+    } else if (button === '.') {
+      handleNumber('.');
+    } else if (!isNaN(Number(button))) {
+      handleNumber(button);
+    }
+  };
+
+  // Expose methods via ref
+  useImperativeHandle(ref, () => ({
+    pressButton: (button: string) => {
+      handleButtonPress(button);
+    },
+    clear: () => {
+      handleClear();
+    },
+    getDisplay: () => {
+      return display;
+    }
+  }));
+
+  // Handle external button presses
+  useEffect(() => {
+    if (externalButtonPress) {
+      handleButtonPress(externalButtonPress);
+      if (onButtonPressComplete) {
+        setTimeout(() => onButtonPressComplete(), 100);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [externalButtonPress]);
 
   const renderButton = (
     label: string | React.ReactNode,
@@ -186,4 +237,8 @@ export default function NeumorphicCalculator({ onValueChange, currentValue = 0 }
       </div>
     </div>
   );
-}
+});
+
+NeumorphicCalculator.displayName = 'NeumorphicCalculator';
+
+export default NeumorphicCalculator;

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Calculator, Play, RotateCcw, Keyboard } from 'lucide-react';
+import NeumorphicCalculator, { CalculatorRef } from './NeumorphicCalculator';
 
 interface FormulaDemoProps {
   title: string;
@@ -20,33 +21,69 @@ export default function FormulaDemo({
 }: FormulaDemoProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const calculatorRef = useRef<CalculatorRef>(null);
+  const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
+
+  // Clear timeouts on unmount
+  useEffect(() => {
+    return () => {
+      timeoutRefs.current.forEach(t => clearTimeout(t));
+    };
+  }, []);
+
+  const clearTimeouts = () => {
+    timeoutRefs.current.forEach(t => clearTimeout(t));
+    timeoutRefs.current = [];
+  };
 
   const startDemo = () => {
     setIsPlaying(true);
     setCurrentStep(0);
+    clearTimeouts();
     
-    // Animate through button sequence
-    let timeout = 0;
-    
-    buttonSequence.forEach((button, index) => {
-      setTimeout(() => {
-        setCurrentStep(index + 1);
-        
-        if (index === buttonSequence.length - 1) {
-          // Pause at the end before resetting
-          setTimeout(() => {
-            setIsPlaying(false);
-          }, 1000);
-        }
-      }, timeout);
+    // Clear calculator first
+    if (calculatorRef.current) {
+      calculatorRef.current.clear();
+    }
+
+    // Wait a moment, then start pressing buttons
+    const initialDelay = setTimeout(() => {
+      let timeout = 0;
       
-      timeout += 800; // Delay between button presses
-    });
+      buttonSequence.forEach((button, index) => {
+        const t = setTimeout(() => {
+          setCurrentStep(index + 1);
+          
+          // Press button on calculator
+          if (calculatorRef.current) {
+            calculatorRef.current.pressButton(button);
+          }
+          
+          if (index === buttonSequence.length - 1) {
+            // Pause at the end before resetting
+            const endDelay = setTimeout(() => {
+              setIsPlaying(false);
+            }, 1000);
+            timeoutRefs.current.push(endDelay);
+          }
+        }, timeout);
+        timeoutRefs.current.push(t);
+        
+        timeout += 800; // Delay between button presses
+      });
+    }, 300);
+    timeoutRefs.current.push(initialDelay);
   };
 
   const resetDemo = () => {
     setIsPlaying(false);
     setCurrentStep(0);
+    clearTimeouts();
+    
+    // Clear calculator
+    if (calculatorRef.current) {
+      calculatorRef.current.clear();
+    }
   };
 
   return (
@@ -151,6 +188,22 @@ export default function FormulaDemo({
       <p className="text-xs text-gray-600 dark:text-text-secondary leading-relaxed italic mt-4">
         {explanation}
       </p>
+
+      {/* Live Calculator */}
+      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-600">
+        <p className="text-xs font-semibold text-gray-600 dark:text-text-secondary mb-4 uppercase tracking-wide">
+          Live Calculator Demo:
+        </p>
+        <div className="flex justify-center">
+          <div className="scale-90 origin-center">
+            <NeumorphicCalculator 
+              ref={calculatorRef}
+              onValueChange={() => {}}
+              currentValue={0}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

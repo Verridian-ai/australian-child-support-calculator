@@ -66,6 +66,11 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
             exampleValues={{ "Current Annual Wage": 97000, "Multiplier": 0.85 }}
             explanation="Multiply the current annual wage ($97,000) by 0.85 (which represents 85% or 100% minus 15%). This gives you the threshold amount ($82,450). If a parent's new reported wage falls below this threshold, the 15% rule is met and reassessment can proceed."
             result={97000 * 0.85}
+            calculationSteps={[
+              { step: "Current Annual Wage", value: 97000 },
+              { step: "Multiplied by 0.85 (85%)", value: 0.85 },
+              { step: "15% Reduction Threshold", value: 97000 * 0.85 }
+            ]}
           />
 
           <div className="space-y-4">
@@ -131,6 +136,14 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
             explanation="Calculate the percentage drop: Subtract new reported wage ($82,000) from current wage ($97,000) = $15,000. Divide by current wage ($97,000) = 0.1546. Multiply by 100 = 15.46%. If result is 15% or greater, reassessment can proceed."
             result={((97000 - 82000) / 97000) * 100}
             resultFormat="percentage"
+            calculationSteps={[
+              { step: "Current Wage", value: 97000 },
+              { step: "Minus New Reported Wage", value: 82000 },
+              { step: "Wage Difference", value: 97000 - 82000 },
+              { step: "Divided by Current Wage", value: 97000 },
+              { step: "Multiplied by 100", value: 100 },
+              { step: "Percentage Drop", value: ((97000 - 82000) / 97000) * 100 }
+            ]}
           />
 
           <div className="space-y-4">

@@ -40,6 +40,11 @@ export function ParentIncomes({ inputs, onChange, onShowGuide }: ParentIncomesPr
         exampleValues={{ "Parent A ATI": 50000, "Self-Support Amount": 29841 }}
         explanation="Enter Parent A's income ($50,000) and subtract the self-support amount ($29,841) to get Child Support Income. Result: $20,159. Repeat the same calculation for Parent B with their income amount."
         result={50000 - 29841}
+        calculationSteps={[
+          { step: "Parent A ATI", value: 50000 },
+          { step: "Minus Self-Support Amount", value: 29841 },
+          { step: "Child Support Income", value: 50000 - 29841 }
+        ]}
       />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

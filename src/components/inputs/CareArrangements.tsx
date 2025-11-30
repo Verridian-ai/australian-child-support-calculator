@@ -40,6 +40,12 @@ export function CareArrangements({ inputs, onChange, onShowGuide }: CareArrangem
         exampleValues={{ "Parent A Nights": 290, "Days per Year": 365 }}
         explanation="To calculate Parent A's care percentage: Divide care nights (290) by 365 days, then multiply by 100. Result: 79.45%. Repeat for Parent B using their care nights. The sum of both percentages should equal 100%."
         result={Math.round((290 / 365) * 100 * 100) / 100}
+        resultFormat="percentage"
+        calculationSteps={[
+          { step: "Care Nights", value: 290 },
+          { step: "Divided by Days per Year", value: 365 },
+          { step: "Result", value: Math.round((290 / 365) * 100 * 100) / 100 }
+        ]}
       />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

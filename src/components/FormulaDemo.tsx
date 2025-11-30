@@ -9,6 +9,7 @@ interface FormulaDemoProps {
   exampleValues: { [key: string]: string | number };
   explanation: string;
   result?: number;
+  resultFormat?: 'currency' | 'percentage' | 'number';
 }
 
 export default function FormulaDemo({
@@ -17,8 +18,40 @@ export default function FormulaDemo({
   buttonSequence,
   exampleValues,
   explanation,
-  result
+  result,
+  resultFormat = 'currency'
 }: FormulaDemoProps) {
+  
+  // Group consecutive digits for better display
+  const getGroupedSequence = () => {
+    const grouped: Array<{ value: string; indices: number[] }> = [];
+    let currentGroup: string[] = [];
+    let currentIndices: number[] = [];
+    
+    buttonSequence.forEach((button, index) => {
+      const isDigit = !isNaN(Number(button)) && button !== '.';
+      
+      if (isDigit) {
+        currentGroup.push(button);
+        currentIndices.push(index);
+      } else {
+        if (currentGroup.length > 0) {
+          grouped.push({ value: currentGroup.join(''), indices: currentIndices });
+          currentGroup = [];
+          currentIndices = [];
+        }
+        grouped.push({ value: button, indices: [index] });
+      }
+    });
+    
+    if (currentGroup.length > 0) {
+      grouped.push({ value: currentGroup.join(''), indices: currentIndices });
+    }
+    
+    return grouped;
+  };
+  
+  const groupedSequence = getGroupedSequence();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const calculatorRef = useRef<CalculatorRef>(null);
@@ -133,25 +166,34 @@ export default function FormulaDemo({
         <p className="text-xs font-semibold text-gray-600 dark:text-text-secondary mb-2 uppercase tracking-wide">
           Calculator Button Sequence:
         </p>
-        <div className="flex flex-wrap gap-2">
-          {buttonSequence.map((button, index) => (
-            <div
-              key={index}
-              className={`
-                px-3 py-1.5 rounded-md font-mono text-sm font-semibold
-                transition-all duration-300
-                ${
-                  index < currentStep
-                    ? 'bg-accent-teal text-white shadow-md'
-                    : index === currentStep && isPlaying
-                    ? 'bg-accent-orange text-white shadow-lg scale-110 animate-pulse'
-                    : 'bg-gray-200 dark:bg-dark-700 text-gray-700 dark:text-gray-300'
-                }
-              `}
-            >
-              {button}
-            </div>
-          ))}
+        <div className="flex flex-wrap gap-2 items-center">
+          {groupedSequence.map((group, groupIndex) => {
+            const isCompleted = group.indices.every(idx => idx < currentStep);
+            const isActive = group.indices.some(idx => idx === currentStep) && isPlaying;
+            
+            return (
+              <React.Fragment key={groupIndex}>
+                <div
+                  className={`
+                    px-3 py-1.5 rounded-md font-mono text-sm font-semibold
+                    transition-all duration-300
+                    ${
+                      isCompleted
+                        ? 'bg-accent-teal text-white shadow-md'
+                        : isActive
+                        ? 'bg-accent-orange text-white shadow-lg scale-110 animate-pulse'
+                        : 'bg-gray-200 dark:bg-dark-700 text-gray-700 dark:text-gray-300'
+                    }
+                  `}
+                >
+                  {group.value}
+                </div>
+                {groupIndex < groupedSequence.length - 1 && (
+                  <span className="text-gray-400 dark:text-gray-600">→</span>
+                )}
+              </React.Fragment>
+            );
+          })}
         </div>
       </div>
 
@@ -179,7 +221,13 @@ export default function FormulaDemo({
             Expected Result:
           </p>
           <p className="text-lg font-bold font-mono text-accent-teal">
-            {typeof result === 'number' ? result.toLocaleString('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0 }) : result}
+            {typeof result === 'number' 
+              ? resultFormat === 'percentage'
+                ? `${result.toFixed(2)}%`
+                : resultFormat === 'currency'
+                ? result.toLocaleString('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0 })
+                : result.toLocaleString('en-AU')
+              : result}
           </p>
         </div>
       )}

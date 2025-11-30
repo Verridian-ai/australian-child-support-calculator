@@ -130,6 +130,7 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
             exampleValues={{ "Current Wage": 97000, "New Reported Wage": 82000 }}
             explanation="Calculate the percentage drop: Subtract new reported wage ($82,000) from current wage ($97,000) = $15,000. Divide by current wage ($97,000) = 0.1546. Multiply by 100 = 15.46%. If result is 15% or greater, reassessment can proceed."
             result={((97000 - 82000) / 97000) * 100}
+            resultFormat="percentage"
           />
 
           <div className="space-y-4">

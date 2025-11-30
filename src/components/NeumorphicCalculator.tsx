@@ -166,22 +166,22 @@ export default function NeumorphicCalculator({ onValueChange, currentValue = 0 }
           {renderButton('4', () => handleNumber('4'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
           {renderButton('5', () => handleNumber('5'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
           {renderButton('6', () => handleNumber('6'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton(<X className="h-4 w-4" />, '×', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton(<Divide className="h-4 w-4" />, '÷', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton(<X className="h-4 w-4" />, () => handleOperator('×'), 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton(<Divide className="h-4 w-4" />, () => handleOperator('÷'), 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
 
           {/* Row 5 */}
           {renderButton('1', () => handleNumber('1'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
           {renderButton('2', () => handleNumber('2'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
           {renderButton('3', () => handleNumber('3'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
-          {renderButton(<Plus className="h-5 w-5" />, '+', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', 'row-span-2 h-full', 'text-xl')}
-          {renderButton(<Minus className="h-5 w-5" />, '-', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton(<Plus className="h-5 w-5" />, () => handleOperator('+'), 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', 'row-span-2 h-full', 'text-xl')}
+          {renderButton(<Minus className="h-5 w-5" />, () => handleOperator('-'), 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
 
           {/* Row 6 */}
           {renderButton('0', () => handleNumber('0'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
           {renderButton('.', () => handleNumber('.'), 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-xl')}
           {renderButton('±', () => {}, 'bg-gray-100 dark:bg-gray-700', 'text-gray-900 dark:text-white', '', 'text-lg')}
           {/* + occupied by rowspan */}
-          {renderButton(<Equal className="h-5 w-5" />, '=', 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
+          {renderButton(<Equal className="h-5 w-5" />, handleEquals, 'bg-gray-300 dark:bg-gray-600', 'text-gray-900 dark:text-white', '', 'text-xl')}
         </div>
       </div>
     </div>

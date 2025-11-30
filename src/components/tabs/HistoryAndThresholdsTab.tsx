@@ -30,7 +30,7 @@ export default function HistoryAndThresholdsTab({ calculations, onLoadCalculatio
 
       <div className="grid grid-cols-1 gap-6">
         {/* Section A: Calculation History */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6">
           <div className="glass-panel-lg p-6 md:p-8">
             <div className="flex items-center space-x-2 mb-6">
               <History className="h-5 w-5 text-accent-teal" />

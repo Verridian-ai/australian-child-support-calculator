@@ -14,7 +14,7 @@ export default function AboutAndLegalTab() {
 
       <div className="grid grid-cols-1 gap-6">
         {/* About This Tool */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6">
           <div className="glass-panel-lg p-6 md:p-8">
           <div className="flex items-center space-x-2 mb-6">
             <Info className="h-5 w-5 text-accent-teal" />

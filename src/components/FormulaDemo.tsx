@@ -128,57 +128,98 @@ export default function FormulaDemo({
     setCurrentExplanation(null);
     setHighlightedButton(null);
     setCurrentCalculationStep(0);
+    setShowCalculator(true); // Show calculator when demo starts
     clearTimeouts();
     
     // Clear calculator first
     if (calculatorRef.current) {
       calculatorRef.current.clear();
+      setCalculatorDisplayValue('0');
     }
+    
+    // Show first step explanation
+    if (buttonSequence.length > 0) {
+      setCurrentExplanation('Click "Next" to start the calculation step by step.');
+    }
+  };
 
-    // Wait a moment, then start pressing buttons
-    const initialDelay = setTimeout(() => {
-      let timeout = 0;
+  const nextStep = () => {
+    if (currentStep < buttonSequence.length) {
+      const button = buttonSequence[currentStep];
+      setCurrentStep(currentStep + 1);
+      setHighlightedButton(button);
+      setCurrentExplanation(getStepExplanation(button, currentStep, buttonSequence));
       
-      buttonSequence.forEach((button, index) => {
-        const t = setTimeout(() => {
-          setCurrentStep(index + 1);
-          setHighlightedButton(button);
-          setCurrentExplanation(getStepExplanation(button, index, buttonSequence));
-          
-          // Press button on calculator
-          if (calculatorRef.current) {
-            calculatorRef.current.pressButton(button);
-            // Update display value after a short delay
-            setTimeout(() => {
-              const display = calculatorRef.current?.getDisplay() || '0';
-              setCalculatorDisplayValue(display);
-            }, 100);
+      // Press button on calculator
+      if (calculatorRef.current) {
+        calculatorRef.current.pressButton(button);
+        // Update display value after a short delay
+        setTimeout(() => {
+          const display = calculatorRef.current?.getDisplay() || '0';
+          setCalculatorDisplayValue(display);
+        }, 100);
+      }
+      
+      // If this is the last step, show completion message
+      if (currentStep === buttonSequence.length - 1) {
+        setTimeout(() => {
+          setCurrentExplanation('✓ Calculation complete! Result displayed.');
+          if (result !== undefined) {
+            setCurrentCalculationStep(calculationSteps.length);
           }
-          
-          // Clear highlight after a moment
-          setTimeout(() => {
-            setHighlightedButton(null);
-            setCurrentExplanation(null);
-          }, 600);
-          
-          if (index === buttonSequence.length - 1) {
-            // Pause at the end before resetting
-            const endDelay = setTimeout(() => {
-              setIsPlaying(false);
-              setCurrentExplanation('✓ Calculation complete! Result displayed.');
-              if (result !== undefined) {
-                setCurrentCalculationStep(calculationSteps.length);
-              }
-            }, 1000);
-            timeoutRefs.current.push(endDelay);
-          }
-        }, timeout);
-        timeoutRefs.current.push(t);
+        }, 500);
+      }
+    }
+  };
+
+  const previousStep = () => {
+    if (currentStep > 0) {
+      const newStep = currentStep - 1;
+      setCurrentStep(newStep);
+      
+      // Reset calculator and replay up to previous step
+      if (calculatorRef.current) {
+        calculatorRef.current.clear();
+        setCalculatorDisplayValue('0');
         
-        timeout += 800; // Delay between button presses
-      });
-    }, 300);
-    timeoutRefs.current.push(initialDelay);
+        // Replay all steps up to the previous one
+        setTimeout(() => {
+          for (let i = 0; i < newStep; i++) {
+            setTimeout(() => {
+              if (calculatorRef.current) {
+                calculatorRef.current.pressButton(buttonSequence[i]);
+              }
+            }, i * 100);
+          }
+          
+          // Update display and explanation after replay
+          setTimeout(() => {
+            if (calculatorRef.current) {
+              const display = calculatorRef.current.getDisplay();
+              setCalculatorDisplayValue(display);
+            }
+            if (newStep > 0) {
+              const button = buttonSequence[newStep - 1];
+              setHighlightedButton(button);
+              setCurrentExplanation(getStepExplanation(button, newStep - 1, buttonSequence));
+            } else {
+              setHighlightedButton(null);
+              setCurrentExplanation('Click "Next" to start the calculation step by step.');
+            }
+          }, newStep * 100 + 200);
+        }, 50);
+      } else {
+        // If no calculator ref, just update the step
+        if (newStep > 0) {
+          const button = buttonSequence[newStep - 1];
+          setHighlightedButton(button);
+          setCurrentExplanation(getStepExplanation(button, newStep - 1, buttonSequence));
+        } else {
+          setHighlightedButton(null);
+          setCurrentExplanation('Click "Next" to start the calculation step by step.');
+        }
+      }
+    }
   };
 
   const startAutoCalculate = () => {
@@ -273,6 +314,7 @@ export default function FormulaDemo({
     setCurrentCalculationStep(0);
     setShowAutoCalculate(false);
     setAutoCalculateSteps([]);
+    setCalculatorDisplayValue('0');
     clearTimeouts();
     
     // Clear calculator
@@ -309,24 +351,45 @@ export default function FormulaDemo({
             <span className="hidden sm:inline">Auto Calculate</span>
             <span className="sm:hidden">Auto</span>
           </button>
-          <button
-            onClick={isPlaying ? resetDemo : startDemo}
-            className="px-2 py-1.5 md:px-3 text-xs font-medium rounded-md bg-accent-teal text-white hover:bg-accent-teal/80 transition-colors flex items-center space-x-1"
-          >
-            {isPlaying ? (
-              <>
+          {!isPlaying ? (
+            <button
+              onClick={startDemo}
+              className="px-2 py-1.5 md:px-3 text-xs font-medium rounded-md bg-accent-teal text-white hover:bg-accent-teal/80 transition-colors flex items-center space-x-1"
+            >
+              <Play className="h-3 w-3" />
+              <span className="hidden sm:inline">Start Demo</span>
+              <span className="sm:hidden">Start</span>
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={previousStep}
+                disabled={currentStep === 0}
+                className="px-2 py-1.5 md:px-3 text-xs font-medium rounded-md bg-gray-500 text-white hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-1"
+              >
+                <span>←</span>
+                <span className="hidden sm:inline">Previous</span>
+                <span className="sm:hidden">Prev</span>
+              </button>
+              <button
+                onClick={nextStep}
+                disabled={currentStep >= buttonSequence.length}
+                className="px-2 py-1.5 md:px-3 text-xs font-medium rounded-md bg-accent-teal text-white hover:bg-accent-teal/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-1"
+              >
+                <span className="hidden sm:inline">Next</span>
+                <span className="sm:hidden">Next</span>
+                <span>→</span>
+              </button>
+              <button
+                onClick={resetDemo}
+                className="px-2 py-1.5 md:px-3 text-xs font-medium rounded-md bg-gray-600 text-white hover:bg-gray-700 transition-colors flex items-center space-x-1"
+              >
                 <RotateCcw className="h-3 w-3" />
                 <span className="hidden sm:inline">Reset</span>
                 <span className="sm:hidden">Reset</span>
-              </>
-            ) : (
-              <>
-                <Play className="h-3 w-3" />
-                <span className="hidden sm:inline">Play Demo</span>
-                <span className="sm:hidden">Play</span>
-              </>
-            )}
-          </button>
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -344,13 +407,20 @@ export default function FormulaDemo({
       </div>
 
       {/* Current Step Explanation */}
-      {currentExplanation && (
-        <div className="mb-4 p-3 bg-accent-teal/10 dark:bg-accent-teal/20 rounded-lg border border-accent-teal/30 animate-fade-in">
-          <div className="flex items-start space-x-2">
+      {isPlaying && (
+        <div className="mb-3 md:mb-4 p-3 bg-accent-teal/10 dark:bg-accent-teal/20 rounded-lg border border-accent-teal/30 animate-fade-in">
+          <div className="flex items-start space-x-2 mb-2">
             <PlayCircle className="h-4 w-4 text-accent-teal flex-shrink-0 mt-0.5 animate-pulse" />
-            <p className="text-xs text-gray-900 dark:text-text-primary font-medium">
-              {currentExplanation}
-            </p>
+            <div className="flex-1">
+              <p className="text-xs text-gray-900 dark:text-text-primary font-medium">
+                {currentExplanation || 'Click "Next" to start the calculation step by step.'}
+              </p>
+              {currentStep > 0 && currentStep <= buttonSequence.length && (
+                <p className="text-xs text-gray-600 dark:text-text-secondary mt-1">
+                  Step {currentStep} of {buttonSequence.length}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -492,16 +562,12 @@ export default function FormulaDemo({
         {explanation}
       </p>
 
-      {/* Live Calculator - Collapsible on Mobile */}
-      <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-gray-200 dark:border-dark-600">
-        <button
-          onClick={() => setShowCalculator(!showCalculator)}
-          className="w-full md:w-auto flex items-center justify-between md:justify-start text-xs font-semibold text-gray-600 dark:text-text-secondary mb-3 md:mb-4 uppercase tracking-wide hover:text-accent-teal transition-colors"
-        >
-          <span>Live Calculator Demo (Keys will light up as pressed)</span>
-          <span className="md:hidden ml-2">{showCalculator ? '−' : '+'}</span>
-        </button>
-        {(showCalculator || !isMobile) && (
+      {/* Live Calculator - Always visible when demo is playing */}
+      {isPlaying && (
+        <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-gray-200 dark:border-dark-600">
+          <p className="text-xs font-semibold text-gray-600 dark:text-text-secondary mb-3 md:mb-4 uppercase tracking-wide">
+            Live Calculator (Keys will light up as pressed):
+          </p>
           <div className="flex justify-center">
             <div className="scale-75 md:scale-90 origin-center relative">
               <NeumorphicCalculator 
@@ -513,21 +579,19 @@ export default function FormulaDemo({
                 highlightedButton={highlightedButton}
               />
               {highlightedButton && (
-                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-accent-orange text-white text-xs px-2 md:px-3 py-1 rounded-full shadow-lg animate-bounce whitespace-nowrap">
+                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-accent-orange text-white text-xs px-2 md:px-3 py-1 rounded-full shadow-lg animate-pulse whitespace-nowrap z-20">
                   Pressing: {highlightedButton}
                 </div>
               )}
             </div>
           </div>
-        )}
-        {/* Calculator Display Value */}
-        {calculatorDisplayValue !== '0' && (
+          {/* Calculator Display Value */}
           <div className="mt-3 md:mt-4 text-center">
             <p className="text-xs text-gray-500 dark:text-text-tertiary mb-1">Current Display:</p>
             <p className="text-base md:text-lg font-mono font-bold text-accent-teal">{calculatorDisplayValue}</p>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

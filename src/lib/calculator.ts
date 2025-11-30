@@ -1,8 +1,8 @@
 // Australian Child Support Calculator Logic
-import { getRates } from './rates/2024-2025';
+import { RATES_2024_2025 as RATES } from './rates/2024-2025';
 
 // Initialize rates
-const RATES = getRates();
+// const RATES = getRates();
 
 export interface ChildSupportInputs {
   parentA_ATI: number;

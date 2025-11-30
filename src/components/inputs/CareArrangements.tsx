@@ -38,9 +38,29 @@ export function CareArrangements({ inputs, onChange, onShowGuide }: CareArrangem
         formula="Care Percentage = (Nights of Care ÷ 365) × 100"
         buttonSequence={["2", "9", "0", "÷", "3", "6", "5", "×", "1", "0", "0", "="]}
         exampleValues={{ "Parent A Nights": 290, "Days per Year": 365 }}
-        explanation="To calculate Parent A's care percentage: Divide care nights (290) by 365 days, then multiply by 100. Result: 79.45%. Repeat for Parent B using their care nights. The sum of both percentages should equal 100%."
+        explanation="To calculate Parent A's care percentage: Divide care nights by 365 days, then multiply by 100. Repeat for Parent B using their care nights. The sum of both percentages should equal 100%."
         result={Math.round((290 / 365) * 100 * 100) / 100}
         resultFormat="percentage"
+        calculateResult={(values) => {
+          const nights = typeof values["Parent A Nights"] === 'number' ? values["Parent A Nights"] : Number(values["Parent A Nights"]);
+          const days = typeof values["Days per Year"] === 'number' ? values["Days per Year"] : Number(values["Days per Year"]);
+          return Math.round((nights / days) * 100 * 100) / 100;
+        }}
+        generateButtonSequence={(values) => {
+          const nights = typeof values["Parent A Nights"] === 'number' ? values["Parent A Nights"] : Number(values["Parent A Nights"]);
+          return [...nights.toString().split(''), '÷', '3', '6', '5', '×', '1', '0', '0', '='];
+        }}
+        generateCalculationSteps={(values, result) => {
+          const nights = typeof values["Parent A Nights"] === 'number' ? values["Parent A Nights"] : Number(values["Parent A Nights"]);
+          const days = typeof values["Days per Year"] === 'number' ? values["Days per Year"] : Number(values["Days per Year"]);
+          const intermediate = nights / days;
+          return [
+            { step: "Enter Care Nights", value: nights },
+            { step: `Divide by Days per Year: ${nights} ÷ ${days}`, value: intermediate },
+            { step: `Multiply by 100: ${intermediate.toFixed(4)} × 100`, value: result },
+            { step: "Care Percentage Result", value: result }
+          ];
+        }}
         calculationSteps={[
           { step: "Enter Care Nights", value: 290 },
           { step: "Divide by Days per Year: 290 ÷ 365", value: 0.7945 },

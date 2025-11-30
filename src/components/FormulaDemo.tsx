@@ -14,6 +14,7 @@ interface FormulaDemoProps {
   calculateResult?: (values: { [key: string]: string | number }) => number;
   generateButtonSequence?: (values: { [key: string]: string | number }) => string[];
   generateCalculationSteps?: (values: { [key: string]: string | number }, result: number) => Array<{ step: string; value: string | number }>;
+  onCalculationComplete?: (result: number) => void;
 }
 
 export default function FormulaDemo({
@@ -27,7 +28,8 @@ export default function FormulaDemo({
   calculationSteps: initialCalculationSteps = [],
   calculateResult,
   generateButtonSequence,
-  generateCalculationSteps
+  generateCalculationSteps,
+  onCalculationComplete
 }: FormulaDemoProps) {
   // Make exampleValues editable
   const [exampleValues, setExampleValues] = useState<{ [key: string]: string | number }>(initialExampleValues);
@@ -43,6 +45,13 @@ export default function FormulaDemo({
   
   // Calculate result dynamically
   const result = calculateResult ? calculateResult(exampleValues) : initialResult;
+  
+  // Notify parent when result changes (for threshold updates)
+  useEffect(() => {
+    if (result !== undefined && onCalculationComplete) {
+      onCalculationComplete(result);
+    }
+  }, [result, onCalculationComplete]);
   
   // Generate button sequence dynamically
   const buttonSequence = generateButtonSequence ? generateButtonSequence(exampleValues) : initialButtonSequence;
@@ -216,6 +225,10 @@ export default function FormulaDemo({
           setCurrentExplanation('✓ Calculation complete! Result displayed.');
           if (result !== undefined) {
             setCurrentCalculationStep(calculationSteps.length);
+            // Notify parent component of the result
+            if (onCalculationComplete) {
+              onCalculationComplete(result);
+            }
           }
         }, 500);
       }

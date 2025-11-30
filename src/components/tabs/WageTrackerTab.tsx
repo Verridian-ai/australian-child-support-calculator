@@ -16,8 +16,9 @@ interface WageTrackerTabProps {
 export default function WageTrackerTab({ currentWage, wageHistory, onWageChange }: WageTrackerTabProps) {
   const [newReportedWage, setNewReportedWage] = useState<string>('');
   const [showReassessmentCheck, setShowReassessmentCheck] = useState(false);
+  const [demoThreshold, setDemoThreshold] = useState<number | null>(null);
 
-  const threshold = calculateWageThreshold(currentWage);
+  const threshold = demoThreshold !== null ? demoThreshold : calculateWageThreshold(currentWage);
   const formatDate = (timestamp: string) => {
     return new Date(timestamp).toLocaleDateString('en-AU', {
       day: '2-digit',
@@ -63,15 +64,41 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
             title="15% Reduction Threshold Calculation"
             formula="15% Reduction Threshold = Current Annual Wage × 0.85"
             buttonSequence={["9", "7", "0", "0", "0", "×", "0", ".", "8", "5", "="]}
-            exampleValues={{ "Current Annual Wage": 97000, "Multiplier": 0.85 }}
-            explanation="Multiply the current annual wage ($97,000) by 0.85 (which represents 85% or 100% minus 15%). This gives you the threshold amount ($82,450). If a parent's new reported wage falls below this threshold, the 15% rule is met and reassessment can proceed."
-            result={97000 * 0.85}
+            exampleValues={{ "Current Annual Wage": currentWage || 97000, "Multiplier": 0.85 }}
+            explanation="Multiply the current annual wage by 0.85 (which represents 85% or 100% minus 15%). This gives you the threshold amount. If a parent's new reported wage falls below this threshold, the 15% rule is met and reassessment can proceed."
+            result={(currentWage || 97000) * 0.85}
+            calculateResult={(values) => {
+              const wage = typeof values["Current Annual Wage"] === 'number' 
+                ? values["Current Annual Wage"] 
+                : Number(values["Current Annual Wage"]);
+              return wage * 0.85;
+            }}
+            generateButtonSequence={(values) => {
+              const wage = typeof values["Current Annual Wage"] === 'number' 
+                ? values["Current Annual Wage"] 
+                : Number(values["Current Annual Wage"]);
+              return [...wage.toString().split(''), '×', '0', '.', '8', '5', '='];
+            }}
+            generateCalculationSteps={(values, result) => {
+              const wage = typeof values["Current Annual Wage"] === 'number' 
+                ? values["Current Annual Wage"] 
+                : Number(values["Current Annual Wage"]);
+              return [
+                { step: "Enter Current Annual Wage", value: wage },
+                { step: "Multiply by 0.85 (85%)", value: 0.85 },
+                { step: `${wage} × 0.85`, value: result },
+                { step: "15% Reduction Threshold Result", value: result }
+              ];
+            }}
             calculationSteps={[
-              { step: "Enter Current Annual Wage", value: 97000 },
+              { step: "Enter Current Annual Wage", value: currentWage || 97000 },
               { step: "Multiply by 0.85 (85%)", value: 0.85 },
-              { step: "97000 × 0.85", value: 82450 },
-              { step: "15% Reduction Threshold Result", value: 82450 }
+              { step: `${currentWage || 97000} × 0.85`, value: (currentWage || 97000) * 0.85 },
+              { step: "15% Reduction Threshold Result", value: (currentWage || 97000) * 0.85 }
             ]}
+            onCalculationComplete={(result) => {
+              setDemoThreshold(result);
+            }}
           />
 
           <div className="space-y-4">
@@ -112,7 +139,7 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
                 <AlertTriangle className="h-4 w-4 text-semantic-warning" />
               </div>
               <p className="text-2xl font-bold text-gray-900 dark:text-text-primary font-mono mb-1">
-                {formatCurrency(currentWage ? currentWage * 0.85 : 0)}
+                {formatCurrency(threshold)}
               </p>
               <p className="text-xs text-gray-500 dark:text-text-tertiary">
                 Minimum wage level required to trigger a reassessment.

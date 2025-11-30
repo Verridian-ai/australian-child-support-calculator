@@ -87,5 +87,13 @@ export const guideSteps: GuideStep[] = [
     buttonSequence: ["1", "3", "5", "3", "0", "×", "0", ".", "3", "5", "9", "4", "="],
     inputValues: {},
     explanation: "Multiply Total COTC ($13,530) by the Child Support Percentage (35.94%). Final Amount: ~$4,862 (payable by Parent B)."
+  },
+  {
+    stepNumber: 9,
+    title: "Step 9: Wage Tracking (15% Rule)",
+    description: "Calculate the wage drop trigger point.",
+    buttonSequence: ["9", "7", "0", "0", "0", "×", "0", ".", "8", "5", "="],
+    inputValues: { currentWage: "97000" },
+    explanation: "Enter your current wage ($97,000) and multiply by 0.85 (85%). Result: $82,450. If your income drops below this amount, you can request a new estimate."
   }
 ];

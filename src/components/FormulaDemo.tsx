@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Calculator, Play, RotateCcw, Keyboard, Zap, Info } from 'lucide-react';
+import { Calculator, Play, RotateCcw, Keyboard, Zap, CheckCircle, PlayCircle } from 'lucide-react';
 import NeumorphicCalculator, { CalculatorRef } from './NeumorphicCalculator';
 
 interface FormulaDemoProps {
@@ -137,7 +137,7 @@ export default function FormulaDemo({
             // Pause at the end before resetting
             const endDelay = setTimeout(() => {
               setIsPlaying(false);
-              setCurrentExplanation('Calculation complete!');
+              setCurrentExplanation('✓ Calculation complete! Result displayed.');
               if (result !== undefined) {
                 setCurrentCalculationStep(calculationSteps.length);
               }
@@ -304,9 +304,9 @@ export default function FormulaDemo({
 
       {/* Current Step Explanation */}
       {currentExplanation && (
-        <div className="mb-4 p-3 bg-accent-orange/10 dark:bg-accent-orange/20 rounded-lg border border-accent-orange/30 animate-fade-in">
+        <div className="mb-4 p-3 bg-accent-teal/10 dark:bg-accent-teal/20 rounded-lg border border-accent-teal/30 animate-fade-in">
           <div className="flex items-start space-x-2">
-            <Info className="h-4 w-4 text-accent-orange flex-shrink-0 mt-0.5" />
+            <PlayCircle className="h-4 w-4 text-accent-teal flex-shrink-0 mt-0.5 animate-pulse" />
             <p className="text-xs text-gray-900 dark:text-text-primary font-medium">
               {currentExplanation}
             </p>

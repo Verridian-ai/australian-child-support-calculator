@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Calculator, Play, RotateCcw, Keyboard, Zap, CheckCircle, PlayCircle } from 'lucide-react';
+import { Calculator, RotateCcw, Keyboard, Zap, PlayCircle } from 'lucide-react';
 import NeumorphicCalculator, { CalculatorRef } from './NeumorphicCalculator';
 
 interface FormulaDemoProps {
@@ -288,6 +288,15 @@ export default function FormulaDemo({
   const startAutoCalculate = () => {
     clearTimeouts();
     setCurrentCalculationStep(0);
+    setIsPlaying(true);
+    setCurrentStep(0);
+    setCurrentExplanation(null);
+    setHighlightedButton(null);
+    
+    // Clear calculator first
+    if (calculatorRef.current) {
+      calculatorRef.current.clear();
+    }
     
     // Use provided calculationSteps or generate from button sequence
     let stepsToShow: Array<{ step: string; value: string | number }> = [];
@@ -350,7 +359,82 @@ export default function FormulaDemo({
     setAutoCalculateSteps(stepsToShow);
     setShowAutoCalculate(true);
     
-    // Animate through calculation steps
+    // Start the live calculator demo
+    let buttonIndex = 0;
+    const pressNextButton = () => {
+      if (buttonIndex < buttonSequence.length && calculatorRef.current) {
+        const button = buttonSequence[buttonIndex];
+        const nextGroup = groupedSequence.find(g => g.indices.includes(buttonIndex));
+        
+        if (nextGroup) {
+          // Check if this is the start of a new group
+          if (nextGroup.indices[0] === buttonIndex) {
+            // Enter the full number/group at once
+            const fullValue = nextGroup.value;
+            if (nextGroup.isNumber) {
+              // For numbers, enter digit by digit but quickly
+              const digits = fullValue.split('');
+              let digitIndex = 0;
+              const enterDigit = () => {
+                if (digitIndex < digits.length) {
+                  calculatorRef.current?.pressButton(digits[digitIndex]);
+                  setHighlightedButton(digits[digitIndex]);
+                  setCurrentExplanation(`Entering ${fullValue}...`);
+                  digitIndex++;
+                  if (digitIndex < digits.length) {
+                    const timeout = setTimeout(enterDigit, 200);
+                    timeoutRefs.current.push(timeout);
+                  } else {
+                    // Finished entering the number, move to next group
+                    setHighlightedButton(null);
+                    setCurrentExplanation(`Entered ${fullValue}. Continuing...`);
+                    buttonIndex = nextGroup.indices[nextGroup.indices.length - 1] + 1;
+                    const timeout = setTimeout(pressNextButton, 500);
+                    timeoutRefs.current.push(timeout);
+                  }
+                }
+              };
+              enterDigit();
+            } else {
+              // For operators, press once
+              calculatorRef.current.pressButton(button);
+              setHighlightedButton(button);
+              setCurrentExplanation(getStepExplanation(button, buttonIndex, buttonSequence));
+              buttonIndex++;
+              const timeout = setTimeout(() => {
+                setHighlightedButton(null);
+                pressNextButton();
+              }, 800);
+              timeoutRefs.current.push(timeout);
+            }
+          } else {
+            // Continue with current group
+            buttonIndex++;
+            pressNextButton();
+          }
+        } else {
+          // Single button press
+          calculatorRef.current.pressButton(button);
+          setHighlightedButton(button);
+          setCurrentExplanation(getStepExplanation(button, buttonIndex, buttonSequence));
+          buttonIndex++;
+          const timeout = setTimeout(() => {
+            setHighlightedButton(null);
+            pressNextButton();
+          }, 800);
+          timeoutRefs.current.push(timeout);
+        }
+      } else {
+        // Demo complete
+        setCurrentExplanation('✓ Calculation complete! Result displayed.');
+        setHighlightedButton(null);
+        if (result !== undefined && onCalculationComplete) {
+          onCalculationComplete(result);
+        }
+      }
+    };
+    
+    // Animate through calculation steps (auto-calculate panel)
     let stepIndex = 0;
     const animateSteps = () => {
       if (stepIndex < stepsToShow.length) {
@@ -363,8 +447,10 @@ export default function FormulaDemo({
       }
     };
     
+    // Start both animations
     const initialTimeout = setTimeout(() => {
       animateSteps();
+      pressNextButton();
     }, 500);
     timeoutRefs.current.push(initialTimeout);
   };
@@ -407,22 +493,14 @@ export default function FormulaDemo({
           </h4>
         </div>
         <div className="flex items-center space-x-2 flex-wrap gap-2">
-          <button
-            onClick={startAutoCalculate}
-            className="px-2 py-1.5 md:px-3 text-xs font-medium rounded-md bg-accent-orange text-white hover:bg-accent-orange/80 transition-colors flex items-center space-x-1"
-          >
-            <Zap className="h-3 w-3" />
-            <span className="hidden sm:inline">Auto Calculate</span>
-            <span className="sm:hidden">Auto</span>
-          </button>
           {!isPlaying ? (
             <button
-              onClick={startDemo}
-              className="px-2 py-1.5 md:px-3 text-xs font-medium rounded-md bg-accent-teal text-white hover:bg-accent-teal/80 transition-colors flex items-center space-x-1"
+              onClick={startAutoCalculate}
+              className="px-2 py-1.5 md:px-3 text-xs font-medium rounded-md bg-accent-orange text-white hover:bg-accent-orange/80 transition-colors flex items-center space-x-1"
             >
-              <Play className="h-3 w-3" />
-              <span className="hidden sm:inline">Start Demo</span>
-              <span className="sm:hidden">Start</span>
+              <Zap className="h-3 w-3" />
+              <span className="hidden sm:inline">Auto Calculate</span>
+              <span className="sm:hidden">Auto</span>
             </button>
           ) : (
             <>

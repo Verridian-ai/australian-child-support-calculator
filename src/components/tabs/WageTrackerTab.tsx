@@ -49,14 +49,58 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
-        {/* Section A: Wage Tracking (System Baseline) */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="glass-panel-lg p-6 md:p-8">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary mb-6 flex items-center">
-            <DollarSign className="h-5 w-5 text-accent-green mr-2" />
-            Recorded Wage in System
-          </h3>
+      {/* Unified Wage Tracker Section */}
+      <div className="glass-panel-lg p-6 md:p-8">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary mb-6 flex items-center">
+          <DollarSign className="h-5 w-5 text-accent-green mr-2" />
+          Wage Tracker & 15% Rule Check
+        </h3>
+
+        <div className="space-y-6">
+          {/* Current Wage Input */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-text-secondary mb-2">
+              Recorded Wage in System
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span className="text-gray-500 dark:text-text-tertiary font-medium">$</span>
+              </div>
+              <input
+                type="number"
+                value={currentWage || ''}
+                onChange={(e) => onWageChange(parseFloat(e.target.value) || 0)}
+                className="input-field pl-8 w-full"
+                placeholder="97,000"
+                min="0"
+                step="1000"
+              />
+            </div>
+            <p className="text-xs text-gray-500 dark:text-text-tertiary mt-1">
+              Used as the baseline wage recorded in the assessment system.
+            </p>
+            {wageHistory.length > 0 && (
+              <p className="text-xs text-gray-500 dark:text-text-tertiary mt-1">
+                Last updated: {formatDate(wageHistory[wageHistory.length - 1]?.timestamp || new Date().toISOString())}
+              </p>
+            )}
+          </div>
+
+          {/* 15% Reduction Threshold Display */}
+          <div className="p-4 bg-gray-50 dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-600">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-gray-700 dark:text-text-secondary">
+                15% Reduction Threshold
+              </span>
+              <AlertTriangle className="h-4 w-4 text-semantic-warning" />
+            </div>
+            <p className="text-2xl font-bold text-gray-900 dark:text-text-primary font-mono mb-1">
+              {formatCurrency(threshold)}
+            </p>
+            <p className="text-xs text-gray-500 dark:text-text-tertiary">
+              Minimum wage level required to trigger a reassessment.
+            </p>
+          </div>
 
           {/* Formula Demo for 15% Reduction Threshold */}
           <FormulaDemo
@@ -100,81 +144,70 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
             }}
           />
 
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-text-secondary mb-2">
-                Current Annual Wage
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 dark:text-text-tertiary font-medium">$</span>
-                </div>
-                <input
-                  type="number"
-                  value={currentWage || ''}
-                  onChange={(e) => onWageChange(parseFloat(e.target.value) || 0)}
-                  className="input-field pl-8 w-full"
-                  placeholder="97,000"
-                  min="0"
-                  step="1000"
-                />
-              </div>
-              <p className="text-xs text-gray-500 dark:text-text-tertiary mt-1">
-                Used as the baseline wage recorded in the assessment system.
-              </p>
-              {wageHistory.length > 0 && (
-                <p className="text-xs text-gray-500 dark:text-text-tertiary mt-1">
-                  Last updated: {formatDate(wageHistory[wageHistory.length - 1]?.timestamp || new Date().toISOString())}
-                </p>
-              )}
-            </div>
+          {/* Divider */}
+          <div className="border-t border-gray-200 dark:border-dark-600 pt-6">
+            <h4 className="text-md font-semibold text-gray-900 dark:text-text-primary mb-4 flex items-center">
+              <TrendingDown className="h-4 w-4 text-accent-orange mr-2" />
+              15% Reassessment Check
+            </h4>
 
-            {/* 15% Reduction Threshold */}
-            <div className="p-4 bg-gray-50 dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-600">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-text-secondary">
-                  15% Reduction Threshold
-                </span>
-                <AlertTriangle className="h-4 w-4 text-semantic-warning" />
-              </div>
-              <p className="text-2xl font-bold text-gray-900 dark:text-text-primary font-mono mb-1">
-                {formatCurrency(threshold)}
-              </p>
-              <p className="text-xs text-gray-500 dark:text-text-tertiary">
-                Minimum wage level required to trigger a reassessment.
-              </p>
-            </div>
-          </div>
-          </div>
+            {/* Formula Demo for Percentage Drop Calculation */}
+            <FormulaDemo
+              title="15% Percentage Drop Calculation"
+              formula="Percentage Drop = ((Current Wage - New Reported Wage) ÷ Current Wage) × 100"
+              buttonSequence={["9", "7", "0", "0", "0", "-", "8", "2", "0", "0", "0", "=", "÷", "9", "7", "0", "0", "0", "=", "×", "1", "0", "0", "="]}
+              exampleValues={{ "Current Wage": currentWage || 97000, "New Reported Wage": newReportedWage ? parseFloat(newReportedWage) : 82000 }}
+              explanation="Calculate the percentage drop: Subtract new reported wage from current wage, divide by current wage, then multiply by 100. If result is 15% or greater, reassessment can proceed."
+              result={newReportedWage && currentWage ? ((currentWage - parseFloat(newReportedWage)) / currentWage) * 100 : ((97000 - 82000) / 97000) * 100}
+              resultFormat="percentage"
+              calculateResult={(values) => {
+                const current = typeof values["Current Wage"] === 'number' 
+                  ? values["Current Wage"] 
+                  : Number(values["Current Wage"]);
+                const newWage = typeof values["New Reported Wage"] === 'number' 
+                  ? values["New Reported Wage"] 
+                  : Number(values["New Reported Wage"]);
+                return ((current - newWage) / current) * 100;
+              }}
+              generateButtonSequence={(values) => {
+                const current = typeof values["Current Wage"] === 'number' 
+                  ? values["Current Wage"] 
+                  : Number(values["Current Wage"]);
+                const newWage = typeof values["New Reported Wage"] === 'number' 
+                  ? values["New Reported Wage"] 
+                  : Number(values["New Reported Wage"]);
+                return [...current.toString().split(''), '-', ...newWage.toString().split(''), '=', '÷', ...current.toString().split(''), '=', '×', '1', '0', '0', '='];
+              }}
+              generateCalculationSteps={(values, res) => {
+                const current = typeof values["Current Wage"] === 'number' 
+                  ? values["Current Wage"] 
+                  : Number(values["Current Wage"]);
+                const newWage = typeof values["New Reported Wage"] === 'number' 
+                  ? values["New Reported Wage"] 
+                  : Number(values["New Reported Wage"]);
+                const difference = current - newWage;
+                const ratio = difference / current;
+                return [
+                  { step: "Enter Current Wage", value: current },
+                  { step: "Enter New Reported Wage", value: newWage },
+                  { step: `Calculate Difference: ${current} - ${newWage}`, value: difference },
+                  { step: `Divide by Current Wage: ${difference} ÷ ${current}`, value: ratio },
+                  { step: `Multiply by 100: ${ratio.toFixed(4)} × 100`, value: res },
+                  { step: "Percentage Drop Result", value: res }
+                ];
+              }}
+              calculationSteps={[
+                { step: "Enter Current Wage", value: currentWage || 97000 },
+                { step: "Enter New Reported Wage", value: newReportedWage ? parseFloat(newReportedWage) : 82000 },
+                { step: `Calculate Difference: ${currentWage || 97000} - ${newReportedWage ? parseFloat(newReportedWage) : 82000}`, value: (currentWage || 97000) - (newReportedWage ? parseFloat(newReportedWage) : 82000) },
+                { step: `Divide by Current Wage`, value: ((currentWage || 97000) - (newReportedWage ? parseFloat(newReportedWage) : 82000)) / (currentWage || 97000) },
+                { step: "Multiply by 100", value: 100 },
+                { step: "Percentage Drop Result", value: newReportedWage && currentWage ? ((currentWage - parseFloat(newReportedWage)) / currentWage) * 100 : ((97000 - 82000) / 97000) * 100 }
+              ]}
+            />
 
-          {/* Section B: 15% Rule Calculator */}
-          <div className="glass-panel-lg p-6 md:p-8">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary mb-6 flex items-center">
-            <TrendingDown className="h-5 w-5 text-accent-orange mr-2" />
-            15% Reassessment Check
-          </h3>
-
-          {/* Formula Demo for Percentage Drop Calculation */}
-          <FormulaDemo
-            title="15% Percentage Drop Calculation"
-            formula="Percentage Drop = ((Current Wage - New Reported Wage) ÷ Current Wage) × 100"
-            buttonSequence={["9", "7", "0", "0", "0", "-", "8", "2", "0", "0", "0", "=", "÷", "9", "7", "0", "0", "0", "=", "×", "1", "0", "0", "="]}
-            exampleValues={{ "Current Wage": 97000, "New Reported Wage": 82000 }}
-            explanation="Calculate the percentage drop: Subtract new reported wage ($82,000) from current wage ($97,000) = $15,000. Divide by current wage ($97,000) = 0.1546. Multiply by 100 = 15.46%. If result is 15% or greater, reassessment can proceed."
-            result={((97000 - 82000) / 97000) * 100}
-            resultFormat="percentage"
-            calculationSteps={[
-              { step: "Enter Current Wage", value: 97000 },
-              { step: "Enter New Reported Wage", value: 82000 },
-              { step: "Calculate Difference: 97000 - 82000", value: 15000 },
-              { step: "Divide by Current Wage: 15000 ÷ 97000", value: 0.1546 },
-              { step: "Multiply by 100: 0.1546 × 100", value: 15.46 },
-              { step: "Percentage Drop Result", value: 15.46 }
-            ]}
-          />
-
-          <div className="space-y-4">
-            <div>
+            {/* New Reported Wage Input */}
+            <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700 dark:text-text-secondary mb-2">
                 New Reported Annual Wage
               </label>
@@ -202,19 +235,19 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
 
             <button
               onClick={handleReassessmentCheck}
-              className="w-full neumorphic-btn-primary py-2"
+              className="w-full neumorphic-btn-primary py-2 mt-4"
             >
               Check 15% Rule
             </button>
 
             {/* Results */}
             {reassessmentResult && (
-              <div className="space-y-3 pt-4 border-t border-gray-200 dark:border-dark-600">
+              <div className="space-y-3 pt-4 border-t border-gray-200 dark:border-dark-600 mt-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-3 bg-gray-50 dark:bg-dark-800 rounded-lg">
                     <p className="text-xs text-gray-500 dark:text-text-tertiary mb-1">Percentage Income Drop</p>
                     <p className="text-lg font-bold text-gray-900 dark:text-text-primary">
-                      {reassessmentResult.percentage.toFixed(1)}%
+                      {reassessmentResult.percentage.toFixed(2)}%
                     </p>
                   </div>
                   <div className="p-3 bg-gray-50 dark:bg-dark-800 rounded-lg">
@@ -244,9 +277,7 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
               </div>
             )}
           </div>
-          </div>
         </div>
-
       </div>
 
       {/* Training Note */}

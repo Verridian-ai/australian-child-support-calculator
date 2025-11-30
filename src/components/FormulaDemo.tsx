@@ -52,9 +52,9 @@ export default function FormulaDemo({
     ? generateCalculationSteps(exampleValues, result)
     : initialCalculationSteps;
   
-  // Group consecutive digits for better display
+  // Group consecutive digits for better display and step navigation
   const getGroupedSequence = () => {
-    const grouped: Array<{ value: string; indices: number[] }> = [];
+    const grouped: Array<{ value: string; indices: number[]; isNumber: boolean }> = [];
     let currentGroup: string[] = [];
     let currentIndices: number[] = [];
     
@@ -66,22 +66,32 @@ export default function FormulaDemo({
         currentIndices.push(index);
       } else {
         if (currentGroup.length > 0) {
-          grouped.push({ value: currentGroup.join(''), indices: currentIndices });
+          grouped.push({ value: currentGroup.join(''), indices: currentIndices, isNumber: true });
           currentGroup = [];
           currentIndices = [];
         }
-        grouped.push({ value: button, indices: [index] });
+        grouped.push({ value: button, indices: [index], isNumber: false });
       }
     });
     
     if (currentGroup.length > 0) {
-      grouped.push({ value: currentGroup.join(''), indices: currentIndices });
+      grouped.push({ value: currentGroup.join(''), indices: currentIndices, isNumber: true });
     }
     
     return grouped;
   };
   
   const groupedSequence = getGroupedSequence();
+  
+  // Get the current group index based on currentStep
+  const getCurrentGroupIndex = () => {
+    for (let i = 0; i < groupedSequence.length; i++) {
+      if (groupedSequence[i].indices.some(idx => idx >= currentStep - 1)) {
+        return i;
+      }
+    }
+    return -1;
+  };
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [currentExplanation, setCurrentExplanation] = useState<string | null>(null);
@@ -145,23 +155,63 @@ export default function FormulaDemo({
 
   const nextStep = () => {
     if (currentStep < buttonSequence.length) {
-      const button = buttonSequence[currentStep];
-      setCurrentStep(currentStep + 1);
-      setHighlightedButton(button);
-      setCurrentExplanation(getStepExplanation(button, currentStep, buttonSequence));
+      const currentGroupIdx = getCurrentGroupIndex();
+      const nextGroupIdx = currentGroupIdx + 1;
       
-      // Press button on calculator
-      if (calculatorRef.current) {
-        calculatorRef.current.pressButton(button);
-        // Update display value after a short delay
-        setTimeout(() => {
-          const display = calculatorRef.current?.getDisplay() || '0';
-          setCalculatorDisplayValue(display);
-        }, 100);
+      if (nextGroupIdx < groupedSequence.length) {
+        const nextGroup = groupedSequence[nextGroupIdx];
+        
+        // If it's a number group, enter all digits at once
+        if (nextGroup.isNumber) {
+          // Enter each digit of the number with a small delay for visual effect
+          nextGroup.value.split('').forEach((digit, digitIndex) => {
+            setTimeout(() => {
+              if (calculatorRef.current) {
+                calculatorRef.current.pressButton(digit);
+                setHighlightedButton(digit);
+                
+                // Update display after last digit
+                if (digitIndex === nextGroup.value.length - 1) {
+                  setTimeout(() => {
+                    const display = calculatorRef.current?.getDisplay() || '0';
+                    setCalculatorDisplayValue(display);
+                    setHighlightedButton(null);
+                  }, 100);
+                }
+              }
+            }, digitIndex * 150); // Small delay between digits for visual effect
+          });
+          
+          // Update step to the last index of this group
+          setCurrentStep(nextGroup.indices[nextGroup.indices.length - 1] + 1);
+          setCurrentExplanation(`Entering ${nextGroup.value}...`);
+          
+          // Clear explanation after number is entered
+          setTimeout(() => {
+            setCurrentExplanation(`Entered ${nextGroup.value}. Click "Next" to continue.`);
+          }, nextGroup.value.length * 150 + 200);
+        } else {
+          // Single button press for operators
+          const button = nextGroup.value;
+          setCurrentStep(nextGroup.indices[0] + 1);
+          setHighlightedButton(button);
+          setCurrentExplanation(getStepExplanation(button, nextGroup.indices[0], buttonSequence));
+          
+          // Press button on calculator
+          if (calculatorRef.current) {
+            calculatorRef.current.pressButton(button);
+            // Update display value after a short delay
+            setTimeout(() => {
+              const display = calculatorRef.current?.getDisplay() || '0';
+              setCalculatorDisplayValue(display);
+              setHighlightedButton(null);
+            }, 300);
+          }
+        }
       }
       
       // If this is the last step, show completion message
-      if (currentStep === buttonSequence.length - 1) {
+      if (currentStep >= buttonSequence.length - 1) {
         setTimeout(() => {
           setCurrentExplanation('✓ Calculation complete! Result displayed.');
           if (result !== undefined) {

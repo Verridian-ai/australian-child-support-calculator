@@ -112,7 +112,7 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
                 <AlertTriangle className="h-4 w-4 text-semantic-warning" />
               </div>
               <p className="text-2xl font-bold text-gray-900 dark:text-text-primary font-mono mb-1">
-                {formatCurrency(threshold)}
+                {formatCurrency(currentWage ? currentWage * 0.85 : 0)}
               </p>
               <p className="text-xs text-gray-500 dark:text-text-tertiary">
                 Minimum wage level required to trigger a reassessment.

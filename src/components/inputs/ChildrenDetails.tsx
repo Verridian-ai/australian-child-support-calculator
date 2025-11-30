@@ -1,22 +1,34 @@
 import React from 'react';
-import { Baby } from 'lucide-react';
+import { Baby, HelpCircle } from 'lucide-react';
 import { ChildSupportInputs } from '../../lib/calculator';
 
 interface ChildrenDetailsProps {
   inputs: ChildSupportInputs;
   onChange: (field: keyof ChildSupportInputs, value: any) => void;
+  onShowGuide?: () => void;
 }
 
-export function ChildrenDetails({ inputs, onChange }: ChildrenDetailsProps) {
+export function ChildrenDetails({ inputs, onChange, onShowGuide }: ChildrenDetailsProps) {
   return (
     <div className="glass-panel-section animate-slide-up" style={{ animationDelay: '100ms' }}>
-      <div className="flex items-center space-x-3 mb-5">
-        <div className="p-2 bg-accent-orange/10 rounded-lg">
-          <Baby className="h-5 w-5 text-accent-orange" />
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center space-x-3">
+          <div className="p-2 bg-accent-orange/10 rounded-lg">
+            <Baby className="h-5 w-5 text-accent-orange" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary">
+            Children Details
+          </h3>
         </div>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary">
-          Children Details
-        </h3>
+        {onShowGuide && (
+          <button 
+            onClick={onShowGuide}
+            className="text-xs flex items-center text-accent-teal hover:text-accent-teal/80 transition-colors font-medium"
+          >
+            <HelpCircle className="h-3.5 w-3.5 mr-1.5" />
+            Show Guide
+          </button>
+        )}
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

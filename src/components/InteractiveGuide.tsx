@@ -17,8 +17,9 @@ export default function InteractiveGuide({
   onButtonHighlight, 
   onGuideStepComplete,
   onCalculatorClick,
-  onInputChange
-}: InteractiveGuideProps) {
+  onInputChange,
+  activeSection
+}: InteractiveGuideProps & { activeSection?: string }) {
   const [isGuideActive, setIsGuideActive] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -26,6 +27,11 @@ export default function InteractiveGuide({
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
   const [simulatedCursor, setSimulatedCursor] = useState<{ x: number, y: number, visible: boolean }>({ x: 0, y: 0, visible: false });
   const [typingStatus, setTypingStatus] = useState<string | null>(null);
+
+  // Filter steps based on activeSection
+  const activeSteps = activeSection 
+    ? guideSteps.filter(step => step.section === activeSection)
+    : guideSteps;
 
   const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
 
@@ -52,6 +58,16 @@ export default function InteractiveGuide({
     setTypingStatus(null);
   };
 
+  const nextStep = () => {
+    if (currentStep < activeSteps.length - 1) {
+      setCurrentStep(prev => prev + 1);
+      setIsPlaying(true);
+    } else {
+      setIsPlaying(false);
+      setTypingStatus('Guide Complete');
+    }
+  };
+
   const resetGuide = () => {
     clearTimeouts();
     setIsGuideActive(false);
@@ -65,7 +81,9 @@ export default function InteractiveGuide({
   const playStepSequence = async () => {
     if (!isPlaying || !isGuideActive) return;
     
-    const step = guideSteps[currentStep];
+    const step = activeSteps[currentStep];
+    if (!step) return;
+
     const STEP_DELAY = 1000;
     const TYPING_DELAY = 150;
     const BUTTON_PRESS_DELAY = 600;
@@ -136,16 +154,9 @@ export default function InteractiveGuide({
     setCompletedSteps(newCompleted);
     onGuideStepComplete();
 
-    // 4. Move to next step after delay
-    const t = setTimeout(() => {
-      if (currentStep < guideSteps.length - 1) {
-        setCurrentStep(prev => prev + 1);
-      } else {
-        setIsPlaying(false);
-        setTypingStatus('Guide Complete');
-      }
-    }, STEP_DELAY * 2);
-    timeoutRefs.current.push(t);
+    // 4. Pause and wait for user to click Next
+    setIsPlaying(false); 
+    setTypingStatus('Paused - Click Next to Continue');
   };
 
   // Effect to trigger sequence when step/play status changes
@@ -157,12 +168,21 @@ export default function InteractiveGuide({
     return () => clearTimeouts();
   }, [currentStep, isPlaying, isGuideActive]);
 
+  // Auto-start guide if activeSection changes and we aren't active yet
+  useEffect(() => {
+    if (activeSection && !isGuideActive) {
+      startGuide();
+    }
+  }, [activeSection]);
+
   if (!isGuideActive) {
     return <WelcomeScreen onStart={startGuide} />;
   }
 
-  const currentGuideStep = guideSteps[currentStep];
-  const progress = ((currentStep + 1) / guideSteps.length) * 100;
+  const currentGuideStep = activeSteps[currentStep];
+  if (!currentGuideStep) return null;
+
+  const progress = ((currentStep + 1) / activeSteps.length) * 100;
 
   return (
     <div className="space-y-6 animate-fade-in relative">
@@ -175,7 +195,7 @@ export default function InteractiveGuide({
             </div>
             <div>
               <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                Step {currentStep + 1}: {currentGuideStep.title}
+                {activeSection ? 'Section Guide' : `Step ${currentStep + 1}`}: {currentGuideStep.title}
               </h3>
               {typingStatus && (
                 <p className="text-xs text-accent-orange font-medium animate-pulse flex items-center">
@@ -187,13 +207,24 @@ export default function InteractiveGuide({
           </div>
           
           <div className="flex items-center space-x-2">
-            <button
-              onClick={isPlaying ? pauseGuide : resumeGuide}
-              className="neumorphic-btn-accent p-2 h-10 w-10 flex items-center justify-center rounded-full"
-              title={isPlaying ? "Pause" : "Resume"}
-            >
-              {isPlaying ? <Pause className="h-4 w-4 fill-current" /> : <Play className="h-4 w-4 fill-current ml-0.5" />}
-            </button>
+            {!isPlaying && currentStep < activeSteps.length - 1 && (
+              <button
+                onClick={nextStep}
+                className="neumorphic-btn-primary px-4 py-2 flex items-center text-sm"
+              >
+                Next Step <ArrowRight className="h-4 w-4 ml-2" />
+              </button>
+            )}
+            
+            {isPlaying && (
+              <button
+                onClick={pauseGuide}
+                className="neumorphic-btn-accent p-2 h-10 w-10 flex items-center justify-center rounded-full"
+                title="Pause"
+              >
+                <Pause className="h-4 w-4 fill-current" />
+              </button>
+            )}
             
             <button
               onClick={resetGuide}
@@ -224,7 +255,7 @@ export default function InteractiveGuide({
       </div>
 
       {/* Completion Screen */}
-      {currentStep === guideSteps.length - 1 && !isPlaying && typingStatus === 'Guide Complete' && (
+      {currentStep === activeSteps.length - 1 && !isPlaying && typingStatus === 'Guide Complete' && (
         <div className="glass-panel-lg border border-accent-green bg-white/95 dark:bg-dark-800/95 text-center animate-slide-up shadow-2xl">
           <div className="flex items-center justify-center space-x-3 mb-6">
             <div className="w-16 h-16 bg-green-100 dark:bg-accent-green/20 rounded-full flex items-center justify-center shadow-inner">
@@ -232,16 +263,16 @@ export default function InteractiveGuide({
             </div>
           </div>
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Guide Complete!
+            {activeSection ? 'Section Guide Complete!' : 'Full Guide Complete!'}
           </h3>
           <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-md mx-auto">
-            You've successfully walked through the entire Australian Child Support calculation process. You can now use the calculator with your own figures.
+            You've successfully completed the guide for this section.
           </p>
           <button
             onClick={resetGuide}
             className="neumorphic-btn-primary px-8 py-3 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all"
           >
-            Start Again
+            Close Guide
           </button>
         </div>
       )}

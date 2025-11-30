@@ -11,13 +11,15 @@ interface CalculatorInputsProps {
   onChange: (inputs: Partial<ChildSupportInputs>) => void;
   onCalculate: () => void;
   result: ChildSupportResult | null;
+  onShowGuide?: (section: string) => void;
 }
 
 export default function CalculatorInputs({ 
   inputs, 
   onChange, 
   onCalculate, 
-  result 
+  result,
+  onShowGuide
 }: CalculatorInputsProps) {
   const handleInputChange = (field: keyof ChildSupportInputs, value: any) => {
     onChange({ [field]: value });
@@ -25,10 +27,10 @@ export default function CalculatorInputs({
 
   return (
     <div className="space-y-6 md:space-y-8">
-      <ParentIncomes inputs={inputs} onChange={handleInputChange} />
-      <ChildrenDetails inputs={inputs} onChange={handleInputChange} />
-      <CareArrangements inputs={inputs} onChange={handleInputChange} />
-      <CurrentWage inputs={inputs} onChange={handleInputChange} />
+      <ParentIncomes inputs={inputs} onChange={handleInputChange} onShowGuide={() => onShowGuide?.('income')} />
+      <ChildrenDetails inputs={inputs} onChange={handleInputChange} onShowGuide={() => onShowGuide?.('costs')} />
+      <CareArrangements inputs={inputs} onChange={handleInputChange} onShowGuide={() => onShowGuide?.('care')} />
+      <CurrentWage inputs={inputs} onChange={handleInputChange} onShowGuide={() => onShowGuide?.('wage')} />
 
       {/* Calculate Button */}
       <div className="pt-4 md:pt-6 border-t border-gray-200 dark:border-dark-600 animate-fade-in" style={{ animationDelay: '400ms' }}>

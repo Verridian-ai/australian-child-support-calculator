@@ -28,6 +28,7 @@ function App() {
 
   const {
     showInteractiveGuide,
+    activeSection,
     highlightedButtons,
     calculatorDisplay,
     handleButtonHighlight,
@@ -39,7 +40,7 @@ function App() {
   return (
     <MainLayout 
       showInteractiveGuide={showInteractiveGuide} 
-      toggleInteractiveGuide={toggleInteractiveGuide}
+      toggleInteractiveGuide={() => toggleInteractiveGuide()}
     >
       {/* Alert Banner */}
       <AlertBanner 
@@ -57,6 +58,7 @@ function App() {
             onGuideStepComplete={handleGuideStepComplete}
             onCalculatorClick={(btn) => handleButtonClick(btn, handleCalculate)}
             onInputChange={handleInputsChange}
+            activeSection={activeSection}
           />
         </div>
       )}
@@ -66,15 +68,24 @@ function App() {
         <div className="lg:col-span-2 space-y-6 lg:space-y-8">
           {/* Input Section */}
           <div className="glass-panel-lg animate-slide-up p-4 sm:p-6 md:p-8" style={{ animationDelay: '100ms' }}>
-            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-text-primary mb-6 flex items-center">
-              <div className="w-1.5 h-6 bg-primary-500 rounded-full mr-3" />
-              Calculation Inputs
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-text-primary mb-6 flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="w-1.5 h-6 bg-primary-500 rounded-full mr-3" />
+                Calculation Inputs
+              </div>
+              <button 
+                onClick={() => toggleInteractiveGuide()} 
+                className="text-sm text-accent-teal hover:text-accent-teal/80 flex items-center"
+              >
+                 Full Guide
+              </button>
             </h2>
             <CalculatorInputs 
               inputs={inputs}
               onChange={handleInputsChange}
               onCalculate={handleCalculate}
               result={result}
+              onShowGuide={(section) => toggleInteractiveGuide(section)}
             />
           </div>
 

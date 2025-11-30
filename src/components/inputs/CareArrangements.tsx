@@ -42,9 +42,10 @@ export function CareArrangements({ inputs, onChange, onShowGuide }: CareArrangem
         result={Math.round((290 / 365) * 100 * 100) / 100}
         resultFormat="percentage"
         calculationSteps={[
-          { step: "Care Nights", value: 290 },
-          { step: "Divided by Days per Year", value: 365 },
-          { step: "Result", value: Math.round((290 / 365) * 100 * 100) / 100 }
+          { step: "Enter Care Nights", value: 290 },
+          { step: "Divide by Days per Year: 290 ÷ 365", value: 0.7945 },
+          { step: "Multiply by 100: 0.7945 × 100", value: 79.45 },
+          { step: "Care Percentage Result", value: 79.45 }
         ]}
       />
       

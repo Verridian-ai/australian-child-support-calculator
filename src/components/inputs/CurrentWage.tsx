@@ -48,9 +48,10 @@ export function CurrentWage({ inputs, onChange, onShowGuide }: CurrentWageProps)
         explanation="Multiply the current annual wage ($97,000) by 0.85 (which represents 85% or 100% minus 15%). This gives you the threshold amount ($82,450). If a parent's new reported wage falls below this threshold, the 15% rule is met and reassessment can proceed."
         result={97000 * 0.85}
         calculationSteps={[
-          { step: "Current Annual Wage", value: 97000 },
-          { step: "Multiplied by 0.85 (85%)", value: 0.85 },
-          { step: "15% Reduction Threshold", value: 97000 * 0.85 }
+          { step: "Enter Current Annual Wage", value: 97000 },
+          { step: "Multiply by 0.85 (85%)", value: 0.85 },
+          { step: "97000 × 0.85", value: 82450 },
+          { step: "15% Reduction Threshold Result", value: 82450 }
         ]}
       />
       

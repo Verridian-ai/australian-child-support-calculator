@@ -67,9 +67,10 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
             explanation="Multiply the current annual wage ($97,000) by 0.85 (which represents 85% or 100% minus 15%). This gives you the threshold amount ($82,450). If a parent's new reported wage falls below this threshold, the 15% rule is met and reassessment can proceed."
             result={97000 * 0.85}
             calculationSteps={[
-              { step: "Current Annual Wage", value: 97000 },
-              { step: "Multiplied by 0.85 (85%)", value: 0.85 },
-              { step: "15% Reduction Threshold", value: 97000 * 0.85 }
+              { step: "Enter Current Annual Wage", value: 97000 },
+              { step: "Multiply by 0.85 (85%)", value: 0.85 },
+              { step: "97000 × 0.85", value: 82450 },
+              { step: "15% Reduction Threshold Result", value: 82450 }
             ]}
           />
 
@@ -137,12 +138,12 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
             result={((97000 - 82000) / 97000) * 100}
             resultFormat="percentage"
             calculationSteps={[
-              { step: "Current Wage", value: 97000 },
-              { step: "Minus New Reported Wage", value: 82000 },
-              { step: "Wage Difference", value: 97000 - 82000 },
-              { step: "Divided by Current Wage", value: 97000 },
-              { step: "Multiplied by 100", value: 100 },
-              { step: "Percentage Drop", value: ((97000 - 82000) / 97000) * 100 }
+              { step: "Enter Current Wage", value: 97000 },
+              { step: "Enter New Reported Wage", value: 82000 },
+              { step: "Calculate Difference: 97000 - 82000", value: 15000 },
+              { step: "Divide by Current Wage: 15000 ÷ 97000", value: 0.1546 },
+              { step: "Multiply by 100: 0.1546 × 100", value: 15.46 },
+              { step: "Percentage Drop Result", value: 15.46 }
             ]}
           />
 

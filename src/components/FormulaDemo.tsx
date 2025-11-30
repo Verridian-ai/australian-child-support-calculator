@@ -60,6 +60,8 @@ export default function FormulaDemo({
   const [highlightedButton, setHighlightedButton] = useState<string | null>(null);
   const [showAutoCalculate, setShowAutoCalculate] = useState(false);
   const [currentCalculationStep, setCurrentCalculationStep] = useState(0);
+  const [autoCalculateSteps, setAutoCalculateSteps] = useState<Array<{ step: string; value: string | number }>>([]);
+  const [calculatorDisplayValue, setCalculatorDisplayValue] = useState<string>('0');
   const calculatorRef = useRef<CalculatorRef>(null);
   const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
 
@@ -118,6 +120,11 @@ export default function FormulaDemo({
           // Press button on calculator
           if (calculatorRef.current) {
             calculatorRef.current.pressButton(button);
+            // Update display value after a short delay
+            setTimeout(() => {
+              const display = calculatorRef.current?.getDisplay() || '0';
+              setCalculatorDisplayValue(display);
+            }, 100);
           }
           
           // Clear highlight after a moment
@@ -147,49 +154,87 @@ export default function FormulaDemo({
   };
 
   const startAutoCalculate = () => {
-    setShowAutoCalculate(true);
+    clearTimeouts();
     setCurrentCalculationStep(0);
     
-    if (calculationSteps.length === 0) {
+    // Use provided calculationSteps or generate from button sequence
+    let stepsToShow: Array<{ step: string; value: string | number }> = [];
+    
+    if (calculationSteps.length > 0) {
+      // Use provided steps
+      stepsToShow = [...calculationSteps];
+    } else {
       // Generate calculation steps from button sequence
-      const steps: Array<{ step: string; value: string | number }> = [];
-      let currentExpr = '';
       let currentNumber = '';
+      let firstNumber: string | null = null;
+      let operator: string | null = null;
+      let numbers: Array<{ num: number; op: string | null }> = [];
       
+      // Parse button sequence
       buttonSequence.forEach((button) => {
         if (!isNaN(Number(button)) || button === '.') {
           currentNumber += button;
-        } else if (button !== '=') {
+        } else if (['+', '-', '×', '÷'].includes(button)) {
           if (currentNumber) {
-            currentExpr += currentNumber + ' ' + button + ' ';
-            steps.push({ step: currentExpr.trim(), value: currentNumber });
+            numbers.push({ num: parseFloat(currentNumber), op: operator });
+            operator = button;
+            if (!firstNumber) firstNumber = currentNumber;
             currentNumber = '';
           }
+        } else if (button === '=' && currentNumber) {
+          numbers.push({ num: parseFloat(currentNumber), op: operator });
         }
       });
       
-      if (currentNumber) {
-        currentExpr += currentNumber;
-        steps.push({ step: currentExpr.trim(), value: currentNumber });
+      // Build calculation steps
+      if (numbers.length >= 2) {
+        let runningTotal = numbers[0].num;
+        stepsToShow.push({ step: 'Starting Value', value: numbers[0].num });
+        
+        for (let i = 1; i < numbers.length; i++) {
+          const { num, op } = numbers[i];
+          if (op) {
+            let calcResult = runningTotal;
+            switch (op) {
+              case '+': calcResult = runningTotal + num; break;
+              case '-': calcResult = runningTotal - num; break;
+              case '×': calcResult = runningTotal * num; break;
+              case '÷': calcResult = num !== 0 ? runningTotal / num : 0; break;
+            }
+            stepsToShow.push({ step: `${runningTotal} ${op} ${num}`, value: calcResult });
+            runningTotal = calcResult;
+          }
+        }
+        
+        if (result !== undefined) {
+          stepsToShow.push({ step: 'Final Result', value: result });
+        }
+      } else if (result !== undefined) {
+        stepsToShow.push({ step: 'Result', value: result });
       }
-      
-      if (result !== undefined) {
-        steps.push({ step: 'Result', value: result });
-      }
-      
-      calculationSteps.push(...steps);
     }
+    
+    // Store steps in state
+    setAutoCalculateSteps(stepsToShow);
+    setShowAutoCalculate(true);
     
     // Animate through calculation steps
     let stepIndex = 0;
     const animateSteps = () => {
-      if (stepIndex < calculationSteps.length) {
+      if (stepIndex < stepsToShow.length) {
         setCurrentCalculationStep(stepIndex + 1);
         stepIndex++;
-        setTimeout(animateSteps, 1500);
+        if (stepIndex < stepsToShow.length) {
+          const timeout = setTimeout(animateSteps, 1500);
+          timeoutRefs.current.push(timeout);
+        }
       }
     };
-    animateSteps();
+    
+    const initialTimeout = setTimeout(() => {
+      animateSteps();
+    }, 500);
+    timeoutRefs.current.push(initialTimeout);
   };
 
   const resetDemo = () => {
@@ -198,6 +243,8 @@ export default function FormulaDemo({
     setCurrentExplanation(null);
     setHighlightedButton(null);
     setCurrentCalculationStep(0);
+    setShowAutoCalculate(false);
+    setAutoCalculateSteps([]);
     clearTimeouts();
     
     // Clear calculator
@@ -268,7 +315,7 @@ export default function FormulaDemo({
       )}
 
       {/* Auto-Calculate Section */}
-      {showAutoCalculate && calculationSteps.length > 0 && (
+      {showAutoCalculate && autoCalculateSteps.length > 0 && (
         <div className="mb-4 p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-500/10 dark:to-emerald-500/10 rounded-lg border border-green-200 dark:border-green-500/30">
           <div className="flex items-center space-x-2 mb-3">
             <Zap className="h-4 w-4 text-accent-green" />
@@ -280,7 +327,7 @@ export default function FormulaDemo({
             This shows the calculation steps automatically. Use this if the system is down or for quick verification.
           </p>
           <div className="space-y-2">
-            {calculationSteps.map((calcStep, index) => (
+            {autoCalculateSteps.map((calcStep, index) => (
               <div
                 key={index}
                 className={`p-2 rounded border transition-all ${
@@ -396,7 +443,9 @@ export default function FormulaDemo({
           <div className="scale-90 origin-center relative">
             <NeumorphicCalculator 
               ref={calculatorRef}
-              onValueChange={() => {}}
+              onValueChange={(val) => {
+                setCalculatorDisplayValue(val.toString());
+              }}
               currentValue={0}
               highlightedButton={highlightedButton}
             />
@@ -407,6 +456,13 @@ export default function FormulaDemo({
             )}
           </div>
         </div>
+        {/* Calculator Display Value */}
+        {calculatorDisplayValue !== '0' && (
+          <div className="mt-4 text-center">
+            <p className="text-xs text-gray-500 dark:text-text-tertiary mb-1">Current Display:</p>
+            <p className="text-lg font-mono font-bold text-accent-teal">{calculatorDisplayValue}</p>
+          </div>
+        )}
       </div>
     </div>
   );

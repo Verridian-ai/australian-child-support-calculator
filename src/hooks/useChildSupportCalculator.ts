@@ -18,6 +18,7 @@ export function useChildSupportCalculator() {
     parentB_ATI: 60000,
     numberOfChildren: 3,
     childrenAges: [9, 7, 5],
+    childNames: ['Child One', 'Child Two', 'Child Three'],
     parentA_CareNights: 290,
     parentB_CareNights: 75,
     currentWage: 97000,

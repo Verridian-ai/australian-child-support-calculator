@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Calculator, TrendingDown, BookOpen, Play, Sun, Moon } from 'lucide-react';
+import { Calculator, TrendingDown, Sun, Moon } from 'lucide-react';
 
-interface HeaderProps {
-  showInteractiveGuide: boolean;
-  toggleInteractiveGuide: () => void;
-}
-
-export function Header({ showInteractiveGuide, toggleInteractiveGuide }: HeaderProps) {
+export function Header() {
   const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
@@ -53,16 +48,16 @@ export function Header({ showInteractiveGuide, toggleInteractiveGuide }: HeaderP
             
             <div className="flex flex-col justify-center">
               <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-text-primary tracking-tight leading-tight">
-                Express Plus <span className="text-accent-teal">Child Support</span>
+                Child Support Assessment <span className="text-accent-teal">Training Console</span>
               </h1>
-              <p className="text-[10px] sm:text-xs text-gray-500 dark:text-text-tertiary font-medium uppercase tracking-wider hidden xs:block">
-                Department of Human Services
+              <p className="text-[10px] sm:text-xs text-red-600 dark:text-red-400 font-medium uppercase tracking-wider hidden xs:block">
+                Internal Use Only
               </p>
               <div className="flex items-center space-x-1.5 mt-1">
                 <div className="w-1.5 h-1.5 bg-accent-green rounded-full" />
                 <div className="w-1.5 h-1.5 bg-accent-teal rounded-full" />
                 <div className="w-1.5 h-1.5 bg-accent-yellow rounded-full" />
-                <span className="text-[10px] text-gray-500 dark:text-text-tertiary ml-1 hidden sm:inline">Professional Tool</span>
+                <span className="text-[10px] text-gray-500 dark:text-text-tertiary ml-1 hidden sm:inline">Officer Training Tool</span>
               </div>
             </div>
           </div>
@@ -88,30 +83,6 @@ export function Header({ showInteractiveGuide, toggleInteractiveGuide }: HeaderP
               {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
 
-            <button
-              onClick={toggleInteractiveGuide}
-              className={`
-                flex items-center space-x-2 px-3 py-2 sm:px-4 sm:py-2 rounded-lg 
-                transition-all duration-300 font-medium text-xs sm:text-sm
-                ${showInteractiveGuide 
-                  ? 'bg-accent-green text-white shadow-neumorphic-green ring-2 ring-accent-green/50' 
-                  : 'bg-gray-100 dark:bg-dark-800 text-accent-teal border border-accent-teal/30 hover:bg-accent-teal hover:text-white hover:border-accent-teal shadow-neumorphic-sm'}
-              `}
-              aria-label={showInteractiveGuide ? "Disable Interactive Guide" : "Enable Interactive Guide"}
-            >
-              {showInteractiveGuide ? (
-                <>
-                  <BookOpen className="h-4 w-4" />
-                  <span className="hidden sm:inline">Guide Active</span>
-                </>
-              ) : (
-                <>
-                  <Play className="h-4 w-4" />
-                  <span className="hidden sm:inline">Start Guide</span>
-                  <span className="sm:hidden">Guide</span>
-                </>
-              )}
-            </button>
           </div>
         </div>
       </div>

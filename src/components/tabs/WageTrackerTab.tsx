@@ -1,0 +1,203 @@
+import React, { useState } from 'react';
+import { DollarSign, TrendingDown, AlertTriangle, Info } from 'lucide-react';
+import { formatCurrency, checkWageReduction, calculateWageThreshold } from '../../lib/calculator';
+
+interface WageTrackerTabProps {
+  currentWage: number;
+  wageHistory: Array<{
+    wage: number;
+    timestamp: string;
+  }>;
+  onWageChange: (newWage: number) => void;
+}
+
+export default function WageTrackerTab({ currentWage, wageHistory, onWageChange }: WageTrackerTabProps) {
+  const [newReportedWage, setNewReportedWage] = useState<string>('');
+  const [showReassessmentCheck, setShowReassessmentCheck] = useState(false);
+
+  const threshold = calculateWageThreshold(currentWage);
+  const formatDate = (timestamp: string) => {
+    return new Date(timestamp).toLocaleDateString('en-AU', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const handleReassessmentCheck = () => {
+    const reportedWage = parseFloat(newReportedWage);
+    if (reportedWage && reportedWage > 0) {
+      setShowReassessmentCheck(true);
+    }
+  };
+
+  const reassessmentResult = showReassessmentCheck && newReportedWage
+    ? checkWageReduction(parseFloat(newReportedWage), currentWage)
+    : null;
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center space-x-3">
+        <div className="w-1.5 h-6 bg-accent-green rounded-full" />
+        <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-text-primary">
+          Wage Tracker & 15% Rule
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Section A: Wage Tracking (System Baseline) */}
+        <div className="glass-panel-lg p-6 md:p-8">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary mb-6 flex items-center">
+            <DollarSign className="h-5 w-5 text-accent-green mr-2" />
+            Recorded Wage in System
+          </h3>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-text-secondary mb-2">
+                Current Annual Wage
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-gray-500 dark:text-text-tertiary font-medium">$</span>
+                </div>
+                <input
+                  type="number"
+                  value={currentWage || ''}
+                  onChange={(e) => onWageChange(parseFloat(e.target.value) || 0)}
+                  className="input-field pl-8 w-full"
+                  placeholder="97,000"
+                  min="0"
+                  step="1000"
+                />
+              </div>
+              <p className="text-xs text-gray-500 dark:text-text-tertiary mt-1">
+                Used as the baseline wage recorded in the assessment system.
+              </p>
+              {wageHistory.length > 0 && (
+                <p className="text-xs text-gray-500 dark:text-text-tertiary mt-1">
+                  Last updated: {formatDate(wageHistory[wageHistory.length - 1]?.timestamp || new Date().toISOString())}
+                </p>
+              )}
+            </div>
+
+            {/* 15% Reduction Threshold */}
+            <div className="p-4 bg-gray-50 dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-600">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700 dark:text-text-secondary">
+                  15% Reduction Threshold
+                </span>
+                <AlertTriangle className="h-4 w-4 text-semantic-warning" />
+              </div>
+              <p className="text-2xl font-bold text-gray-900 dark:text-text-primary font-mono mb-1">
+                {formatCurrency(threshold)}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-text-tertiary">
+                Minimum wage level required to trigger a reassessment.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Section B: 15% Rule Calculator */}
+        <div className="glass-panel-lg p-6 md:p-8">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary mb-6 flex items-center">
+            <TrendingDown className="h-5 w-5 text-accent-orange mr-2" />
+            15% Reassessment Check
+          </h3>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-text-secondary mb-2">
+                New Reported Annual Wage
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-gray-500 dark:text-text-tertiary font-medium">$</span>
+                </div>
+                <input
+                  type="number"
+                  value={newReportedWage}
+                  onChange={(e) => {
+                    setNewReportedWage(e.target.value);
+                    setShowReassessmentCheck(false);
+                  }}
+                  className="input-field pl-8 w-full"
+                  placeholder="82,000"
+                  min="0"
+                  step="1000"
+                />
+              </div>
+              <p className="text-xs text-gray-500 dark:text-text-tertiary mt-1">
+                Wage the parent is reporting now.
+              </p>
+            </div>
+
+            <button
+              onClick={handleReassessmentCheck}
+              className="w-full neumorphic-btn-primary py-2"
+            >
+              Check 15% Rule
+            </button>
+
+            {/* Results */}
+            {reassessmentResult && (
+              <div className="space-y-3 pt-4 border-t border-gray-200 dark:border-dark-600">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-3 bg-gray-50 dark:bg-dark-800 rounded-lg">
+                    <p className="text-xs text-gray-500 dark:text-text-tertiary mb-1">Percentage Income Drop</p>
+                    <p className="text-lg font-bold text-gray-900 dark:text-text-primary">
+                      {reassessmentResult.percentage.toFixed(1)}%
+                    </p>
+                  </div>
+                  <div className="p-3 bg-gray-50 dark:bg-dark-800 rounded-lg">
+                    <p className="text-xs text-gray-500 dark:text-text-tertiary mb-1">Is 15% Rule Met?</p>
+                    <p className={`text-lg font-bold ${reassessmentResult.qualifies ? 'text-green-600 dark:text-accent-green' : 'text-red-600 dark:text-semantic-error'}`}>
+                      {reassessmentResult.qualifies ? 'Yes' : 'No'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Outcome */}
+                <div className={`p-4 rounded-lg border ${
+                  reassessmentResult.qualifies
+                    ? 'bg-green-50 dark:bg-green-500/10 border-green-200 dark:border-green-500/30'
+                    : 'bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/30'
+                }`}>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-text-primary mb-1">
+                    Outcome:
+                  </p>
+                  <p className={`text-sm ${reassessmentResult.qualifies ? 'text-green-800 dark:text-green-400' : 'text-red-800 dark:text-red-400'}`}>
+                    {reassessmentResult.qualifies
+                      ? 'Reassessment can proceed. The wage drop meets or exceeds the 15% threshold.'
+                      : `Reassessment must be denied. The wage drop is less than 15%. The parent must wait until the next financial year reporting period.`
+                    }
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Training Note */}
+      <div className="glass-panel-sm p-4 border border-blue-200 dark:border-info-500/30 bg-blue-50 dark:bg-info-500/10">
+        <div className="flex items-start space-x-3">
+          <Info className="h-5 w-5 text-blue-600 dark:text-info-500 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-medium text-blue-900 dark:text-info-500 mb-1">
+              Training Rule: 15% Threshold
+            </p>
+            <p className="text-xs text-blue-800 dark:text-info-400 leading-relaxed">
+              A parent cannot trigger a reassessment unless their income has dropped by more than 15% relative to the wage currently recorded in the system. If the drop is below 15%, the reassessment request must be declined and the parent must wait until the next financial year reporting.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+

@@ -9,6 +9,7 @@ export interface ChildSupportInputs {
   parentB_ATI: number;
   numberOfChildren: number;
   childrenAges: number[];
+  childNames?: string[]; // Optional: child names for display purposes only
   parentA_CareNights: number;
   parentB_CareNights: number;
   currentWage: number;

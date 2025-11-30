@@ -85,7 +85,19 @@ export default function StepByStepGuideTab({
 
         {/* Calculator Sidebar */}
         <div className="lg:col-span-1 space-y-6">
-          {showInteractiveGuide ? (
+          {/* Always show manual calculator */}
+          <div className="glass-panel-sm">
+            <h3 className="text-lg font-semibold text-accent-teal mb-4">
+              Manual Calculator Reference
+            </h3>
+            <NeumorphicCalculator 
+              onValueChange={() => {}}
+              currentValue={0}
+            />
+          </div>
+          
+          {/* Show interactive calculator if guide is active */}
+          {showInteractiveGuide && (
             <div className="glass-panel-sm">
               <h3 className="text-lg font-semibold text-accent-teal mb-4">
                 Interactive Calculator
@@ -94,16 +106,6 @@ export default function StepByStepGuideTab({
                 highlightedButtons={highlightedButtons}
                 onButtonClick={onCalculatorClick}
                 currentDisplay={calculatorDisplay}
-              />
-            </div>
-          ) : (
-            <div className="glass-panel-sm">
-              <h3 className="text-lg font-semibold text-accent-teal mb-4">
-                Manual Calculator Reference
-              </h3>
-              <NeumorphicCalculator 
-                onValueChange={() => {}}
-                currentValue={0}
               />
             </div>
           )}

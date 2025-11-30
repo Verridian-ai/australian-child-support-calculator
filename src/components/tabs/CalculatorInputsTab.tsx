@@ -6,6 +6,7 @@ import { ChildrenDetails } from '../inputs/ChildrenDetails';
 import { CareArrangements } from '../inputs/CareArrangements';
 import { CurrentWage } from '../inputs/CurrentWage';
 import { formatCurrency } from '../../lib/calculator';
+import NeumorphicCalculator from '../NeumorphicCalculator';
 
 interface CalculatorInputsTabProps {
   inputs: ChildSupportInputs;
@@ -99,9 +100,22 @@ export default function CalculatorInputsTab({
         </div>
 
         {/* Quick Result Preview Sidebar */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 space-y-6">
+          {/* Calculator */}
+          <div className="glass-panel-sm border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800/60 sticky top-24">
+            <h4 className="text-sm font-semibold text-accent-teal uppercase tracking-wide mb-4 flex items-center">
+              <div className="w-1.5 h-1.5 bg-accent-teal rounded-full mr-2" />
+              Manual Calculator Reference
+            </h4>
+            <NeumorphicCalculator 
+              onValueChange={() => {}}
+              currentValue={0}
+            />
+          </div>
+
+          {/* Quick Result Preview */}
           {result && (
-            <div className="glass-panel-sm border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800/60 sticky top-24">
+            <div className="glass-panel-sm border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800/60">
               <h4 className="text-sm font-semibold text-accent-teal uppercase tracking-wide mb-4 flex items-center">
                 <div className="w-1.5 h-1.5 bg-accent-teal rounded-full mr-2" />
                 Quick Result Preview

@@ -2,6 +2,7 @@ import React from 'react';
 import { FileText, ArrowLeft } from 'lucide-react';
 import type { ChildSupportInputs, ChildSupportResult } from '../../lib/calculator';
 import { formatCurrency } from '../../lib/calculator';
+import NeumorphicCalculator from '../NeumorphicCalculator';
 
 interface FinalResultTabProps {
   result: ChildSupportResult | null;
@@ -49,9 +50,9 @@ export default function FinalResultTab({ result, inputs, onViewGuide }: FinalRes
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Summary Panel */}
-        <div className="glass-panel-lg p-6 md:p-8">
+        <div className="lg:col-span-2 glass-panel-lg p-6 md:p-8">
           <div className="space-y-6">
             {/* Final Transfer */}
             <div className="text-center p-6 bg-gradient-to-br from-accent-orange/10 to-accent-teal/10 rounded-xl border border-accent-orange/20">
@@ -94,11 +95,25 @@ export default function FinalResultTab({ result, inputs, onViewGuide }: FinalRes
           </div>
         </div>
 
-        {/* Per-Child Breakdown */}
-        <div className="glass-panel-lg p-6 md:p-8">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary mb-4">
-            Per-Child Breakdown
-          </h3>
+        {/* Sidebar with Calculator and Per-Child Breakdown */}
+        <div className="lg:col-span-1 space-y-6">
+          {/* Calculator */}
+          <div className="glass-panel-sm border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800/60">
+            <h4 className="text-sm font-semibold text-accent-teal uppercase tracking-wide mb-4 flex items-center">
+              <div className="w-1.5 h-1.5 bg-accent-teal rounded-full mr-2" />
+              Manual Calculator Reference
+            </h4>
+            <NeumorphicCalculator 
+              onValueChange={() => {}}
+              currentValue={0}
+            />
+          </div>
+
+          {/* Per-Child Breakdown */}
+          <div className="glass-panel-lg p-6 md:p-8">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary mb-4">
+              Per-Child Breakdown
+            </h3>
           
           <div className="mb-4 p-4 bg-gray-50 dark:bg-dark-800 rounded-lg">
             <p className="text-sm text-gray-600 dark:text-text-secondary mb-1">Per Child (Annual)</p>
@@ -136,6 +151,7 @@ export default function FinalResultTab({ result, inputs, onViewGuide }: FinalRes
               Covers: {inputs.childNames.join(', ')}
             </p>
           )}
+          </div>
         </div>
       </div>
 

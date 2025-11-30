@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DollarSign, TrendingDown, AlertTriangle, Info } from 'lucide-react';
 import { formatCurrency, checkWageReduction, calculateWageThreshold } from '../../lib/calculator';
+import NeumorphicCalculator from '../NeumorphicCalculator';
 
 interface WageTrackerTabProps {
   currentWage: number;
@@ -47,9 +48,10 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Section A: Wage Tracking (System Baseline) */}
-        <div className="glass-panel-lg p-6 md:p-8">
+        <div className="lg:col-span-2 space-y-6">
+          <div className="glass-panel-lg p-6 md:p-8">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary mb-6 flex items-center">
             <DollarSign className="h-5 w-5 text-accent-green mr-2" />
             Recorded Wage in System
@@ -100,10 +102,10 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
               </p>
             </div>
           </div>
-        </div>
+          </div>
 
-        {/* Section B: 15% Rule Calculator */}
-        <div className="glass-panel-lg p-6 md:p-8">
+          {/* Section B: 15% Rule Calculator */}
+          <div className="glass-panel-lg p-6 md:p-8">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary mb-6 flex items-center">
             <TrendingDown className="h-5 w-5 text-accent-orange mr-2" />
             15% Reassessment Check
@@ -179,6 +181,21 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
                 </div>
               </div>
             )}
+          </div>
+          </div>
+        </div>
+
+        {/* Calculator Sidebar */}
+        <div className="lg:col-span-1">
+          <div className="glass-panel-sm border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800/60 sticky top-24">
+            <h4 className="text-sm font-semibold text-accent-teal uppercase tracking-wide mb-4 flex items-center">
+              <div className="w-1.5 h-1.5 bg-accent-teal rounded-full mr-2" />
+              Manual Calculator Reference
+            </h4>
+            <NeumorphicCalculator 
+              onValueChange={() => {}}
+              currentValue={0}
+            />
           </div>
         </div>
       </div>

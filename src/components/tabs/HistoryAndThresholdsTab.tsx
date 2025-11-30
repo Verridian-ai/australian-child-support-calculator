@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { History, FileText, Clock } from 'lucide-react';
 import CalculationHistory from '../CalculationHistory';
 import ReferenceModal from '../ReferenceModal';
+import NeumorphicCalculator from '../NeumorphicCalculator';
 import { formatCurrency } from '../../lib/calculator';
 import type { ChildSupportInputs } from '../../lib/calculator';
 
@@ -28,9 +29,9 @@ export default function HistoryAndThresholdsTab({ calculations, onLoadCalculatio
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Section A: Calculation History */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-2 space-y-6">
           <div className="glass-panel-lg p-6 md:p-8">
             <div className="flex items-center space-x-2 mb-6">
               <History className="h-5 w-5 text-accent-teal" />
@@ -56,10 +57,8 @@ export default function HistoryAndThresholdsTab({ calculations, onLoadCalculatio
               />
             )}
           </div>
-        </div>
 
-        {/* Section B: Rates & Thresholds */}
-        <div className="lg:col-span-1">
+          {/* Section B: Rates & Thresholds */}
           <div className="glass-panel-lg p-6 md:p-8">
             <div className="flex items-center space-x-2 mb-6">
               <FileText className="h-5 w-5 text-accent-orange" />
@@ -87,6 +86,20 @@ export default function HistoryAndThresholdsTab({ calculations, onLoadCalculatio
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Calculator Sidebar */}
+        <div className="lg:col-span-1">
+          <div className="glass-panel-sm border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800/60 sticky top-24">
+            <h4 className="text-sm font-semibold text-accent-teal uppercase tracking-wide mb-4 flex items-center">
+              <div className="w-1.5 h-1.5 bg-accent-teal rounded-full mr-2" />
+              Manual Calculator Reference
+            </h4>
+            <NeumorphicCalculator 
+              onValueChange={() => {}}
+              currentValue={0}
+            />
           </div>
         </div>
       </div>

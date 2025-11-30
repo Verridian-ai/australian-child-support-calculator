@@ -1,5 +1,6 @@
 import React from 'react';
 import { Info, Shield, FileText } from 'lucide-react';
+import NeumorphicCalculator from '../NeumorphicCalculator';
 
 export default function AboutAndLegalTab() {
   return (
@@ -12,9 +13,10 @@ export default function AboutAndLegalTab() {
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* About This Tool */}
-        <div className="glass-panel-lg p-6 md:p-8">
+        <div className="lg:col-span-2 space-y-6">
+          <div className="glass-panel-lg p-6 md:p-8">
           <div className="flex items-center space-x-2 mb-6">
             <Info className="h-5 w-5 text-accent-teal" />
             <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary">
@@ -36,10 +38,10 @@ export default function AboutAndLegalTab() {
               </p>
             </div>
           </div>
-        </div>
+          </div>
 
-        {/* Legal Disclaimer */}
-        <div className="glass-panel-lg p-6 md:p-8">
+          {/* Legal Disclaimer */}
+          <div className="glass-panel-lg p-6 md:p-8">
           <div className="flex items-center space-x-2 mb-6">
             <Shield className="h-5 w-5 text-accent-orange" />
             <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary">
@@ -57,6 +59,21 @@ export default function AboutAndLegalTab() {
                 <strong>Important:</strong> This is an internal training tool for authorised officers only. All calculations are for training purposes and must not be used for actual case assessments.
               </p>
             </div>
+          </div>
+          </div>
+        </div>
+
+        {/* Calculator Sidebar */}
+        <div className="lg:col-span-1">
+          <div className="glass-panel-sm border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800/60 sticky top-24">
+            <h4 className="text-sm font-semibold text-accent-teal uppercase tracking-wide mb-4 flex items-center">
+              <div className="w-1.5 h-1.5 bg-accent-teal rounded-full mr-2" />
+              Manual Calculator Reference
+            </h4>
+            <NeumorphicCalculator 
+              onValueChange={() => {}}
+              currentValue={0}
+            />
           </div>
         </div>
       </div>

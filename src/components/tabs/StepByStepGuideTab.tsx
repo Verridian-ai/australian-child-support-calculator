@@ -2,7 +2,6 @@ import React from 'react';
 import CalculationSteps from '../CalculationSteps';
 import type { ChildSupportCalculationStep } from '../../lib/calculator';
 import InteractiveGuide from '../InteractiveGuide';
-import NeumorphicCalculator from '../NeumorphicCalculator';
 import ButtonHighlighter from '../ButtonHighlighter';
 
 interface StepByStepGuideTabProps {
@@ -68,9 +67,9 @@ export default function StepByStepGuideTab({
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         {/* Main Steps Panel */}
-        <div className="lg:col-span-3">
+        <div>
           <div className="glass-panel-lg p-4 sm:p-6 md:p-8">
             <CalculationSteps steps={steps} />
             
@@ -83,33 +82,6 @@ export default function StepByStepGuideTab({
           </div>
         </div>
 
-        {/* Calculator Sidebar */}
-        <div className="lg:col-span-1 space-y-6">
-          {/* Always show manual calculator */}
-          <div className="glass-panel-sm">
-            <h3 className="text-lg font-semibold text-accent-teal mb-4">
-              Manual Calculator Reference
-            </h3>
-            <NeumorphicCalculator 
-              onValueChange={() => {}}
-              currentValue={0}
-            />
-          </div>
-          
-          {/* Show interactive calculator if guide is active */}
-          {showInteractiveGuide && (
-            <div className="glass-panel-sm">
-              <h3 className="text-lg font-semibold text-accent-teal mb-4">
-                Interactive Calculator
-              </h3>
-              <ButtonHighlighter
-                highlightedButtons={highlightedButtons}
-                onButtonClick={onCalculatorClick}
-                currentDisplay={calculatorDisplay}
-              />
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );

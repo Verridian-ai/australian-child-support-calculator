@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { DollarSign, TrendingDown, AlertTriangle, Info } from 'lucide-react';
 import { formatCurrency, checkWageReduction, calculateWageThreshold } from '../../lib/calculator';
-import NeumorphicCalculator from '../NeumorphicCalculator';
 import FormulaDemo from '../FormulaDemo';
 
 interface WageTrackerTabProps {
@@ -50,7 +49,7 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         {/* Section A: Wage Tracking (System Baseline) */}
         <div className="lg:col-span-2 space-y-6">
           <div className="glass-panel-lg p-6 md:p-8">
@@ -248,19 +247,6 @@ export default function WageTrackerTab({ currentWage, wageHistory, onWageChange 
           </div>
         </div>
 
-        {/* Calculator Sidebar */}
-        <div className="lg:col-span-1">
-          <div className="glass-panel-sm border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800/60 sticky top-24">
-            <h4 className="text-sm font-semibold text-accent-teal uppercase tracking-wide mb-4 flex items-center">
-              <div className="w-1.5 h-1.5 bg-accent-teal rounded-full mr-2" />
-              Manual Calculator Reference
-            </h4>
-            <NeumorphicCalculator 
-              onValueChange={() => {}}
-              currentValue={0}
-            />
-          </div>
-        </div>
       </div>
 
       {/* Training Note */}

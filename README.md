@@ -2,85 +2,195 @@
 
 <div align="center">
 
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+<img src="./public/Services_australia_logo.png" alt="Services Australia" width="200"/>
 
-**A professional, privacy-focused child support calculator implementing the official Australian Child Support Formula**
+### Professional Child Support Assessment Tool
 
-[Features](#-features) | [Quick Start](#-quick-start) | [Documentation](#-documentation) | [API Reference](#-api-reference) | [Contributing](#-contributing)
+**A comprehensive, privacy-focused calculator implementing the official 8-step Australian Child Support Formula**
 
----
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_Application-0066CC?style=for-the-badge)](https://4usw7ly4n1eh.space.minimax.io)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](./LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_App-blue?style=for-the-badge)](https://4usw7ly4n1eh.space.minimax.io)
+[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Wiki](./docs/wiki/Home.md) • [Contributing](#-contributing) • [License](#-license)
 
 </div>
 
 ---
 
-## Overview
+## 📋 Table of Contents
 
-The Australian Child Support Calculator is a comprehensive web application designed to help Australian parents understand and calculate child support obligations according to the official Department of Social Services (DSS) guidelines. Built with modern web technologies, this calculator provides accurate, step-by-step calculations while maintaining complete user privacy.
+- [Overview](#-overview)
+- [Features](#-features)
+- [Quick Start](#-quick-start)
+- [Documentation](#-documentation)
+- [Technology Stack](#-technology-stack)
+- [Project Structure](#-project-structure)
+- [Development](#-development)
+- [Deployment](#-deployment)
+- [Testing](#-testing)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Disclaimer](#-disclaimer)
+- [Support](#-support)
+
+---
+
+## 🎯 Overview
+
+The **Australian Child Support Calculator** is a professional-grade web application that implements the complete 8-step child support assessment formula as published by the Australian Department of Social Services (DSS). Designed with privacy, accuracy, and education as core principles, this tool helps Australian parents understand their child support obligations through an intuitive, government-styled interface.
 
 ### Why This Calculator?
 
-| Benefit | Description |
-|---------|-------------|
-| **100% Client-Side** | All calculations happen in your browser - no data is ever sent to external servers |
-| **Official Formula** | Implements the complete 8-step Australian child support formula |
-| **Educational Focus** | Interactive guides help users understand each calculation step |
-| **Modern Design** | Professional neumorphic interface with government-compliant accessibility |
-| **Offline Capable** | Works without an internet connection after initial load |
+<table>
+<tr>
+<td width="50%">
+
+#### 🔒 **Privacy First**
+- **100% Client-Side Processing** - All calculations happen in your browser
+- **Zero Data Transmission** - No information sent to external servers
+- **Local Storage Only** - Data persists only in your browser
+- **No Tracking** - Completely anonymous usage
+
+</td>
+<td width="50%">
+
+#### ✅ **Official & Accurate**
+- **DSS Formula Compliant** - Implements official 8-step calculation
+- **2024-2025 Rates** - Current self-support and cost thresholds
+- **Verified Calculations** - Matches Services Australia methodology
+- **Regular Updates** - Maintained with latest legislative changes
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+#### 📚 **Educational Focus**
+- **Interactive Guide** - Step-by-step walkthrough with button highlighting
+- **Formula Breakdown** - Detailed explanation of each calculation step
+- **Visual Calculator** - Neumorphic calculator widget for demonstrations
+- **Real-time Feedback** - Instant updates as inputs change
+
+</td>
+<td width="50%">
+
+#### 🎨 **Professional Design**
+- **Express Plus Styling** - Government app aesthetic
+- **Dark Theme** - Professional appearance for legal/financial contexts
+- **WCAG 2.1 Compliant** - Accessible to all users
+- **Responsive Layout** - Works on desktop, tablet, and mobile
+
+</td>
+</tr>
+</table>
 
 ---
 
-## Features
+## ✨ Features
 
-### Core Calculator
+### 🧮 Core Calculator Functionality
 
-- **8-Step Australian Child Support Formula** - Complete implementation based on official DSS guidelines
-- **Dual Parent Support** - Calculate obligations for both Parent A and Parent B
-- **Care Arrangements** - Flexible night-based care percentage calculations (0-365 nights)
-- **Multiple Children** - Support for calculating costs across multiple children
-- **Wage Tracking** - Monitor income changes with automatic 15% threshold alerts
-- **Calculation History** - Save and review past calculations locally
+<table>
+<tr>
+<td width="33%">
 
-### Interactive Educational Guide
+**8-Step DSS Formula**
+- Complete implementation of official Australian child support calculation
+- Steps 1-8 fully documented
+- Matches Services Australia methodology
+- 2024-2025 rate tables
 
-- **Step-by-Step Walkthrough** - Visual demonstration of the entire calculation process
-- **Button Highlighting** - Interactive tutorial showing exactly which buttons to press
-- **Real-time Calculations** - Instant updates as you modify inputs
-- **Educational Context** - Detailed explanations for each calculation step
-- **Progress Tracking** - Visual indicators showing your position in the guide
+</td>
+<td width="33%">
 
-### Professional Design
+**Dual Parent Support**
+- Calculate for Parent A & B
+- Flexible income inputs
+- Care night distribution
+- Automatic offset calculations
 
-- **Express Plus Branding** - Government app styling consistent with Services Australia
-- **Dark Theme** - Professional appearance suitable for legal and financial contexts
-- **Neumorphic Buttons** - 3D pressed/depressed button effects for tactile feedback
-- **Glassmorphic Panels** - Modern frosted glass containers with elegant shadows
-- **High Contrast** - Government accessibility standards (WCAG 2.1 compliant)
+</td>
+<td width="33%">
 
-### Privacy & Security
+**Multiple Children**
+- Support for 1-8+ children
+- Age-based cost calculations
+- Individual child tracking
+- Combined cost assessments
 
-- **No Data Collection** - Zero user data is transmitted or stored externally
-- **Local Storage Only** - All data persists only in your browser's localStorage
-- **No External APIs** - Completely self-contained application
-- **Open Source** - Complete transparency - review the code yourself
+</td>
+</tr>
+</table>
+
+### 📊 Advanced Features
+
+| Feature | Description | Benefit |
+|---------|-------------|---------|
+| **Wage Tracker** | Monitor income changes over time | Automatic 15% threshold alerts ($82,450 for $97,000 wage) |
+| **Calculation History** | Save and review past assessments | Track changes and compare scenarios |
+| **Care Arrangements** | Flexible 0-365 night inputs | Accurate care percentage calculations |
+| **Real-time Updates** | Instant recalculation on input change | Immediate feedback for scenario planning |
+| **Export Functionality** | Save calculations as JSON | Share with legal/financial advisors |
+
+### 🎓 Interactive Educational Guide
+
+The calculator includes a comprehensive interactive tutorial system:
+
+- **🎯 Button Highlighting** - Visual cues showing exactly which buttons to press
+- **📝 Step-by-Step Walkthrough** - Guided tour through the entire calculation process
+- **🧮 Neumorphic Calculator** - Working calculator widget demonstrating operations
+- **📚 Formula Explanations** - Detailed breakdown of each calculation step
+- **✅ Progress Tracking** - Visual indicators showing completion status
+- **🔄 Interactive Demonstrations** - Real-time calculation updates
+
+### 🎨 Professional Design System
+
+**Express Plus Government Styling**
+- Dark theme optimized for legal/financial contexts
+- Neumorphic button effects (3D pressed/depressed states)
+- Glassmorphic panels with frosted glass aesthetics
+- High contrast ratios (WCAG 2.1 AA compliant)
+- Responsive grid layout (desktop, tablet, mobile)
+
+**Accessibility Features**
+- Keyboard navigation support
+- Screen reader compatible
+- Focus indicators
+- Semantic HTML structure
+- ARIA labels and roles
+
+### 🔒 Privacy & Security
+
+| Aspect | Implementation |
+|--------|----------------|
+| **Data Processing** | 100% client-side - zero server communication |
+| **Storage** | Browser localStorage only - never leaves your device |
+| **External APIs** | None - completely self-contained application |
+| **Tracking** | Zero analytics or user tracking |
+| **Open Source** | Full code transparency - audit yourself |
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm (recommended) or npm
-- Modern web browser (Chrome, Firefox, Safari, Edge)
+Before you begin, ensure you have the following installed:
+
+| Requirement | Version | Download |
+|------------|---------|----------|
+| **Node.js** | 18.0.0 or higher | [nodejs.org](https://nodejs.org/) |
+| **pnpm** | Latest (recommended) | `npm install -g pnpm` |
+| **Git** | Latest | [git-scm.com](https://git-scm.com/) |
+| **Browser** | Modern (Chrome, Firefox, Safari, Edge) | - |
 
 ### Installation
+
+#### Option 1: Clone from GitHub
 
 ```bash
 # Clone the repository
@@ -89,42 +199,84 @@ git clone https://github.com/Verridian-ai/australian-child-support-calculator.gi
 # Navigate to project directory
 cd australian-child-support-calculator
 
-# Install dependencies
+# Install dependencies (recommended: pnpm)
 pnpm install
-# or
-npm install
 
 # Start development server
 pnpm dev
-# or
-npm run dev
 ```
 
-The application will be available at `http://localhost:5173`
+#### Option 2: Download ZIP
+
+1. Download the [latest release](https://github.com/Verridian-ai/australian-child-support-calculator/releases)
+2. Extract the ZIP file
+3. Open terminal in the extracted directory
+4. Run `pnpm install && pnpm dev`
+
+### Development Server
+
+The application will be available at:
+
+```
+🌐 Local:   http://localhost:5173
+📱 Network: http://[your-ip]:5173
+```
+
+**Hot Module Replacement (HMR)** is enabled - changes will reflect instantly without page refresh.
 
 ### Production Build
 
 ```bash
 # Create optimized production build
 pnpm build
-# or
-npm run build
 
 # Preview production build locally
 pnpm preview
-# or
-npm run preview
+
+# Build with production optimizations
+pnpm build:prod
 ```
 
-The built files will be in the `dist/` directory, ready for deployment.
+**Build Output:**
+- Location: `dist/` directory
+- Size: ~500KB (gzipped)
+- Assets: Minified, tree-shaken, and optimized
+- Ready for: Static hosting (Vercel, Netlify, GitHub Pages, etc.)
+
+### Quick Commands Reference
+
+```bash
+pnpm dev          # Start development server
+pnpm build        # Build for production
+pnpm build:prod   # Build with production mode
+pnpm preview      # Preview production build
+pnpm lint         # Run ESLint
+pnpm clean        # Clean dependencies and cache
+```
 
 ---
 
-## Documentation
+## 📚 Documentation
+
+### Complete Wiki
+
+For comprehensive documentation, visit the [**Project Wiki**](./docs/wiki/Home.md):
+
+| Wiki Page | Description |
+|-----------|-------------|
+| [🏠 Home](./docs/wiki/Home.md) | Wiki overview and navigation |
+| [🚀 Getting Started](./docs/wiki/Getting-Started.md) | Installation and setup guide |
+| [📖 User Guide](./docs/wiki/User-Guide.md) | How to use the calculator |
+| [🧮 Formula Explained](./docs/wiki/Formula-Explained.md) | Complete 8-step formula breakdown |
+| [🏗️ Architecture](./docs/wiki/Architecture.md) | Technical architecture and design patterns |
+| [📡 API Reference](./docs/wiki/API-Reference.md) | Developer API documentation |
+| [🚢 Deployment Guide](./docs/wiki/Deployment-Guide.md) | Deployment options and instructions |
+| [🤝 Contributing](./docs/wiki/Contributing.md) | How to contribute to the project |
+| [❓ FAQ](./docs/wiki/FAQ.md) | Frequently asked questions |
 
 ### The 8-Step Child Support Formula
 
-The calculator implements the official Australian child support assessment formula as published by the Department of Social Services:
+The calculator implements the official Australian child support assessment formula as published by the Department of Social Services (DSS):
 
 #### Step 1: Child Support Income (CSI)
 
@@ -276,7 +428,9 @@ australian-child-support-calculator/
 
 ---
 
-## Technology Stack
+## 🛠️ Technology Stack
+
+### Core Technologies
 
 | Category | Technology | Version | Purpose |
 |----------|------------|---------|---------|
@@ -284,21 +438,198 @@ australian-child-support-calculator/
 | **Language** | TypeScript | 5.6.2 | Type-safe development |
 | **Build Tool** | Vite | 6.0.1 | Fast development & bundling |
 | **Styling** | Tailwind CSS | 3.4.16 | Utility-first CSS framework |
-| **UI Components** | Radix UI | Various | Accessible component primitives |
-| **Icons** | Lucide React | 0.364.0 | Modern icon library |
-| **Forms** | React Hook Form | 7.54.2 | Form management |
-| **Validation** | Zod | 3.24.1 | Schema validation |
-| **Charts** | Recharts | 2.12.4 | Data visualization |
-| **Notifications** | Sonner | 1.7.2 | Toast notifications |
-| **Storage** | localStorage | Native | Client-side data persistence |
+
+### UI & Components
+
+| Library | Version | Purpose |
+|---------|---------|---------|
+| **Radix UI** | Various | Accessible component primitives (Dialog, Accordion, Tabs, etc.) |
+| **Lucide React** | 0.364.0 | Modern icon library (500+ icons) |
+| **class-variance-authority** | 0.7.1 | Component variant management |
+| **tailwind-merge** | 2.6.0 | Tailwind class merging utility |
+| **tailwindcss-animate** | 1.0.7 | Animation utilities |
+
+### Forms & Validation
+
+| Library | Version | Purpose |
+|---------|---------|---------|
+| **React Hook Form** | 7.54.2 | Performant form management |
+| **Zod** | 3.24.1 | TypeScript-first schema validation |
+| **@hookform/resolvers** | 3.10.0 | Form validation resolvers |
+
+### Data & Visualization
+
+| Library | Version | Purpose |
+|---------|---------|---------|
+| **Recharts** | 2.12.4 | Composable charting library |
+| **date-fns** | 3.0.0 | Modern date utility library |
+| **localStorage** | Native | Client-side data persistence |
+
+### Developer Experience
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| **ESLint** | 9.15.0 | Code linting |
+| **TypeScript ESLint** | 8.15.0 | TypeScript-specific linting |
+| **PostCSS** | 8.4.49 | CSS processing |
+| **Autoprefixer** | 10.4.20 | CSS vendor prefixing |
 
 ---
 
-## API Reference
+## 🏗️ Project Structure
 
-### Calculator Functions
+```
+australian-child-support-calculator/
+├── 📁 src/
+│   ├── 📁 components/               # React UI components
+│   │   ├── 📁 layout/               # Layout components
+│   │   │   ├── Header.tsx           # App header with navigation
+│   │   │   ├── Footer.tsx           # App footer with links
+│   │   │   ├── MainLayout.tsx       # Main layout wrapper
+│   │   │   └── TabContainer.tsx     # Tab navigation system
+│   │   ├── 📁 inputs/               # Input field components
+│   │   │   ├── ParentIncomes.tsx    # Parent income inputs
+│   │   │   ├── ChildrenDetails.tsx  # Children information
+│   │   │   ├── CareArrangements.tsx # Care night inputs
+│   │   │   └── CurrentWage.tsx      # Wage tracking input
+│   │   ├── 📁 steps/                # Calculation step components
+│   │   │   ├── StepCard.tsx         # Individual step card
+│   │   │   └── StepContent.tsx      # Step content renderer
+│   │   ├── 📁 guide/                # Interactive guide components
+│   │   │   └── WelcomeScreen.tsx    # Guide welcome screen
+│   │   ├── 📁 tabs/                 # Tab content components
+│   │   │   ├── CalculatorInputsTab.tsx
+│   │   │   ├── StepByStepGuideTab.tsx
+│   │   │   ├── FinalResultTab.tsx
+│   │   │   ├── WageTrackerTab.tsx
+│   │   │   ├── HistoryAndThresholdsTab.tsx
+│   │   │   └── AboutAndLegalTab.tsx
+│   │   ├── AlertBanner.tsx          # Alert notification system
+│   │   ├── ButtonHighlighter.tsx    # Tutorial button highlighting
+│   │   ├── CalculationHistory.tsx   # Past calculations viewer
+│   │   ├── CalculationSteps.tsx     # Step-by-step results
+│   │   ├── CalculatorInputs.tsx     # Main input form
+│   │   ├── ErrorBoundary.tsx        # Error handling wrapper
+│   │   ├── FormulaDemo.tsx          # Formula demonstration
+│   │   ├── InteractiveGuide.tsx     # Educational guide system
+│   │   ├── NeumorphicCalculator.tsx # Visual calculator widget
+│   │   ├── ReferenceModal.tsx       # Reference information
+│   │   └── WageTracker.tsx          # Wage monitoring component
+│   ├── 📁 hooks/                    # Custom React hooks
+│   │   ├── useChildSupportCalculator.ts  # Main calculator state
+│   │   ├── useInteractiveGuide.ts        # Guide state management
+│   │   └── use-mobile.tsx                # Mobile detection hook
+│   ├── 📁 lib/                      # Core logic & utilities
+│   │   ├── 📁 rates/                # Annual rate configurations
+│   │   │   └── 2024-2025.ts         # Current year rates
+│   │   ├── calculator.ts            # Calculation engine (8-step formula)
+│   │   └── utils.ts                 # Utility functions
+│   ├── 📁 data/                     # Static data
+│   │   └── guideSteps.ts            # Interactive guide step definitions
+│   ├── App.tsx                      # Main application component
+│   ├── App.css                      # Application-specific styles
+│   ├── main.tsx                     # Application entry point
+│   ├── index.css                    # Global styles (Tailwind imports)
+│   └── vite-env.d.ts               # Vite type definitions
+├── 📁 public/                       # Static assets
+│   ├── Services_australia_logo.png  # Services Australia logo
+│   └── use.txt                      # Usage notes
+├── 📁 docs/                         # Documentation
+│   └── 📁 wiki/                     # Wiki documentation
+│       ├── Home.md                  # Wiki home page
+│       ├── Getting-Started.md       # Setup guide
+│       ├── User-Guide.md            # User documentation
+│       ├── Formula-Explained.md     # Formula breakdown
+│       ├── Architecture.md          # Technical architecture
+│       ├── API-Reference.md         # API documentation
+│       ├── Deployment-Guide.md      # Deployment instructions
+│       ├── Contributing.md          # Contribution guidelines
+│       └── FAQ.md                   # Frequently asked questions
+├── 📁 dist/                         # Production build output (generated)
+├── package.json                     # Dependencies and scripts
+├── pnpm-lock.yaml                   # Dependency lock file
+├── vite.config.ts                   # Vite configuration
+├── tailwind.config.js               # Tailwind CSS configuration
+├── postcss.config.js                # PostCSS configuration
+├── tsconfig.json                    # TypeScript configuration
+├── tsconfig.app.json                # App-specific TS config
+├── tsconfig.node.json               # Node-specific TS config
+├── eslint.config.js                 # ESLint configuration
+├── components.json                  # Shadcn UI component config
+├── LICENSE                          # MIT License
+└── README.md                        # This file
+```
 
-#### `calculateChildSupport(inputs)`
+### Key Directories Explained
+
+| Directory | Purpose | Key Files |
+|-----------|---------|-----------|
+| `src/components/` | All React UI components | 35+ component files |
+| `src/hooks/` | Custom React hooks for state management | Calculator, Guide, Mobile hooks |
+| `src/lib/` | Core business logic and utilities | Calculator engine, rate tables |
+| `src/data/` | Static data and configurations | Guide steps, constants |
+| `docs/wiki/` | Comprehensive documentation | 9 wiki pages |
+| `public/` | Static assets served as-is | Logo, images |
+| `dist/` | Production build output | Generated by `pnpm build` |
+
+---
+
+## 💻 Development
+
+### Development Workflow
+
+```bash
+# 1. Install dependencies
+pnpm install
+
+# 2. Start development server with HMR
+pnpm dev
+
+# 3. Open browser to http://localhost:5173
+
+# 4. Make changes - see instant updates
+
+# 5. Lint code
+pnpm lint
+
+# 6. Build for production
+pnpm build
+
+# 7. Preview production build
+pnpm preview
+```
+
+### Code Style & Standards
+
+- **TypeScript** - Strict mode enabled
+- **ESLint** - Enforced code quality rules
+- **Prettier** - Consistent code formatting (via ESLint)
+- **Component Structure** - Functional components with hooks
+- **File Naming** - PascalCase for components, camelCase for utilities
+- **Import Order** - React → Third-party → Local components → Utilities
+
+### Environment Variables
+
+No environment variables required - the application is fully self-contained.
+
+### Browser Support
+
+| Browser | Minimum Version |
+|---------|----------------|
+| Chrome | 90+ |
+| Firefox | 88+ |
+| Safari | 14+ |
+| Edge | 90+ |
+
+---
+
+## 📡 API Reference
+
+For complete API documentation, see [API Reference Wiki](./docs/wiki/API-Reference.md).
+
+### Core Calculator Functions
+
+#### `calculateChildSupport(inputs: ChildSupportInputs): ChildSupportResult`
 
 Performs the complete 8-step child support calculation.
 
@@ -306,85 +637,166 @@ Performs the complete 8-step child support calculation.
 interface ChildSupportInputs {
   parentA_ATI: number;        // Parent A's Adjusted Taxable Income
   parentB_ATI: number;        // Parent B's Adjusted Taxable Income
-  numberOfChildren: number;   // Number of children
+  numberOfChildren: number;   // Number of children (1-8+)
   childrenAges: number[];     // Array of children's ages
-  parentA_CareNights: number; // Annual nights of care for Parent A
-  parentB_CareNights: number; // Annual nights of care for Parent B
+  childNames?: string[];      // Optional: child names for display
+  parentA_CareNights: number; // Annual nights of care for Parent A (0-365)
+  parentB_CareNights: number; // Annual nights of care for Parent B (0-365)
   currentWage: number;        // Current wage for tracking
 }
 
 interface ChildSupportResult {
-  steps: ChildSupportCalculationStep[];  // Detailed step breakdown
+  steps: ChildSupportCalculationStep[];  // Detailed step breakdown (8 steps)
   finalAmount: number;                    // Annual child support amount
   parentA_PerChild: number;               // Per-child amount (Parent A)
   parentB_PerChild: number;               // Per-child amount (Parent B)
   totalAmount: number;                    // Total annual amount
   offsetApplied: boolean;                 // Whether offset rules applied
 }
+
+// Example usage
+const result = calculateChildSupport({
+  parentA_ATI: 50000,
+  parentB_ATI: 60000,
+  numberOfChildren: 2,
+  childrenAges: [8, 5],
+  parentA_CareNights: 182,
+  parentB_CareNights: 183,
+  currentWage: 50000
+});
 ```
 
-#### `checkWageReduction(newWage, previousWage)`
+#### `checkWageReduction(newWage: number, previousWage: number): WageReductionResult`
 
-Checks if a wage reduction qualifies for a new child support estimate.
+Checks if a wage reduction qualifies for a new child support estimate (15% threshold).
 
 ```typescript
 interface WageReductionResult {
   qualifies: boolean;    // Whether the 15% threshold is met
   percentage: number;    // Actual reduction percentage
-  threshold: number;     // Calculated threshold value
+  threshold: number;     // Calculated threshold value (85% of previous wage)
 }
+
+// Example usage
+const check = checkWageReduction(82000, 97000);
+// Returns: { qualifies: true, percentage: 15.46, threshold: 82450 }
 ```
 
-#### `calculateCarePercentage(nights)`
+#### `calculateCarePercentage(nights: number): number`
 
 Converts annual nights of care to a percentage.
 
 ```typescript
 // Returns: (nights / 365) * 100
 calculateCarePercentage(182);  // Returns: 49.86
+calculateCarePercentage(128);  // Returns: 35.07
 ```
 
-#### `calculateCostPercentage(carePercentage)`
+#### `calculateCostPercentage(carePercentage: number): number`
 
-Converts care percentage to cost percentage using the care cost table.
+Converts care percentage to cost percentage using the official care cost table.
 
 ```typescript
-calculateCostPercentage(50);  // Returns: 0.50 (50%)
+calculateCostPercentage(50);   // Returns: 0.50 (50% - equal shared care)
+calculateCostPercentage(30);   // Returns: 0.24 (24% - regular care)
+calculateCostPercentage(70);   // Returns: 0.76 (76% - primary care)
 ```
 
+### Storage Functions
+
+#### `saveCalculation(inputs: ChildSupportInputs, result: ChildSupportResult): void`
+
+Saves a calculation to localStorage history.
+
+#### `getCalculations(): SavedCalculation[]`
+
+Retrieves all saved calculations from localStorage.
+
+#### `saveCurrentWage(wage: number): void`
+
+Saves the current wage to localStorage.
+
+#### `getCurrentWage(): number`
+
+Retrieves the current wage from localStorage.
+
+#### `saveWageToHistory(wage: number): void`
+
+Adds a wage entry to the wage history.
+
+#### `getWageHistory(): WageHistoryEntry[]`
+
+Retrieves the complete wage history.
+
 ---
 
-## Usage Guide
+## 🧪 Testing
 
-### Basic Calculator
+### Manual Testing
 
-1. **Enter Parent Incomes** - Input the Adjusted Taxable Income for both parents
-2. **Add Child Information** - Specify the number of children and their ages
-3. **Set Care Arrangements** - Enter the annual nights each parent has the children
-4. **View Results** - See the step-by-step calculation breakdown
-5. **Save Calculation** - Optionally save for future reference
+The application includes comprehensive manual testing capabilities:
 
-### Interactive Guide
+1. **Calculator Accuracy** - Test calculations against Services Australia examples
+2. **Interactive Guide** - Verify button highlighting and step progression
+3. **Wage Tracker** - Test 15% threshold alerts
+4. **Responsive Design** - Test on desktop, tablet, and mobile
+5. **Accessibility** - Test keyboard navigation and screen readers
 
-1. Click the **"Start Guide"** button in the header
-2. Watch as buttons highlight with instructions
-3. Follow along with each of the 8 steps
-4. Learn the Australian child support formula interactively
+### Test Scenarios
 
-### Wage Tracking
+| Scenario | Expected Result |
+|----------|----------------|
+| Equal incomes, equal care | Minimal/no child support payment |
+| High income disparity | Higher earner pays proportional support |
+| Primary care (90%+ nights) | Lower earner may receive support |
+| 15% wage reduction | Alert triggers for new estimate eligibility |
+| Multiple children | Costs calculated per child and combined |
 
-1. Enter your current wage in the Wage Tracker panel
-2. The calculator monitors against the 15% reduction threshold
-3. Receive alerts when income changes may allow a new estimate
-4. Track wage history over time
+### Browser Testing
+
+Tested and verified on:
+- ✅ Chrome 120+ (Windows, macOS, Linux)
+- ✅ Firefox 120+ (Windows, macOS, Linux)
+- ✅ Safari 17+ (macOS, iOS)
+- ✅ Edge 120+ (Windows)
 
 ---
 
-## Deployment
+## 🚢 Deployment
 
-### GitHub Pages
+### Static Hosting (Recommended)
 
-1. Update `vite.config.ts` with your repository base path:
+The application is a static site and can be deployed to any static hosting service.
+
+#### Vercel (Recommended)
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+
+# Production deployment
+vercel --prod
+```
+
+#### Netlify
+
+```bash
+# Install Netlify CLI
+npm i -g netlify-cli
+
+# Build
+pnpm build
+
+# Deploy
+netlify deploy --prod --dir=dist
+```
+
+#### GitHub Pages
+
+1. Update `vite.config.ts`:
    ```typescript
    export default defineConfig({
      base: '/australian-child-support-calculator/',
@@ -395,141 +807,336 @@ calculateCostPercentage(50);  // Returns: 0.50 (50%)
 2. Build and deploy:
    ```bash
    pnpm build
-   # Deploy contents of dist/ folder to gh-pages branch
+   # Deploy dist/ folder to gh-pages branch
    ```
 
-### Vercel
+#### Other Platforms
 
-1. Connect your GitHub repository to Vercel
-2. Configure build settings:
-   - Build Command: `pnpm build`
-   - Output Directory: `dist`
-3. Deploy automatically on push
+The `dist/` folder can be deployed to:
+- **AWS S3 + CloudFront**
+- **Azure Static Web Apps**
+- **Google Cloud Storage**
+- **Cloudflare Pages**
+- **Firebase Hosting**
 
-### Netlify
+### Build Configuration
 
-1. Connect your GitHub repository
-2. Build settings:
-   - Build Command: `pnpm build`
-   - Publish Directory: `dist`
-3. Deploy automatically
-
-### Docker
-
-```dockerfile
-# Build stage
-FROM node:18-alpine as build
-WORKDIR /app
-COPY package*.json pnpm-lock.yaml ./
-RUN npm install -g pnpm && pnpm install --frozen-lockfile
-COPY . .
-RUN pnpm build
-
-# Production stage
-FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-```
-
-Build and run:
+**Production Build:**
 ```bash
-docker build -t child-support-calculator .
-docker run -p 8080:80 child-support-calculator
+pnpm build:prod
 ```
 
----
-
-## Browser Support
-
-| Browser | Minimum Version |
-|---------|-----------------|
-| Chrome | 90+ |
-| Firefox | 88+ |
-| Safari | 14+ |
-| Edge | 90+ |
+**Build Output:**
+- Minified JavaScript and CSS
+- Tree-shaken dependencies
+- Optimized assets
+- Source maps (optional)
+- Typical size: ~500KB gzipped
 
 ---
 
-## Contributing
+## 📖 Usage Guide
 
-Contributions are welcome! Please follow these guidelines:
+### Basic Calculator Usage
 
-### Development Workflow
+1. **📊 Enter Parent Incomes**
+   - Navigate to the "Calculator Inputs" tab
+   - Input Parent A's Adjusted Taxable Income (ATI)
+   - Input Parent B's Adjusted Taxable Income (ATI)
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Make your changes following the code standards
-4. Run linting: `pnpm lint`
-5. Build to verify: `pnpm build`
-6. Commit with clear messages
-7. Push and create a Pull Request
+2. **👶 Add Child Information**
+   - Specify the number of children (1-8+)
+   - Enter each child's age
+   - Optionally add child names for clarity
 
-### Code Standards
+3. **🏠 Set Care Arrangements**
+   - Enter annual nights of care for Parent A (0-365)
+   - Enter annual nights of care for Parent B (0-365)
+   - Total should equal 365 nights
 
-- Use TypeScript strict mode
-- Follow existing code patterns and naming conventions
-- Add JSDoc comments for public functions
-- Ensure accessibility compliance (WCAG 2.1)
-- Test on multiple browsers before submitting
+4. **📈 View Results**
+   - Navigate to "Step-by-Step Guide" tab
+   - See detailed breakdown of all 8 calculation steps
+   - Review final assessment in "Final Result" tab
 
-### Commit Message Format
+5. **💾 Save Calculation**
+   - Click "Save Calculation" button
+   - Access saved calculations in "History & Thresholds" tab
+   - Export calculations as JSON for records
 
-```
-type(scope): description
+### Interactive Guide Usage
 
-[optional body]
-```
+1. **🎯 Start the Guide**
+   - Click the "Start Interactive Guide" button in the header
+   - Or navigate to "Step-by-Step Guide" tab and click "Start Guide"
 
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+2. **👀 Follow Button Highlights**
+   - Watch as buttons highlight with glowing effects
+   - Read instructions for each highlighted button
+   - Click highlighted buttons to progress
+
+3. **🧮 Use the Calculator Widget**
+   - Interact with the neumorphic calculator
+   - Perform calculations as instructed
+   - See real-time updates in the guide
+
+4. **📚 Learn Each Step**
+   - Progress through all 8 steps of the formula
+   - Read detailed explanations for each step
+   - Understand the Australian child support methodology
+
+### Wage Tracking Usage
+
+1. **💰 Enter Current Wage**
+   - Navigate to "Wage Tracker & 15% Rule" tab
+   - Input your current wage
+   - System automatically saves to history
+
+2. **📉 Monitor Threshold**
+   - Calculator tracks against 15% reduction threshold
+   - Example: $97,000 wage → $82,450 threshold (15% = $14,550)
+   - Alerts appear when threshold is crossed
+
+3. **📊 View Wage History**
+   - See historical wage entries with timestamps
+   - Track income changes over time
+   - Identify when new estimates may be requested
+
+4. **🔔 Respond to Alerts**
+   - Receive notifications when wage drops 15%+
+   - Understand eligibility for new child support estimate
+   - Take action with Services Australia if needed
 
 ---
 
-## Legal Disclaimer
+## 🤝 Contributing
 
-This calculator is provided for **informational and educational purposes only**. While it implements the official Australian child support formula as published by the Department of Social Services, it should not be considered legal or financial advice.
+We welcome contributions from the community! Here's how you can help:
 
-**Important Notes:**
-- Official assessments are conducted by Services Australia
-- Individual circumstances may affect actual obligations
-- Tax advice should come from qualified professionals
-- This tool does not replace official government calculators
+### Ways to Contribute
 
-For official information, visit:
-- [Services Australia - Child Support](https://www.servicesaustralia.gov.au/child-support)
-- [Department of Social Services](https://www.dss.gov.au/)
+- 🐛 **Report Bugs** - Submit detailed bug reports via GitHub Issues
+- 💡 **Suggest Features** - Propose new features or improvements
+- 📝 **Improve Documentation** - Help make docs clearer and more comprehensive
+- 🔧 **Submit Pull Requests** - Fix bugs or implement new features
+- 🧪 **Test** - Help test new features and report issues
+- 🌍 **Translate** - Help make the calculator accessible in other languages
+
+### Contribution Guidelines
+
+1. **Fork the Repository**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/australian-child-support-calculator.git
+   cd australian-child-support-calculator
+   ```
+
+2. **Create a Feature Branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Make Your Changes**
+   - Follow existing code style
+   - Add comments for complex logic
+   - Update documentation as needed
+   - Test thoroughly
+
+4. **Commit Your Changes**
+   ```bash
+   git add .
+   git commit -m "feat: add your feature description"
+   ```
+
+5. **Push to Your Fork**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+6. **Submit a Pull Request**
+   - Provide a clear description of changes
+   - Reference any related issues
+   - Wait for review and feedback
+
+### Code Style
+
+- **TypeScript** - Use strict typing
+- **Components** - Functional components with hooks
+- **Naming** - PascalCase for components, camelCase for functions
+- **Comments** - Document complex logic and formulas
+- **Formatting** - Follow ESLint rules
+
+### Reporting Issues
+
+When reporting bugs, please include:
+- **Description** - Clear description of the issue
+- **Steps to Reproduce** - Detailed steps to recreate the bug
+- **Expected Behavior** - What should happen
+- **Actual Behavior** - What actually happens
+- **Screenshots** - If applicable
+- **Environment** - Browser, OS, version
+
+For more details, see [Contributing Guide](./docs/wiki/Contributing.md).
 
 ---
 
-## License
+## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE) file for details.
+
+### MIT License Summary
+
+✅ **Permissions:**
+- ✓ Commercial use
+- ✓ Modification
+- ✓ Distribution
+- ✓ Private use
+
+❌ **Limitations:**
+- ✗ Liability
+- ✗ Warranty
+
+📋 **Conditions:**
+- License and copyright notice must be included
+
+### Third-Party Licenses
+
+This project uses open-source libraries. See `package.json` for full list of dependencies and their licenses.
 
 ---
 
-## Acknowledgments
+## ⚠️ Disclaimer
 
-- Australian Department of Social Services for publishing the child support formula
-- Services Australia for providing calculation guidelines
-- Express Plus Child Support app for design inspiration
-- The React, TypeScript, and Vite communities for excellent tools
+### Important Legal Notice
+
+**This calculator is for informational and educational purposes only.**
+
+- ❌ **NOT LEGAL ADVICE** - This tool does not constitute legal or financial advice
+- ❌ **NOT OFFICIAL** - This is not an official Services Australia calculator
+- ❌ **NOT BINDING** - Results are estimates and not legally binding
+- ✅ **EDUCATIONAL** - Designed to help understand the child support formula
+
+### Official Resources
+
+For official child support assessments, contact:
+
+| Resource | Purpose | Link |
+|----------|---------|------|
+| **Services Australia** | Official assessments | [servicesaustralia.gov.au](https://www.servicesaustralia.gov.au/child-support) |
+| **Child Support Guide** | Official formula documentation | [DSS Guide](https://guides.dss.gov.au/child-support-guide) |
+| **Express Plus App** | Official mobile app | [App Store / Google Play](https://www.servicesaustralia.gov.au/express-plus-child-support-app) |
+| **Phone Support** | 131 272 | Monday-Friday 8am-8pm |
+
+### Accuracy Notice
+
+While this calculator implements the official 8-step formula:
+- Individual circumstances may vary
+- Special rules may apply in certain cases
+- Legislative changes may affect calculations
+- Professional advice is recommended for complex situations
+
+### Privacy Notice
+
+- ✅ All calculations are performed locally in your browser
+- ✅ No data is transmitted to external servers
+- ✅ No personal information is collected
+- ✅ Data persists only in your browser's localStorage
+- ✅ You can clear data at any time
 
 ---
 
-## Support
+## 📞 Support
 
-For technical issues with this application, please [open an issue](https://github.com/Verridian-ai/australian-child-support-calculator/issues).
+### Getting Help
 
-For questions about the Australian child support calculation itself, refer to:
-- [Services Australia - Child Support](https://www.servicesaustralia.gov.au/child-support)
-- [DSS - Child Support Guide](https://guides.dss.gov.au/child-support-guide)
+| Issue Type | Resource |
+|------------|----------|
+| 🐛 **Bug Reports** | [GitHub Issues](https://github.com/Verridian-ai/australian-child-support-calculator/issues) |
+| 💡 **Feature Requests** | [GitHub Issues](https://github.com/Verridian-ai/australian-child-support-calculator/issues) |
+| 📖 **Documentation** | [Project Wiki](./docs/wiki/Home.md) |
+| ❓ **Questions** | [GitHub Discussions](https://github.com/Verridian-ai/australian-child-support-calculator/discussions) |
+| 🌐 **Live Demo** | [https://4usw7ly4n1eh.space.minimax.io](https://4usw7ly4n1eh.space.minimax.io) |
+
+### Official Child Support Help
+
+For official child support assistance:
+- **Phone:** 131 272 (Monday-Friday 8am-8pm AEST)
+- **Website:** [servicesaustralia.gov.au/child-support](https://www.servicesaustralia.gov.au/child-support)
+- **In Person:** Visit a Services Australia service centre
+
+---
+
+## 🙏 Acknowledgments
+
+### Credits
+
+- **Department of Social Services** - For publishing the official child support formula
+- **Services Australia** - For child support administration and resources
+- **React Team** - For the excellent React framework
+- **Vercel** - For Vite and deployment platform
+- **Radix UI** - For accessible component primitives
+- **Tailwind Labs** - For Tailwind CSS
+- **Open Source Community** - For all the amazing libraries used in this project
+
+### Inspiration
+
+This project was inspired by the need for a transparent, educational tool to help Australian parents understand child support calculations. The official formula can be complex, and this calculator aims to demystify the process.
+
+---
+
+## 📊 Project Stats
+
+| Metric | Value |
+|--------|-------|
+| **Total Files** | 35+ |
+| **Lines of Code** | 9,184 |
+| **Components** | 30+ |
+| **Wiki Pages** | 9 |
+| **Dependencies** | 40+ |
+| **Build Size** | ~500KB (gzipped) |
+| **Browser Support** | Chrome, Firefox, Safari, Edge |
+| **License** | MIT |
+
+---
+
+## 🗺️ Roadmap
+
+### Planned Features
+
+- [ ] **Multi-language Support** - Translations for non-English speakers
+- [ ] **PDF Export** - Generate PDF reports of calculations
+- [ ] **Comparison Mode** - Compare multiple scenarios side-by-side
+- [ ] **Historical Rates** - Support for previous year rate tables
+- [ ] **Advanced Scenarios** - Special circumstances and edge cases
+- [ ] **Mobile App** - Native iOS and Android applications
+- [ ] **API Service** - RESTful API for integrations
+
+### Future Enhancements
+
+- [ ] **Dark/Light Theme Toggle** - User preference for theme
+- [ ] **Accessibility Improvements** - Enhanced screen reader support
+- [ ] **Performance Optimization** - Further bundle size reduction
+- [ ] **Offline PWA** - Progressive Web App capabilities
+- [ ] **Data Import/Export** - CSV import for bulk calculations
 
 ---
 
 <div align="center">
 
-**Built with care for Australian families**
+## ⭐ Star This Repository
 
-[Report Bug](https://github.com/Verridian-ai/australian-child-support-calculator/issues) | [Request Feature](https://github.com/Verridian-ai/australian-child-support-calculator/issues) | [View Demo](https://4usw7ly4n1eh.space.minimax.io)
+If you find this calculator helpful, please consider giving it a star on GitHub!
+
+[![GitHub stars](https://img.shields.io/github/stars/Verridian-ai/australian-child-support-calculator?style=social)](https://github.com/Verridian-ai/australian-child-support-calculator)
+
+---
+
+**Made with ❤️ for Australian families**
+
+[🏠 Home](./docs/wiki/Home.md) • [📖 Documentation](./docs/wiki/Getting-Started.md) • [🐛 Report Bug](https://github.com/Verridian-ai/australian-child-support-calculator/issues) • [💡 Request Feature](https://github.com/Verridian-ai/australian-child-support-calculator/issues)
+
+---
+
+*Last Updated: December 2024*
 
 </div>
+

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Calculator, TrendingDown, Sun, Moon } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { TrendingDown, Sun, Moon } from 'lucide-react';
 
 export function Header() {
   const [isDark, setIsDark] = useState(true);
@@ -37,15 +37,15 @@ export function Header() {
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Branding */}
           <div className="flex items-center space-x-3 sm:space-x-4">
+            {/* Services Australia Logo */}
             <div className="relative group cursor-pointer transition-transform duration-300 hover:scale-105">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-accent-green via-accent-teal to-accent-yellow rounded-xl flex items-center justify-center shadow-neumorphic-accent">
-                <Calculator className="h-6 w-6 sm:h-7 sm:w-7 text-white drop-shadow-md" />
-              </div>
-              {/* Animated accent rings */}
-              <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-accent-orange rounded-full opacity-80 animate-pulse-slow" />
-              <div className="absolute -bottom-1 -left-1 w-2 h-2 sm:w-3 sm:h-3 bg-accent-teal rounded-full opacity-60 animate-bounce-slow" />
+              <img
+                src="/Services_australia_logo.png"
+                alt="Services Australia"
+                className="h-12 sm:h-14 w-auto object-contain"
+              />
             </div>
-            
+
             <div className="flex flex-col justify-center">
               <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-text-primary tracking-tight leading-tight">
                 Child Support Assessment <span className="text-accent-teal">Training Console</span>

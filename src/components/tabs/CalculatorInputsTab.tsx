@@ -31,23 +31,23 @@ export default function CalculatorInputsTab({
   const currentStep = result ? 8 : 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header with Progress Badge */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center space-x-3">
-          <div className="w-1.5 h-6 bg-primary-500 rounded-full" />
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-text-primary">
+          <div className="w-1.5 h-6 bg-primary-500 rounded-full flex-shrink-0" />
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 dark:text-text-primary">
             Calculation Inputs
           </h2>
         </div>
-        
-        {/* Progress Badge */}
+
+        {/* Progress Badge - Stack on mobile, row on larger screens */}
         {result && (
-          <div className="flex items-center space-x-4 text-sm">
-            <div className="px-3 py-1 bg-accent-teal/10 text-accent-teal rounded-full font-medium">
-              Step {currentStep}: Final Annual Amount
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm ml-4 sm:ml-0">
+            <div className="px-2.5 sm:px-3 py-1 sm:py-1.5 bg-accent-teal/10 text-accent-teal rounded-full font-medium whitespace-nowrap">
+              Step {currentStep}: Final Amount
             </div>
-            <div className="px-3 py-1 bg-gray-100 dark:bg-dark-800 text-gray-700 dark:text-text-secondary rounded-full font-medium">
+            <div className="px-2.5 sm:px-3 py-1 sm:py-1.5 bg-gray-100 dark:bg-dark-800 text-gray-700 dark:text-text-secondary rounded-full font-medium whitespace-nowrap">
               Progress {progress}%
             </div>
           </div>

@@ -38,11 +38,11 @@ export function Header() {
           {/* Branding */}
           <div className="flex items-center space-x-3 sm:space-x-4">
             {/* Services Australia Logo */}
-            <div className="relative group cursor-pointer transition-transform duration-300 hover:scale-105">
+            <div className="relative group cursor-pointer transition-transform duration-300 hover:scale-105 flex-shrink-0">
               <img
-                src="/Services_australia_logo.png"
+                src="/Services_australia_logo.svg"
                 alt="Services Australia"
-                className="h-12 sm:h-14 w-auto object-contain"
+                className="h-10 sm:h-12 md:h-14 w-auto object-contain"
               />
             </div>
 

@@ -20,35 +20,34 @@ export function StepCard({ step, isExpanded, onToggle }: StepCardProps) {
     <div className={`step-card ${isExpanded ? 'step-card-expanded' : ''} group`}>
       {/* Step Header */}
       <div
-        className="flex items-center justify-between cursor-pointer py-2"
+        className="flex items-center justify-between cursor-pointer py-2 gap-3"
         onClick={onToggle}
       >
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-3">
-            <div className={`
-              w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg transition-transform duration-300
-              ${step.stepNumber === 8 ? 'bg-gradient-to-br from-accent-green to-accent-teal scale-110' : 'bg-gray-600 dark:bg-dark-600 group-hover:bg-gray-500 dark:group-hover:bg-dark-500'}
-            `}>
-              {step.stepNumber}
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-text-primary group-hover:text-accent-teal transition-colors">
-                {step.title}
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-text-tertiary hidden sm:block">
-                {step.description}
-              </p>
-            </div>
+        <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0">
+          <div className={`
+            w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg transition-transform duration-300 flex-shrink-0
+            ${step.stepNumber === 8 ? 'bg-gradient-to-br from-accent-green to-accent-teal scale-110' : 'bg-gray-600 dark:bg-dark-600 group-hover:bg-gray-500 dark:group-hover:bg-dark-500'}
+          `}>
+            {step.stepNumber}
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 dark:text-text-primary group-hover:text-accent-teal transition-colors leading-tight">
+              {step.title}
+            </h3>
+            {/* Description - always visible on desktop, shown below title on mobile when not expanded */}
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-text-tertiary hidden sm:block mt-0.5">
+              {step.description}
+            </p>
           </div>
         </div>
-        
-        <div className="flex items-center space-x-4">
+
+        <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
           <div className="text-right">
-            <div className={`text-xl font-mono font-bold ${getStepColor(step.stepNumber)}`}>
+            <div className={`text-base sm:text-lg md:text-xl font-mono font-bold ${getStepColor(step.stepNumber)}`}>
               {formatCurrency(step.value)}
             </div>
             {step.stepNumber < 8 && (
-              <div className="text-sm text-gray-500 dark:text-text-tertiary">
+              <div className="text-xs sm:text-sm text-gray-500 dark:text-text-tertiary">
                 {step.stepNumber === 3 || step.stepNumber === 5 || step.stepNumber === 6
                   ? formatPercentage(Math.abs(step.value))
                   : formatCurrency(step.value)
@@ -58,18 +57,20 @@ export function StepCard({ step, isExpanded, onToggle }: StepCardProps) {
           </div>
           <div className="text-gray-400 dark:text-text-secondary transition-transform duration-300">
             {isExpanded ? (
-              <ChevronDown className="h-5 w-5" />
+              <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5" />
             ) : (
-              <ChevronRight className="h-5 w-5" />
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
             )}
           </div>
         </div>
       </div>
 
-      {/* Mobile Description (only visible when collapsed on mobile) */}
-      <div className="sm:hidden text-xs text-gray-500 dark:text-text-tertiary mt-2 pl-11">
-        {!isExpanded && step.description}
-      </div>
+      {/* Mobile Description - shown when not expanded on mobile */}
+      {!isExpanded && (
+        <p className="sm:hidden text-xs text-gray-500 dark:text-text-tertiary mt-1 ml-10 leading-relaxed">
+          {step.description}
+        </p>
+      )}
 
       {/* Step Content */}
       {isExpanded && (

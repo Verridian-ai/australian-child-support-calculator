@@ -5,20 +5,37 @@
 @layer base {
   :root {
     --radius: 0.5rem;
+    /* Mobile-first touch target sizing */
+    --min-touch-target: 44px;
   }
 
   * {
     @apply border-border;
+    /* Prevent text size adjustment on orientation change */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Prevent horizontal overflow on mobile */
+    overflow-x: hidden;
   }
 
   body {
     @apply bg-gray-100 dark:bg-dark-900 text-gray-900 dark:text-gray-100;
     font-family: 'Inter', -apple-system, system-ui, sans-serif;
     line-height: 1.5;
+    /* Mobile-first font size */
+    font-size: 16px;
+    /* Prevent horizontal overflow */
+    overflow-x: hidden;
+    /* Improve tap highlighting on mobile */
+    -webkit-tap-highlight-color: rgba(0, 102, 255, 0.1);
   }
 
-  html {
-    scroll-behavior: smooth;
+  /* Improve touch interactions */
+  button, a, [role="button"] {
+    touch-action: manipulation;
   }
 
   /* Reduce motion for accessibility */
@@ -31,6 +48,15 @@
     *:where(:not(.no-transition)) {
       transition-property: opacity, color, background-color, border-color;
       transition-duration: 150ms;
+    }
+  }
+
+  /* Safe area insets for notched devices (iPhone X+) */
+  @supports (padding: max(0px)) {
+    body {
+      padding-left: max(0px, env(safe-area-inset-left));
+      padding-right: max(0px, env(safe-area-inset-right));
+      padding-bottom: max(0px, env(safe-area-inset-bottom));
     }
   }
 }
@@ -258,5 +284,39 @@
 ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.3); }
 .dark ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
 
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth scroll behavior */
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
 ::selection { background: rgba(0, 102, 255, 0.1); color: #0066FF; }
 .dark ::selection { background: rgba(0, 102, 255, 0.3); color: #4D9BFF; }
+
+/* Mobile-specific utilities */
+@media (max-width: 640px) {
+  /* Ensure minimum touch targets */
+  .min-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Prevent zoom on input focus (iOS) */
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}

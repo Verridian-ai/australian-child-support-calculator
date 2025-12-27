@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Calculator, BookOpen, FileText, DollarSign, History, Info } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Calculator, BookOpen, FileText, DollarSign, History, Info, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export type TabId = 'inputs' | 'guide' | 'result' | 'wage' | 'history' | 'about';
 
@@ -35,6 +35,9 @@ export function TabContainer({ children }: TabContainerProps) {
   };
 
   const [activeTab, setActiveTab] = useState<TabId>(getInitialTab);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(false);
+  const navRef = useRef<HTMLDivElement>(null);
 
   // Handle hash changes
   useEffect(() => {
@@ -50,11 +53,69 @@ export function TabContainer({ children }: TabContainerProps) {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
+  // Check scroll position for arrow indicators
+  const checkScrollPosition = () => {
+    if (navRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = navRef.current;
+      setShowLeftArrow(scrollLeft > 10);
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  useEffect(() => {
+    checkScrollPosition();
+    const nav = navRef.current;
+    if (nav) {
+      nav.addEventListener('scroll', checkScrollPosition);
+      window.addEventListener('resize', checkScrollPosition);
+      return () => {
+        nav.removeEventListener('scroll', checkScrollPosition);
+        window.removeEventListener('resize', checkScrollPosition);
+      };
+    }
+  }, []);
+
+  const scrollTabs = (direction: 'left' | 'right') => {
+    if (navRef.current) {
+      const scrollAmount = 150;
+      navRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <div className="w-full">
       {/* Tab Bar */}
-      <div className="border-b border-gray-200 dark:border-dark-700 mb-6">
-        <nav className="flex space-x-1 overflow-x-auto scrollbar-hide" aria-label="Tabs">
+      <div className="border-b border-gray-200 dark:border-dark-700 mb-4 sm:mb-6 relative">
+        {/* Left scroll indicator */}
+        {showLeftArrow && (
+          <button
+            onClick={() => scrollTabs('left')}
+            className="absolute left-0 top-0 bottom-0 z-10 flex items-center justify-center w-8 bg-gradient-to-r from-gray-100 dark:from-dark-900 to-transparent sm:hidden"
+            aria-label="Scroll tabs left"
+          >
+            <ChevronLeft className="h-5 w-5 text-gray-600 dark:text-text-secondary" />
+          </button>
+        )}
+
+        {/* Right scroll indicator */}
+        {showRightArrow && (
+          <button
+            onClick={() => scrollTabs('right')}
+            className="absolute right-0 top-0 bottom-0 z-10 flex items-center justify-center w-8 bg-gradient-to-l from-gray-100 dark:from-dark-900 to-transparent sm:hidden"
+            aria-label="Scroll tabs right"
+          >
+            <ChevronRight className="h-5 w-5 text-gray-600 dark:text-text-secondary" />
+          </button>
+        )}
+
+        <nav
+          ref={navRef}
+          className="flex space-x-0.5 sm:space-x-1 overflow-x-auto scrollbar-hide scroll-smooth px-1"
+          aria-label="Tabs"
+        >
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -63,8 +124,8 @@ export function TabContainer({ children }: TabContainerProps) {
                 window.location.hash = tab.id;
               }}
               className={`
-                flex items-center space-x-2 px-4 py-3 text-sm font-medium whitespace-nowrap
-                transition-all duration-200 relative
+                flex items-center space-x-1.5 sm:space-x-2 px-2.5 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium whitespace-nowrap
+                transition-all duration-200 relative min-h-[44px]
                 ${
                   activeTab === tab.id
                     ? 'text-accent-teal border-b-2 border-accent-teal'
@@ -72,9 +133,9 @@ export function TabContainer({ children }: TabContainerProps) {
                 }
               `}
             >
-              {tab.icon}
+              <span className="flex-shrink-0">{tab.icon}</span>
               <span className="hidden sm:inline">{tab.label}</span>
-              <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+              <span className="sm:hidden text-[11px]">{tab.label.split(' ')[0]}</span>
             </button>
           ))}
         </nav>

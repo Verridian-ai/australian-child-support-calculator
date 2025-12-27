@@ -520,31 +520,31 @@ export default function FormulaDemo({
         {/* Formula, Values, Result - Stacked for Mobile */}
         <div className="space-y-3">
           {/* Formula */}
-          <div className="p-2 md:p-3 bg-white dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-600">
-            <div className="flex items-center space-x-2 mb-1.5">
-              <Keyboard className="h-3 w-3 text-gray-500 dark:text-text-tertiary" />
-              <span className="text-[10px] md:text-xs font-semibold text-gray-600 dark:text-text-secondary uppercase tracking-wide">
+          <div className="p-3 sm:p-4 bg-white dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-600">
+            <div className="flex items-center space-x-2 mb-2">
+              <Keyboard className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-500 dark:text-text-tertiary" />
+              <span className="text-xs sm:text-sm font-semibold text-gray-600 dark:text-text-secondary uppercase tracking-wide">
                 Formula
               </span>
             </div>
-            <p className="text-[10px] md:text-xs font-mono text-gray-900 dark:text-text-primary break-words">
+            <p className="text-xs sm:text-sm font-mono text-gray-900 dark:text-text-primary break-words leading-relaxed">
               {formula}
             </p>
           </div>
 
           {/* Editable Values */}
-          <div className="p-2 md:p-3 bg-white dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-600">
-            <p className="text-[10px] md:text-xs font-semibold text-gray-600 dark:text-text-secondary mb-2 uppercase tracking-wide">
+          <div className="p-3 sm:p-4 bg-white dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-600">
+            <p className="text-xs sm:text-sm font-semibold text-gray-600 dark:text-text-secondary mb-3 uppercase tracking-wide">
               Live Demo Values
             </p>
-            <div className="space-y-1.5 text-[10px] md:text-xs">
+            <div className="space-y-3 text-sm">
               {Object.entries(exampleValues).map(([key, value]) => {
                 const isEditable = typeof value === 'number' || !isNaN(Number(value));
                 const numValue = typeof value === 'number' ? value : Number(value);
                 const strValue = typeof value === 'string' ? value : String(value);
                 return (
-                  <div key={key} className="flex flex-col gap-0.5">
-                    <label className="text-gray-600 dark:text-text-secondary text-[10px]">
+                  <div key={key} className="flex flex-col gap-1">
+                    <label className="text-gray-600 dark:text-text-secondary text-xs sm:text-sm">
                       {key.replace(/_/g, ' ')}:
                     </label>
                     {isEditable ? (
@@ -552,11 +552,11 @@ export default function FormulaDemo({
                         type="number"
                         value={isNaN(numValue) ? 0 : numValue}
                         onChange={(e) => handleValueChange(key, e.target.value)}
-                        className="font-mono font-semibold text-gray-900 dark:text-text-primary bg-transparent border-b border-gray-300 dark:border-gray-600 focus:border-accent-teal focus:outline-none px-1 py-0.5 text-[10px] md:text-xs w-full"
+                        className="font-mono font-semibold text-gray-900 dark:text-text-primary bg-gray-50 dark:bg-dark-700 border border-gray-300 dark:border-gray-600 rounded-md focus:border-accent-teal focus:ring-1 focus:ring-accent-teal focus:outline-none px-3 py-2 text-sm w-full min-h-[44px]"
                         step={key.includes('Amount') || key.includes('Wage') || key.includes('ATI') ? 1000 : key.includes('Nights') ? 1 : 0.01}
                       />
                     ) : (
-                      <span className="font-mono font-semibold text-gray-900 dark:text-text-primary">
+                      <span className="font-mono font-semibold text-gray-900 dark:text-text-primary text-sm">
                         {strValue}
                       </span>
                     )}
@@ -568,11 +568,11 @@ export default function FormulaDemo({
 
           {/* Result */}
           {result !== undefined && (
-            <div className="p-2 md:p-3 bg-accent-teal/10 dark:bg-accent-teal/20 rounded-lg border border-accent-teal/30">
-              <p className="text-[10px] md:text-xs font-semibold text-gray-600 dark:text-text-secondary mb-1 uppercase tracking-wide">
+            <div className="p-3 sm:p-4 bg-accent-teal/10 dark:bg-accent-teal/20 rounded-lg border border-accent-teal/30">
+              <p className="text-xs sm:text-sm font-semibold text-gray-600 dark:text-text-secondary mb-2 uppercase tracking-wide">
                 Calculated Result
               </p>
-              <p className="text-base md:text-lg font-bold font-mono text-accent-teal">
+              <p className="text-lg sm:text-xl md:text-2xl font-bold font-mono text-accent-teal">
                 {result !== undefined && typeof result === 'number'
                   ? resultFormat === 'percentage'
                     ? `${result.toFixed(2)}%`
@@ -587,15 +587,15 @@ export default function FormulaDemo({
 
         {/* Step Explanation */}
         {isPlaying && (
-          <div className="p-2 bg-accent-teal/10 dark:bg-accent-teal/20 rounded-lg border border-accent-teal/30 w-full">
-            <div className="flex items-start space-x-1.5">
-              <PlayCircle className="h-3 w-3 text-accent-teal flex-shrink-0 mt-0.5 animate-pulse" />
+          <div className="p-3 sm:p-4 bg-accent-teal/10 dark:bg-accent-teal/20 rounded-lg border border-accent-teal/30 w-full">
+            <div className="flex items-start space-x-2 sm:space-x-3">
+              <PlayCircle className="h-4 w-4 sm:h-5 sm:w-5 text-accent-teal flex-shrink-0 mt-0.5 animate-pulse" />
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] md:text-xs text-gray-900 dark:text-text-primary font-medium break-words">
+                <p className="text-sm sm:text-base text-gray-900 dark:text-text-primary font-medium break-words">
                   {currentExplanation || 'Click "Next" to start the calculation step by step.'}
                 </p>
                 {currentStep > 0 && currentStep <= buttonSequence.length && (
-                  <p className="text-[9px] text-gray-600 dark:text-text-secondary mt-0.5">
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-text-secondary mt-1">
                     Step {currentStep} of {buttonSequence.length}
                   </p>
                 )}
@@ -604,19 +604,20 @@ export default function FormulaDemo({
           </div>
         )}
 
-        {/* Calculator - Smaller for Mobile */}
-        <div className="relative w-full flex justify-center items-center">
-          <div className="scale-[0.55] sm:scale-[0.65] md:scale-[0.75] lg:scale-[0.85] origin-center relative">
-            <NeumorphicCalculator 
+        {/* Calculator - Responsive without scaling */}
+        <div className="relative w-full flex justify-center items-center py-2">
+          <div className="relative w-full max-w-[300px] sm:max-w-[320px] md:max-w-[340px]">
+            <NeumorphicCalculator
               ref={calculatorRef}
               onValueChange={(val) => {
                 setCalculatorDisplayValue(val.toString());
               }}
               currentValue={0}
               highlightedButton={highlightedButton}
+              compact={isMobile}
             />
             {highlightedButton && (
-              <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-accent-orange text-white text-[9px] px-1.5 py-0.5 rounded-full shadow-lg animate-pulse whitespace-nowrap z-20">
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-accent-orange text-white text-[10px] sm:text-xs px-2 py-1 rounded-full shadow-lg animate-pulse whitespace-nowrap z-20">
                 Pressing: {highlightedButton}
               </div>
             )}
@@ -624,32 +625,32 @@ export default function FormulaDemo({
         </div>
 
         {/* Calculator Display Value */}
-        <div className="text-center w-full">
-          <p className="text-[9px] text-gray-500 dark:text-text-tertiary mb-0.5">Current Display:</p>
-          <p className="text-xs md:text-sm font-mono font-bold text-accent-teal">{calculatorDisplayValue}</p>
+        <div className="text-center w-full py-2">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-text-tertiary mb-1">Current Display:</p>
+          <p className="text-base sm:text-lg md:text-xl font-mono font-bold text-accent-teal">{calculatorDisplayValue}</p>
         </div>
 
-        {/* Button Sequence - Compact */}
+        {/* Button Sequence */}
         <div className="w-full">
-          <p className="text-[9px] md:text-[10px] font-semibold text-gray-600 dark:text-text-secondary mb-1 uppercase tracking-wide text-center">
+          <p className="text-xs sm:text-sm font-semibold text-gray-600 dark:text-text-secondary mb-2 uppercase tracking-wide text-center">
             Button Sequence
           </p>
-          <div className="flex flex-wrap gap-1 justify-center">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
             {groupedSequence.map((group, groupIndex) => {
               const isCompleted = group.indices.every(idx => idx < currentStep);
               const isActive = group.indices.some(idx => idx === currentStep) && isPlaying;
-              
+
               return (
                 <React.Fragment key={groupIndex}>
                   <div
                     className={`
-                      px-1.5 py-0.5 rounded font-mono text-[9px] md:text-[10px] font-semibold
-                      transition-all duration-300
+                      px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-md font-mono text-xs sm:text-sm font-semibold
+                      transition-all duration-300 min-w-[28px] sm:min-w-[32px] text-center
                       ${
                         isCompleted
                           ? 'bg-accent-teal text-white shadow-md'
                           : isActive
-                          ? 'bg-accent-orange text-white shadow-lg scale-110 animate-pulse'
+                          ? 'bg-accent-orange text-white shadow-lg scale-105 animate-pulse'
                           : 'bg-gray-200 dark:bg-dark-700 text-gray-700 dark:text-gray-300'
                       }
                     `}
@@ -657,7 +658,7 @@ export default function FormulaDemo({
                     {group.value}
                   </div>
                   {groupIndex < groupedSequence.length - 1 && (
-                    <span className="text-gray-400 dark:text-gray-600 text-[9px]">→</span>
+                    <span className="text-gray-400 dark:text-gray-600 text-xs sm:text-sm flex items-center">→</span>
                   )}
                 </React.Fragment>
               );
@@ -668,21 +669,21 @@ export default function FormulaDemo({
         {/* Auto-Calculate Steps */}
         <div>
           {showAutoCalculate && autoCalculateSteps.length > 0 ? (
-            <div className="p-2 md:p-3 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-500/10 dark:to-emerald-500/10 rounded-lg border border-green-200 dark:border-green-500/30">
-              <div className="flex items-center space-x-1.5 mb-2">
-                <Zap className="h-3 w-3 text-accent-green" />
-                <span className="text-[10px] md:text-xs font-semibold text-gray-900 dark:text-text-primary uppercase tracking-wide">
+            <div className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-500/10 dark:to-emerald-500/10 rounded-lg border border-green-200 dark:border-green-500/30">
+              <div className="flex items-center space-x-2 mb-3">
+                <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-accent-green" />
+                <span className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-text-primary uppercase tracking-wide">
                   Auto-Calculate
                 </span>
               </div>
-              <p className="text-[9px] md:text-[10px] text-gray-600 dark:text-text-secondary mb-2">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-text-secondary mb-3">
                 Failsafe training mode
               </p>
-              <div className="space-y-1.5 max-h-[300px] overflow-y-auto">
+              <div className="space-y-2 max-h-[300px] overflow-y-auto">
                 {autoCalculateSteps.map((calcStep, index) => (
                   <div
                     key={index}
-                    className={`p-1.5 rounded border transition-all ${
+                    className={`p-2.5 sm:p-3 rounded-md border transition-all ${
                       index < currentCalculationStep
                         ? 'bg-green-100 dark:bg-green-500/20 border-green-300 dark:border-green-500/40'
                         : index === currentCalculationStep
@@ -690,11 +691,11 @@ export default function FormulaDemo({
                         : 'bg-gray-50 dark:bg-dark-700 border-gray-200 dark:border-dark-600 opacity-50'
                     }`}
                   >
-                    <div className="flex justify-between items-center gap-2">
-                      <span className="text-[9px] md:text-[10px] font-medium text-gray-700 dark:text-text-secondary truncate">
+                    <div className="flex justify-between items-center gap-3">
+                      <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-text-secondary truncate">
                         {calcStep.step}:
                       </span>
-                      <span className="text-[10px] md:text-xs font-bold font-mono text-gray-900 dark:text-text-primary flex-shrink-0">
+                      <span className="text-sm sm:text-base font-bold font-mono text-gray-900 dark:text-text-primary flex-shrink-0">
                         {typeof calcStep.value === 'number'
                           ? resultFormat === 'percentage'
                             ? `${calcStep.value.toFixed(2)}%`
@@ -709,8 +710,8 @@ export default function FormulaDemo({
               </div>
             </div>
           ) : (
-            <div className="p-2 md:p-3 bg-white dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-600 flex items-center justify-center">
-              <p className="text-[10px] md:text-xs text-gray-500 dark:text-text-tertiary text-center">
+            <div className="p-3 sm:p-4 bg-white dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-600 flex items-center justify-center min-h-[60px]">
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-text-tertiary text-center">
                 Click "Auto Calculate" to see step-by-step calculation
               </p>
             </div>
@@ -719,7 +720,7 @@ export default function FormulaDemo({
       </div>
 
       {/* Explanation - Bottom */}
-      <p className="text-[10px] md:text-xs text-gray-600 dark:text-text-secondary leading-relaxed italic mt-3 text-center">
+      <p className="text-xs sm:text-sm text-gray-600 dark:text-text-secondary leading-relaxed italic mt-4 text-center">
         {explanation}
       </p>
     </div>

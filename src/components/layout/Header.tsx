@@ -36,28 +36,30 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Branding */}
-          <div className="flex items-center space-x-3 sm:space-x-4">
-            {/* Services Australia Logo */}
-            <div className="relative group cursor-pointer transition-transform duration-300 hover:scale-105 flex-shrink-0">
+          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+            {/* Calculator Logo */}
+            <div className="relative flex-shrink-0">
               <img
-                src="/Services_australia_logo.svg"
-                alt="Services Australia"
-                className="h-10 sm:h-12 md:h-14 w-auto object-contain"
+                src="/calculator-logo.svg"
+                alt="CS Calculator"
+                className="h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 object-contain"
               />
             </div>
 
-            <div className="flex flex-col justify-center">
-              <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-text-primary tracking-tight leading-tight">
-                Child Support Assessment <span className="text-accent-teal">Training Console</span>
+            <div className="flex flex-col justify-center min-w-0">
+              {/* Mobile: Short title */}
+              <h1 className="sm:hidden text-base font-bold text-gray-900 dark:text-text-primary tracking-tight leading-tight">
+                <span className="text-accent-teal">CS</span> Calculator
               </h1>
-              <p className="text-[10px] sm:text-xs text-red-600 dark:text-red-400 font-medium uppercase tracking-wider hidden xs:block">
-                Internal Use Only
-              </p>
-              <div className="flex items-center space-x-1.5 mt-1">
+              {/* Desktop: Full title */}
+              <h1 className="hidden sm:block text-lg md:text-xl font-bold text-gray-900 dark:text-text-primary tracking-tight leading-tight">
+                Child Support <span className="text-accent-teal">Calculator</span>
+              </h1>
+              <div className="flex items-center space-x-1.5 mt-0.5">
                 <div className="w-1.5 h-1.5 bg-accent-green rounded-full" />
                 <div className="w-1.5 h-1.5 bg-accent-teal rounded-full" />
                 <div className="w-1.5 h-1.5 bg-accent-yellow rounded-full" />
-                <span className="text-[10px] text-gray-500 dark:text-text-tertiary ml-1 hidden sm:inline">Officer Training Tool</span>
+                <span className="text-[10px] text-gray-500 dark:text-text-tertiary ml-1 hidden md:inline">Training Tool</span>
               </div>
             </div>
           </div>
